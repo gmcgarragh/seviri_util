@@ -67,6 +67,12 @@ int seviri_native_preproc(const struct seviri_native_data *d,
      double jtime_end;
      double jtime_start;
 
+
+// SRP: Add in new variables to store the image start/stop time
+     double jtime_i;
+     double jtime_end_i;
+     double jtime_start_i;
+
      double t;
 
      double X;
@@ -193,6 +199,12 @@ int seviri_native_preproc(const struct seviri_native_data *d,
      snu_jul_to_cal_date((long) floor(jtime       + .5), &year, &month, &day);
      day_of_year = jtime       - (snu_cal_to_jul_day(year, 1, 0) - .5);
 
+//SRP:	Store the start/stop times so they're not overwritten by the orbit
+//	polynomial values below.
+     jtime_start_i = jtime_start;
+     jtime_end_i = jtime_end;
+     jtime_i = jtime;
+
 
      /*-------------------------------------------------------------------------
       * Compute the satellite position vector in Cartesian coordinates (km).
@@ -233,8 +245,9 @@ int seviri_native_preproc(const struct seviri_native_data *d,
      for (i = 0; i < d->image.n_lines; ++i) {
           ii = d->image.i_line + i;
 
-          jtime2 = jtime_start + (double) ii / (double) (IMAGE_SIZE_VIR_LINES - 1) *
-                   (jtime_end - jtime_start);
+// SRP: Change times from orbit polynomial to image start/stop scan
+          jtime2 = jtime_start_i + (double) ii / (double) (IMAGE_SIZE_VIR_LINES - 1) *
+                   (jtime_end_i - jtime_start_i);
 
           for (j = 0; j < d->image.n_columns; ++j) {
                i_image = i * d->image.n_columns + j;
@@ -246,7 +259,8 @@ int seviri_native_preproc(const struct seviri_native_data *d,
                if (d2->lat[i_image] != FILL_VALUE_F && d2->lon[i_image] != FILL_VALUE_F) {
                     d2->time[i_image] = jtime2;
 
-                    snu_solar_params2(jtime, d2->lat[i_image] * D2R,
+//SRP: Changed jtime here too.
+                    snu_solar_params2(jtime_i, d2->lat[i_image] * D2R,
                                       d2->lon[i_image] * D2R, &mu0, &theta0,
                                       &phi0, NULL);
                     d2->sza[i_image] = theta0 * R2D;
@@ -366,6 +380,26 @@ int seviri_native_preproc(const struct seviri_native_data *d,
           }
      }
 
+    /*-------------------------------------------------------------------------
+      * Extract the raw pixel counts only. Do not scale or transform in any way
+      *-----------------------------------------------------------------------*/
+     for (i = 0; i < d->image.n_bands; ++i) {
+          if (band_units[i] == SEVIRI_UNIT_CNT) {
+
+               for (j = 0; j < d->image.n_lines; ++j) {
+                    for (k = 0; k < d->image.n_columns; ++k) {
+                         i_image = j * d->image.n_columns + k;
+
+                         if (d->image.data_vir[i][i_image] != FILL_VALUE_US &&
+                             d->image.data_vir[i][i_image] > 0) {
+                              L = d->image.data_vir[i][i_image];
+
+                              d2->data[i][i_image] = L;
+                         }
+                    }
+               }
+          }
+     }
 
      return 0;
 }

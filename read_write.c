@@ -1637,6 +1637,9 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
      uint j;
      uint jj;
      uint k;
+     uint q;
+
+     uint skipper;
 
      uint length;
 
@@ -1658,6 +1661,8 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
 
      struct seviri_dimension_data *dimens;
 
+     int bands_infile[12];
+     for (i=0;i<12;i++)bands_infile[i]=0;
 
      /*-------------------------------------------------------------------------
       * Check if the requested band IDs are valid.
@@ -1688,14 +1693,14 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
       *-----------------------------------------------------------------------*/
      n_bands_VIR = 0;
      for (i = 0; i < 11; ++i) {
-          if (marf_header->secondary.SelectedBandIDs.Value[i] == 'X')
+          if (marf_header->secondary.SelectedBandIDs.Value[i] == 'X'){
                n_bands_VIR++;
+	       bands_infile[i]=1;}
      }
-
      n_bands_HRV = 0;
-     if (marf_header->secondary.SelectedBandIDs.Value[11] == 'X')
+     if (marf_header->secondary.SelectedBandIDs.Value[11] == 'X'){
           n_bands_HRV = 1;
-
+          bands_infile[11]=1;}
 
      /*-------------------------------------------------------------------------
       * Allocate and fill in the seviri_dimension_data struct.
@@ -1717,7 +1722,7 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
      n_bytes_VIR_line = PACKET_HEADER_SIZE + LINE_SIDE_INFO_SIZE +
                         dimens->n_columns_selected_VIR / 4 * 5;
      n_bytes_HRV_line = PACKET_HEADER_SIZE + LINE_SIDE_INFO_SIZE +
-                        dimens->n_columns_selected_HRV / 4 * 5;
+                        dimens->n_columns_selected_HRV / 4 * 5 / 2;
 
      n_bytes_line_group = n_bands_VIR * n_bytes_VIR_line +
                           n_bands_HRV * 3 * n_bytes_HRV_line;
@@ -1772,8 +1777,10 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
           ii = dimens->i_line_in_output_VIR + i;
 
           for (i_band = 0; i_band < image->n_bands; ++i_band) {
-               file_offset2 = file_offset + (image->band_ids[i_band] - 1) *
-                    n_bytes_VIR_line + dimens->i_column_to_read_VIR / 4 * 5;
+	       if (bands_infile[image->band_ids[i_band]-1]!=1) continue;
+		skipper=0;
+		for (q=0;q<image->band_ids[i_band]-1;q++) if (bands_infile[q]==1) skipper++;
+	       file_offset2 = file_offset + (skipper) * n_bytes_VIR_line + dimens->i_column_to_read_VIR / 4 * 5;
 
                fseek(fp, file_offset2, SEEK_SET);
 

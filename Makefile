@@ -1,4 +1,4 @@
-#*******************************************************************************
+ #*******************************************************************************
 #
 # Copyright (C) 2014-2015 Greg McGarragh <mcgarragh@atm.ox.ac.uk>
 #
@@ -9,10 +9,10 @@
 .SUFFIXES: .c .f90
 
 CC      = gcc
-CCFLAGS = -O2
+CCFLAGS = -O2 -g
 
 F90      = gfortran
-F90FLAGS = -O2
+F90FLAGS = -O2 -g
 
 OBJECTS = internal.o \
           nav_util.o \
