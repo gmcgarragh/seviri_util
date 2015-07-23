@@ -41,59 +41,6 @@
 } while (0)
 
 
-
-/*******************************************************************************
- * Struct containing auxiliary variables related to configuring the read/write
- * functions.
- ******************************************************************************/
-struct seviri_auxillary_io_data {
-     int operation;
-
-     int swap_bytes;
-
-     ushort *temp_2;
-     uint   *temp_4;
-     ulong  *temp_8;
-};
-
-
-
-/*******************************************************************************
- * Struct containing offsets and dimensions that will passed from the read to
- * write functions.
- ******************************************************************************/
-struct seviri_dimension_data {
-     uint n_lines_selected_VIR;
-     uint n_columns_selected_VIR;
-
-     uint i0_line_selected_VIR;
-     uint i1_line_selected_VIR;
-     uint i0_column_selected_VIR;
-     uint i1_column_selected_VIR;
-
-
-     uint i_line_requested_VIR;
-     uint i_column_requested_VIR;
-
-     uint n_lines_requested_VIR;
-     uint n_columns_requested_VIR;
-
-     uint i_line_to_read_VIR;
-     uint i_column_to_read_VIR;
-
-     uint n_lines_to_read_VIR;
-     uint n_columns_to_read_VIR;
-
-     uint i_line_in_output_VIR;
-     uint i_column_in_output_VIR;
-
-
-     uint n_lines_selected_HRV;
-     uint n_columns_selected_HRV;
-};
-
-
-
 /*******************************************************************************
  * Byte swapping macros to convert Endianness.
  ******************************************************************************/
@@ -119,7 +66,7 @@ struct seviri_dimension_data {
 /*******************************************************************************
  * Like fread() that also swaps bytes after reading as needed.
  ******************************************************************************/
-static int fread_swap(void *ptr, size_t size, size_t nmemb, FILE *stream,
+int fread_swap(void *ptr, size_t size, size_t nmemb, FILE *stream,
                       struct seviri_auxillary_io_data *aux) {
 
      size_t i;
@@ -173,7 +120,7 @@ static int fread_swap(void *ptr, size_t size, size_t nmemb, FILE *stream,
 /*******************************************************************************
  * Like fwrite() that also swaps bytes before writing as needed.
  ******************************************************************************/
-static int fwrite_swap(const void *ptr, size_t size, size_t nmemb, FILE *stream,
+int fwrite_swap(const void *ptr, size_t size, size_t nmemb, FILE *stream,
                        struct seviri_auxillary_io_data *aux) {
 
      size_t i;
@@ -234,7 +181,7 @@ static int fwrite_swap(const void *ptr, size_t size, size_t nmemb, FILE *stream,
 /*******************************************************************************
  * High level function to handle the choice of operation.
  ******************************************************************************/
-static int fxxxx_swap(void *ptr, size_t size, size_t nmemb, FILE *stream, struct
+int fxxxx_swap(void *ptr, size_t size, size_t nmemb, FILE *stream, struct
                       seviri_auxillary_io_data *aux) {
 
      if (aux->operation == 0)
@@ -248,7 +195,7 @@ static int fxxxx_swap(void *ptr, size_t size, size_t nmemb, FILE *stream, struct
 /*******************************************************************************
  *
  ******************************************************************************/
-static int seviri_l15_ph_data_read(FILE *fp,
+int seviri_l15_ph_data_read(FILE *fp,
                                    struct seviri_marf_l15_ph_data_data *d,
                                    struct seviri_auxillary_io_data *aux) {
 
@@ -263,7 +210,7 @@ static int seviri_l15_ph_data_read(FILE *fp,
 /*******************************************************************************
  *
  ******************************************************************************/
-static int seviri_l15_ph_data_id_read(FILE *fp,
+int seviri_l15_ph_data_id_read(FILE *fp,
                                       struct seviri_marf_l15_ph_data_id_data *d,
                                       struct seviri_auxillary_io_data *aux) {
 
@@ -376,7 +323,7 @@ static int seviri_marf_header_read(FILE *fp, struct seviri_marf_header_data *d,
 /*******************************************************************************
  *
  ******************************************************************************/
-static int seviri_TIME_CDS_read(FILE *fp,
+int seviri_TIME_CDS_read(FILE *fp,
                                 struct seviri_TIME_CDS_data *d,
                                 struct seviri_auxillary_io_data *aux) {
 
@@ -389,7 +336,7 @@ static int seviri_TIME_CDS_read(FILE *fp,
 
 
 
-static int seviri_TIME_CDS_SHORT_read(FILE *fp,
+int seviri_TIME_CDS_SHORT_read(FILE *fp,
                                       struct seviri_TIME_CDS_SHORT_data *d,
                                       struct seviri_auxillary_io_data *aux) {
 
@@ -401,7 +348,7 @@ static int seviri_TIME_CDS_SHORT_read(FILE *fp,
 
 
 
-static int seviri_TIME_CDS_EXPANDED_read(FILE *fp,
+int seviri_TIME_CDS_EXPANDED_read(FILE *fp,
                                          struct seviri_TIME_CDS_EXPANDED_data *d,
                                          struct seviri_auxillary_io_data *aux) {
 
@@ -437,7 +384,7 @@ static int seviri_15HEADER_SatelliteStatus_ORBITCOEF_read(
 
 
 
-static int seviri_15HEADER_SatelliteStatus_read(
+int seviri_15HEADER_SatelliteStatus_read(
           FILE *fp,
           struct seviri_15HEADER_SatelliteStatus_data *d,
           struct seviri_auxillary_io_data *aux) {
@@ -692,7 +639,7 @@ static int seviri_15HEADER_ImageDescription_PlannedCoverageHRV_read(
 
 
 
-static int seviri_15HEADER_ImageDescription_read(
+int seviri_15HEADER_ImageDescription_read(
           FILE *fp,
           struct seviri_15HEADER_ImageDescription_data *d,
           struct seviri_auxillary_io_data *aux) {
@@ -734,7 +681,7 @@ static int seviri_15HEADER_RadiometricProcessing_Level1_5ImageCalibration_read(
 
 
 
-static int seviri_15HEADER_RadiometricProcessing_read(
+int seviri_15HEADER_RadiometricProcessing_read(
           FILE *fp,
           struct seviri_15HEADER_RadiometricProcessing_data *d,
           struct seviri_auxillary_io_data *aux) {
@@ -1342,7 +1289,7 @@ static int seviri_LineSideInfo_read(
  *
  * returns	: Non-zero on error
  ******************************************************************************/
-static int seviri_get_dimension_data(
+int seviri_get_dimension_data(
           struct seviri_dimension_data *d,
           const struct seviri_marf_header_data *marf_header,
           enum seviri_bounds bounds,
@@ -1960,7 +1907,7 @@ static int seviri_image_free(struct seviri_image_data *d) {
 /*******************************************************************************
  * Allocate and free data required by the low level read and write functions.
  ******************************************************************************/
-static int seviri_auxillary_alloc(struct seviri_auxillary_io_data *d) {
+int seviri_auxillary_alloc(struct seviri_auxillary_io_data *d) {
 
      uint n = 134915;
 
@@ -1973,7 +1920,7 @@ static int seviri_auxillary_alloc(struct seviri_auxillary_io_data *d) {
 
 
 
-static int seviri_auxillary_free(struct seviri_auxillary_io_data *d) {
+int seviri_auxillary_free(struct seviri_auxillary_io_data *d) {
 
      free(d->temp_2);
      free(d->temp_4);

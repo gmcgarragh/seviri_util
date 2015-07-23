@@ -5,6 +5,10 @@
 **    This source code is licensed under the GNU General Public License (GPL),
 **    Version 3.  See the file COPYING for more details.
 **
+**
+**    Modified by Simon Proud (simon.proud@physics.ox.ac.uk) July 2015
+**    Added support for reading SEVIRI data in HRIT format.
+**
 *******************************************************************************/
 #include "internal.h"
 #include "seviri_native_util.h"
@@ -405,6 +409,63 @@ int seviri_native_preproc(const struct seviri_native_data *d,
 }
 
 
+/*******************************************************************************
+ * Convenience function that calls both seviri_native_read_hrit() and 
+ * seviri_native_preproc() as this is likely the most common usage scenario.
+ *
+ * indir	: Input directory that contains the HRIT files
+ * timeslot	: The timeslot for processing in the form YYYYMMDDHHMM
+ * satnum	: The satellite ID in the form "MSGx", with x=1,2,3,4
+ * preproc	: The struct containing the preprocessed output
+ * n_bands	: Described in the seviri_native_read() header (read_write.c)
+ * band_ids	: 	''
+ * band_units	: Array of band_unit types of length n_bands
+ * bounds	: Described in the seviri_native_read() header (read_write.c)
+ * line0	: 	''
+ * line1	: 	''
+ * column0	: 	''
+ * column1	: 	''
+ * lat0		: 	''
+ * lat1		: 	''
+ * lon0		: 	''
+ * lon1		: 	''
+ * do_not_alloc	: Flag indicating not to allocate space for the output data.
+ *                Useful for avoiding unnecessary memory allocations and use.
+ *
+ * returns	: Non-zero on error
+ ******************************************************************************/
+int seviri_read_and_preproc_hrit(const char *indir,const char *timeslot,const char *satnum,
+                            struct seviri_preproc_data *preproc,
+                            uint n_bands, const uint *band_ids,
+                            const enum seviri_units *band_units,
+                            enum seviri_bounds bounds,
+                            uint line0, uint line1, uint column0, uint column1,
+                            double lat0, double lat1, double lon0, double lon1,
+                            int do_not_alloc) {
+
+	struct seviri_native_data native;
+	if (seviri_native_read_hrit(indir, timeslot, satnum, &native, n_bands, band_ids, bounds,
+		line0, line1, column0, column1, lat0, lat1, lon0, lon1)) {
+		fprintf(stderr, "ERROR: seviri_native_read()\n");
+	return -1;
+	}
+
+	if (seviri_native_preproc(&native, preproc, band_units, do_not_alloc)) {
+	    fprintf(stderr, "ERROR: seviri_native_preproc()\n");
+		return -1;
+	}
+
+	// We cannot use seviri_native_free as not all data was
+	// read from the HRIT file (missing headers).
+	// So manually free image data instead.
+	int i;
+	for (i = 0; i < native.image.n_bands; ++i)
+		free(native.image.data_vir[i]);
+	free(native.image.data_vir);
+	free(native.image.dimens);
+
+	return 0;
+}
 
 /*******************************************************************************
  * Convenience function that calls both seviri_native_read() and seviri_native_

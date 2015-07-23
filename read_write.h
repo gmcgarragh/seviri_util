@@ -14,6 +14,55 @@
 extern "C" {
 #endif
 
+/*******************************************************************************
+ * Struct containing auxiliary variables related to configuring the read/write
+ * functions.
+ ******************************************************************************/
+struct seviri_auxillary_io_data {
+     int operation;
+
+     int swap_bytes;
+
+     ushort *temp_2;
+     uint   *temp_4;
+     ulong  *temp_8;
+};
+
+/*******************************************************************************
+ * Struct containing offsets and dimensions that will passed from the read to
+ * write functions.
+ ******************************************************************************/
+struct seviri_dimension_data {
+     uint n_lines_selected_VIR;
+     uint n_columns_selected_VIR;
+
+     uint i0_line_selected_VIR;
+     uint i1_line_selected_VIR;
+     uint i0_column_selected_VIR;
+     uint i1_column_selected_VIR;
+
+
+     uint i_line_requested_VIR;
+     uint i_column_requested_VIR;
+
+     uint n_lines_requested_VIR;
+     uint n_columns_requested_VIR;
+
+     uint i_line_to_read_VIR;
+     uint i_column_to_read_VIR;
+
+     uint n_lines_to_read_VIR;
+     uint n_columns_to_read_VIR;
+
+     uint i_line_in_output_VIR;
+     uint i_column_in_output_VIR;
+
+
+     uint n_lines_selected_HRV;
+     uint n_columns_selected_HRV;
+};
+
+
 
 /*******************************************************************************
  * The U-MARF header
@@ -890,6 +939,25 @@ int seviri_native_read(const char *filename, struct seviri_native_data *d,
 int seviri_native_write(const char *filename, const struct seviri_native_data *d);
 int seviri_native_free(struct seviri_native_data *d);
 
+
+int seviri_15HEADER_SatelliteStatus_read(FILE *fp,struct seviri_15HEADER_SatelliteStatus_data *d,struct seviri_auxillary_io_data *aux);
+int seviri_15HEADER_ImageDescription_read(FILE *fp,struct seviri_15HEADER_ImageDescription_data *d,struct seviri_auxillary_io_data *aux);
+int seviri_15HEADER_RadiometricProcessing_read(FILE *fp,struct seviri_15HEADER_RadiometricProcessing_data *d,struct seviri_auxillary_io_data *aux);
+
+int seviri_auxillary_alloc(struct seviri_auxillary_io_data *d);
+int seviri_auxillary_free(struct seviri_auxillary_io_data *d);
+
+int seviri_get_dimension_data(struct seviri_dimension_data *d,const struct seviri_marf_header_data *marf_header,enum seviri_bounds bounds,
+			   uint line0, uint line1, uint column0, uint column1,double lat0, double lat1, double lon0, double lon1);
+
+
+int seviri_TIME_CDS_read(FILE *fp,struct seviri_TIME_CDS_data *d,struct seviri_auxillary_io_data *aux);
+int seviri_TIME_CDS_SHORT_read(FILE *fp,struct seviri_TIME_CDS_SHORT_data *d,struct seviri_auxillary_io_data *aux);
+int seviri_TIME_CDS_EXPANDED_read(FILE *fp,struct seviri_TIME_CDS_EXPANDED_data *d,struct seviri_auxillary_io_data *aux);
+int fread_swap(void *ptr, size_t size, size_t nmemb, FILE *stream,struct seviri_auxillary_io_data *aux);
+int fwrite_swap(const void *ptr, size_t size, size_t nmemb, FILE *stream,struct seviri_auxillary_io_data *aux);
+int fxxxx_swap(void *ptr, size_t size, size_t nmemb, FILE *stream, struct seviri_auxillary_io_data *aux);
+int seviri_l15_ph_data_read(FILE *fp,struct seviri_marf_l15_ph_data_data *d,struct seviri_auxillary_io_data *aux);
 
 #ifdef __cplusplus
 }
