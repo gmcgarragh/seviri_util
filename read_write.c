@@ -1717,7 +1717,7 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
      n_bytes_VIR_line = PACKET_HEADER_SIZE + LINE_SIDE_INFO_SIZE +
                         dimens->n_columns_selected_VIR / 4 * 5;
      n_bytes_HRV_line = PACKET_HEADER_SIZE + LINE_SIDE_INFO_SIZE +
-                        dimens->n_columns_selected_HRV / 4 * 5;
+                        dimens->n_columns_selected_HRV / 2 / 4 * 5;
 
      n_bytes_line_group = n_bands_VIR * n_bytes_VIR_line +
                           n_bands_HRV * 3 * n_bytes_HRV_line;
