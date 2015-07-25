@@ -15,7 +15,7 @@ extern "C" {
 #endif
 
 
-#define seviri_native_util_VERSION 0.01
+#define SEVIRI_NATIVE_UTIL_VERSION "0.01"
 
 
 #define SEVIRI_N_BANDS 12
