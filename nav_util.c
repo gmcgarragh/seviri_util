@@ -16,13 +16,13 @@
 /*******************************************************************************
  * Convert SEVIRI line and column to latitude and longitude.
  *
- * line		: Input SEVIRI line number
- * column	: Input SEVIRI column number
- * lat		: Output latitude (degrees: -90.0 -- 90.0)
- * lon		: Output longitude (degrees: -180.0 -- 180.0)
- * lon0		: Projection longitude origin (degrees: -180.0 -- 180.0)
- * nav		: struct containing the navigation scaling factors defined in
- * nav		: Input struct containing the navigation scaling factors
+ * line          : Input SEVIRI line number
+ * column     : Input SEVIRI column number
+ * lat          : Output latitude (degrees: -90.0 -- 90.0)
+ * lon          : Output longitude (degrees: -180.0 -- 180.0)
+ * lon0          : Projection longitude origin (degrees: -180.0 -- 180.0)
+ * nav          : struct containing the navigation scaling factors defined in
+ * nav          : Input struct containing the navigation scaling factors
  *                defined in the reference
  *
  * returns      : Non-zero on error
@@ -87,12 +87,12 @@ int snu_line_column_to_lat_lon(uint line, uint column, float *lat, float *lon,
 /*******************************************************************************
  * Convert latitude and longitude to SEVIRI line and column.
  *
- * lat		: Input latitude (degrees: -90.0 -- 90.0)
- * lon		: Input longitude (degrees: -180.0 -- 180.0)
- * line		: Output SEVIRI line number
- * column	: Output SEVIRI column number
- * lon0		: Input projection longitude origin (radians: -PI -- PI)
- * nav		: Input struct containing the navigation scaling factors
+ * lat          : Input latitude (degrees: -90.0 -- 90.0)
+ * lon          : Input longitude (degrees: -180.0 -- 180.0)
+ * line          : Output SEVIRI line number
+ * column     : Output SEVIRI column number
+ * lon0          : Input projection longitude origin (radians: -PI -- PI)
+ * nav          : Input struct containing the navigation scaling factors
  *                defined in the reference
  *
  * returns      : Non-zero on error
@@ -162,9 +162,9 @@ int snu_lat_lon_to_line_column(float lat, float lon, uint *line, uint *column,
 /*******************************************************************************
  * Compute the Greenwich mean sidereal time given Julian Day Number.
  *
- * jtime	: Input Julian Day Number
+ * jtime     : Input Julian Day Number
  *
- * returns	: Greenwich mean sidereal time
+ * returns     : Greenwich mean sidereal time
  *
  * Ref: The Astronomical Almanac, 2003, B6
  ******************************************************************************/
@@ -194,10 +194,10 @@ static double calc_gmst(double jtime) {
  * Compute the solar declination, Greenwich mean solar time, and Greenwich local
  * solar time given Julian Day Number.
  *
- * jtime		: Input Julian Day Number
- * delta		: Output solar declination
- * gw_mean_sol_time	: Output Greenwich mean solar time
- * gw_appar_sol_time	: Output Greenwich local solar
+ * jtime          : Input Julian Day Number
+ * delta          : Output solar declination
+ * gw_mean_sol_time     : Output Greenwich mean solar time
+ * gw_appar_sol_time     : Output Greenwich local solar
  *
  * Ref: The Astronomical Almanac, 2003, C24
  ******************************************************************************/
@@ -286,10 +286,10 @@ static void solar_coords_and_times(double jtime, double *delta,
 /*******************************************************************************
  * Convert GMT/UTC to local time.
  *
- * gw_time	: input GMT/UTC
- * lon		: input local longitude (radians: -PI -- PI)
+ * gw_time     : input GMT/UTC
+ * lon          : input local longitude (radians: -PI -- PI)
  *
- * returns	: local time
+ * returns     : local time
  ******************************************************************************/
 static double greenwich_to_local_time(double lon, double gw_time) {
 
@@ -307,10 +307,10 @@ static double greenwich_to_local_time(double lon, double gw_time) {
 /*******************************************************************************
  * Convert local time to GMT/UTC.
  *
- * loc_time	: Input local time
- * lon		: Input local longitude (radians: -PI -- PI)
+ * loc_time     : Input local time
+ * lon          : Input local longitude (radians: -PI -- PI)
  *
- * returns	: GMT/UTC
+ * returns     : GMT/UTC
  ******************************************************************************/
 static double local_to_greenwich_time(double lon, double loc_time) {
 
@@ -330,13 +330,13 @@ static double local_to_greenwich_time(double lon, double loc_time) {
  * solar azimuth angle given the solar declination, latitude, hour of day, and
  * the "equation of time" (apparent time - mean time)
  *
- * delta	: Input solar declination
- * lat		: Input latitude (radians: -PI/2 -- PI/2)
- * hour		: Input hour of day
- * eot		: Input equation of time (apparent time - mean time)
- * mu0		: Output solar zenith angle (-1.0 -- 1.0)
- * theta0	: Output solar zenith angle (radians: 0.0 -- PI)
- * phi0		: Output solar azimuth angle (radians: 0.0 -- 2PI)
+ * delta     : Input solar declination
+ * lat          : Input latitude (radians: -PI/2 -- PI/2)
+ * hour          : Input hour of day
+ * eot          : Input equation of time (apparent time - mean time)
+ * mu0          : Output solar zenith angle (-1.0 -- 1.0)
+ * theta0     : Output solar zenith angle (radians: 0.0 -- PI)
+ * phi0          : Output solar azimuth angle (radians: 0.0 -- 2PI)
  ******************************************************************************/
 static void solar_angles(double delta, double lat, double hour, double eot,
                          double *mu0, double *theta0, double *phi0) {
@@ -386,12 +386,12 @@ static void solar_angles(double delta, double lat, double hour, double eot,
  * solar azimuth angle, and the solar distance factor given Julian Day Number
  * latitude and longitude
  *
- * jtime	: Input Julian Day Number
- * lat		: Input latitude (radians: -PI/2 -- PI/2)
- * lon		: Input longitude (radians: -PI -- PI)
- * mu0		: Output solar zenith angle (-1.0 -- 1.0)
- * theta0	: Output solar zenith angle (radians: 0.0 -- PI)
- * phi0		: Output solar azimuth angle (radians: 0.0 -- 2PI)
+ * jtime     : Input Julian Day Number
+ * lat          : Input latitude (radians: -PI/2 -- PI/2)
+ * lon          : Input longitude (radians: -PI -- PI)
+ * mu0          : Output solar zenith angle (-1.0 -- 1.0)
+ * theta0     : Output solar zenith angle (radians: 0.0 -- PI)
+ * phi0          : Output solar azimuth angle (radians: 0.0 -- 2PI)
  *
  * Ref: The Astronomical Almanac, 2003
  ******************************************************************************/
@@ -458,12 +458,12 @@ void snu_solar_params2(double jtime, double lat, double lon, double *mu0,
 /*******************************************************************************
  * Compute the SEVIRI viewing zenith and azimuth angles.
  *
- * lat		: Input latitude of the observer(degrees: -90.0 -- 90.0)
- * lon		: Input longitude of the observer (degrees: -180.0 -- 180.0)
- * height	: Input height of the observer above the ref ellipsoid (km)
- * X, Y, Z	: Input satellite position vector in Cartesian coordinates (km)
- * vza		: Output SEVIRI viewing zenith angle (degrees: 0.0 -- 180.0)
- * vaa		: Output SEVIRI viewing azimuth angle (degrees: 0.0 -- 360.0)
+ * lat          : Input latitude of the observer(degrees: -90.0 -- 90.0)
+ * lon          : Input longitude of the observer (degrees: -180.0 -- 180.0)
+ * height     : Input height of the observer above the ref ellipsoid (km)
+ * X, Y, Z     : Input satellite position vector in Cartesian coordinates (km)
+ * vza          : Output SEVIRI viewing zenith angle (degrees: 0.0 -- 180.0)
+ * vaa          : Output SEVIRI viewing azimuth angle (degrees: 0.0 -- 360.0)
  *
  * Ref: GIESKE_A_S_M, Page 6
  ******************************************************************************/

@@ -32,13 +32,13 @@ static double TIME_CDS_SHORT_to_jtime(const struct seviri_TIME_CDS_SHORT_data *d
  * and azimuth angles, and either radiance, reflectance, or brightness
  * temperature for each requested channel.
  *
- * d		: The main input SEVIRI native level 1.5 struct
- * d2		: The struct containing the preprocessed output
- * band_units	: Array of band_unit types of length n_bands
- * do_not_alloc	: Flag indicating not to allocate space for the output data.
+ * d          : The main input SEVIRI native level 1.5 struct
+ * d2          : The struct containing the preprocessed output
+ * band_units     : Array of band_unit types of length n_bands
+ * do_not_alloc     : Flag indicating not to allocate space for the output data.
  *                Useful for avoiding unnecessary memory allocations and use.
  *
- * returns	: Non-zero on error
+ * returns     : Non-zero on error
  ******************************************************************************/
 int seviri_native_preproc(const struct seviri_native_data *d,
                           struct seviri_preproc_data *d2,
@@ -72,7 +72,7 @@ int seviri_native_preproc(const struct seviri_native_data *d,
      double jtime_start;
 
 
-// SRP: Add in new variables to store the image start/stop time
+/*      SRP: Add in new variables to store the image start/stop time*/
      double jtime_i;
      double jtime_end_i;
      double jtime_start_i;
@@ -203,8 +203,8 @@ int seviri_native_preproc(const struct seviri_native_data *d,
      snu_jul_to_cal_date((long) floor(jtime       + .5), &year, &month, &day);
      day_of_year = jtime       - (snu_cal_to_jul_day(year, 1, 0) - .5);
 
-//SRP:	Store the start/stop times so they're not overwritten by the orbit
-//	polynomial values below.
+/*     SRP:     Store the start/stop times so they're not overwritten by the orbit*/
+/*          polynomial values below.*/
      jtime_start_i = jtime_start;
      jtime_end_i = jtime_end;
      jtime_i = jtime;
@@ -249,7 +249,7 @@ int seviri_native_preproc(const struct seviri_native_data *d,
      for (i = 0; i < d->image.n_lines; ++i) {
           ii = d->image.i_line + i;
 
-// SRP: Change times from orbit polynomial to image start/stop scan
+/*      SRP: Change times from orbit polynomial to image start/stop scan*/
           jtime2 = jtime_start_i + (double) ii / (double) (IMAGE_SIZE_VIR_LINES - 1) *
                    (jtime_end_i - jtime_start_i);
 
@@ -263,7 +263,7 @@ int seviri_native_preproc(const struct seviri_native_data *d,
                if (d2->lat[i_image] != FILL_VALUE_F && d2->lon[i_image] != FILL_VALUE_F) {
                     d2->time[i_image] = jtime2;
 
-//SRP: Changed jtime here too.
+/*     SRP: Changed jtime here too.*/
                     snu_solar_params2(jtime_i, d2->lat[i_image] * D2R,
                                       d2->lon[i_image] * D2R, &mu0, &theta0,
                                       &phi0, NULL);
@@ -413,26 +413,26 @@ int seviri_native_preproc(const struct seviri_native_data *d,
  * Convenience function that calls both seviri_native_read_hrit() and 
  * seviri_native_preproc() as this is likely the most common usage scenario.
  *
- * indir	: Input directory that contains the HRIT files
- * timeslot	: The timeslot for processing in the form YYYYMMDDHHMM
- * satnum	: The satellite ID in the form "MSGx", with x=1,2,3,4
- * preproc	: The struct containing the preprocessed output
- * n_bands	: Described in the seviri_native_read() header (read_write.c)
- * band_ids	: 	''
- * band_units	: Array of band_unit types of length n_bands
- * bounds	: Described in the seviri_native_read() header (read_write.c)
- * line0	: 	''
- * line1	: 	''
- * column0	: 	''
- * column1	: 	''
- * lat0		: 	''
- * lat1		: 	''
- * lon0		: 	''
- * lon1		: 	''
- * do_not_alloc	: Flag indicating not to allocate space for the output data.
+ * indir     : Input directory that contains the HRIT files
+ * timeslot     : The timeslot for processing in the form YYYYMMDDHHMM
+ * satnum     : The satellite ID in the form "MSGx", with x=1,2,3,4
+ * preproc     : The struct containing the preprocessed output
+ * n_bands     : Described in the seviri_native_read() header (read_write.c)
+ * band_ids     :      ''
+ * band_units     : Array of band_unit types of length n_bands
+ * bounds     : Described in the seviri_native_read() header (read_write.c)
+ * line0     :      ''
+ * line1     :      ''
+ * column0     :      ''
+ * column1     :      ''
+ * lat0          :      ''
+ * lat1          :      ''
+ * lon0          :      ''
+ * lon1          :      ''
+ * do_not_alloc     : Flag indicating not to allocate space for the output data.
  *                Useful for avoiding unnecessary memory allocations and use.
  *
- * returns	: Non-zero on error
+ * returns     : Non-zero on error
  ******************************************************************************/
 int seviri_read_and_preproc_hrit(const char *indir,const char *timeslot,const char *satnum,
                             struct seviri_preproc_data *preproc,
@@ -443,52 +443,52 @@ int seviri_read_and_preproc_hrit(const char *indir,const char *timeslot,const ch
                             double lat0, double lat1, double lon0, double lon1,
                             int do_not_alloc) {
 
-	struct seviri_native_data native;
-	if (seviri_native_read_hrit(indir, timeslot, satnum, &native, n_bands, band_ids, bounds,
-		line0, line1, column0, column1, lat0, lat1, lon0, lon1)) {
-		fprintf(stderr, "ERROR: seviri_native_read()\n");
-	return -1;
-	}
+     struct seviri_native_data native;
+     if (seviri_native_read_hrit(indir, timeslot, satnum, &native, n_bands, band_ids, bounds,
+          line0, line1, column0, column1, lat0, lat1, lon0, lon1)) {
+          fprintf(stderr, "ERROR: seviri_native_read()\n");
+     return -1;
+     }
 
-	if (seviri_native_preproc(&native, preproc, band_units, do_not_alloc)) {
-	    fprintf(stderr, "ERROR: seviri_native_preproc()\n");
-		return -1;
-	}
+     if (seviri_native_preproc(&native, preproc, band_units, do_not_alloc)) {
+         fprintf(stderr, "ERROR: seviri_native_preproc()\n");
+          return -1;
+     }
 
-	// We cannot use seviri_native_free as not all data was
-	// read from the HRIT file (missing headers).
-	// So manually free image data instead.
-	int i;
-	for (i = 0; i < native.image.n_bands; ++i)
-		free(native.image.data_vir[i]);
-	free(native.image.data_vir);
-	free(native.image.dimens);
+/*      We cannot use seviri_native_free as not all data was*/
+/*      read from the HRIT file (missing headers).*/
+/*      So manually free image data instead.*/
+     int i;
+     for (i = 0; i < native.image.n_bands; ++i)
+          free(native.image.data_vir[i]);
+     free(native.image.data_vir);
+     free(native.image.dimens);
 
-	return 0;
+     return 0;
 }
 
 /*******************************************************************************
  * Convenience function that calls both seviri_native_read() and seviri_native_
  * preproc() as this is likely the most common usage scenario.
  *
- * filename	: Native SEVIRI level 1.5 filename
- * preproc	: The struct containing the preprocessed output
- * n_bands	: Described in the seviri_native_read() header (read_write.c)
- * band_ids	: 	''
- * band_units	: Array of band_unit types of length n_bands
- * bounds	: Described in the seviri_native_read() header (read_write.c)
- * line0	: 	''
- * line1	: 	''
- * column0	: 	''
- * column1	: 	''
- * lat0		: 	''
- * lat1		: 	''
- * lon0		: 	''
- * lon1		: 	''
- * do_not_alloc	: Flag indicating not to allocate space for the output data.
+ * filename     : Native SEVIRI level 1.5 filename
+ * preproc     : The struct containing the preprocessed output
+ * n_bands     : Described in the seviri_native_read() header (read_write.c)
+ * band_ids     :      ''
+ * band_units     : Array of band_unit types of length n_bands
+ * bounds     : Described in the seviri_native_read() header (read_write.c)
+ * line0     :      ''
+ * line1     :      ''
+ * column0     :      ''
+ * column1     :      ''
+ * lat0          :      ''
+ * lat1          :      ''
+ * lon0          :      ''
+ * lon1          :      ''
+ * do_not_alloc     : Flag indicating not to allocate space for the output data.
  *                Useful for avoiding unnecessary memory allocations and use.
  *
- * returns	: Non-zero on error
+ * returns     : Non-zero on error
  ******************************************************************************/
 int seviri_read_and_preproc(const char *filename,
                             struct seviri_preproc_data *preproc,
@@ -523,9 +523,9 @@ int seviri_read_and_preproc(const char *filename,
  * Free memory allocated by seviri_native_preproc() for the pre-processing
  * output in a struct seviri_preproc_data type.
  *
- * preproc	: The struct containing the preprocessed data
+ * preproc     : The struct containing the preprocessed data
  *
- * returns	: Non-zero on error
+ * returns     : Non-zero on error
  ******************************************************************************/
 int seviri_preproc_free(struct seviri_preproc_data *d) {
 

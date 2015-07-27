@@ -14,13 +14,13 @@
  * SIZE constants useful for skipping around.
  ******************************************************************************/
 /*
-#define UMARF_HEADER_SIZE	5114
+#define UMARF_HEADER_SIZE     5114
 */
-#define PACKET_HEADER_SIZE	38
-#define LINE_SIDE_INFO_SIZE	27
+#define PACKET_HEADER_SIZE     38
+#define LINE_SIDE_INFO_SIZE     27
 /*
-#define _15HEADER_SIZE		445248
-#define _15TRAILER_SIZE		380325
+#define _15HEADER_SIZE          445248
+#define _15TRAILER_SIZE          380325
 */
 
 
@@ -44,21 +44,21 @@
 /*******************************************************************************
  * Byte swapping macros to convert Endianness.
  ******************************************************************************/
-#define SWAP_2(x, y) do {	\
-     y = (x << 8) | (x >> 8);	\
+#define SWAP_2(x, y) do {     \
+     y = (x << 8) | (x >> 8);     \
 } while (0)
 
 
-#define SWAP_4(x, y) do {					\
+#define SWAP_4(x, y) do {                         \
      y = ((x << 8 ) & 0xFF00FF00 ) | ((x >> 8 ) & 0x00FF00FF ); \
-     y =  (y << 16)                |  (y >> 16);		\
+     y =  (y << 16)                |  (y >> 16);          \
 } while (0)
 
 
-#define SWAP_8(x, y) do {							\
-     y = ((x << 8 ) & 0xFF00FF00FF00FF00U) | ((x >> 8 ) & 0x00FF00FF00FF00FFU);	\
-     y = ((y << 16) & 0xFFFF0000FFFF0000U) | ((y >> 16) & 0x0000FFFF0000FFFFU);	\
-     y =  (y << 32)                        |  (y >> 32);			\
+#define SWAP_8(x, y) do {                                   \
+     y = ((x << 8 ) & 0xFF00FF00FF00FF00U) | ((x >> 8 ) & 0x00FF00FF00FF00FFU);     \
+     y = ((y << 16) & 0xFFFF0000FFFF0000U) | ((y >> 16) & 0x0000FFFF0000FFFFU);     \
+     y =  (y << 32)                        |  (y >> 32);               \
 } while (0)
 
 
@@ -1274,20 +1274,20 @@ static int seviri_LineSideInfo_read(
  * Fills a seviri_dimension_data struct given a choice of offset and dimension
  * parameters.
  *
- * d		: The output seviri_dimension_data struct
- * marf_header	: The seviri_marf_header_data struct for the current image data
+ * d          : The output seviri_dimension_data struct
+ * marf_header     : The seviri_marf_header_data struct for the current image data
  *                file.
- * bounds	: Described in the seviri_native_read() header.
- * line0	: 	''
- * line1	: 	''
- * column0	: 	''
- * column1	: 	''
- * lat0		: 	''
- * lat1		: 	''
- * lon0		: 	''
- * lon1		: 	''
+ * bounds     : Described in the seviri_native_read() header.
+ * line0     :      ''
+ * line1     :      ''
+ * column0     :      ''
+ * column1     :      ''
+ * lat0          :      ''
+ * lat1          :      ''
+ * lon0          :      ''
+ * lon1          :      ''
  *
- * returns	: Non-zero on error
+ * returns     : Non-zero on error
  ******************************************************************************/
 int seviri_get_dimension_data(
           struct seviri_dimension_data *d,
@@ -1542,26 +1542,26 @@ int seviri_get_dimension_data(
 /*******************************************************************************
  * Read a VIS/IR line record structure - the actual image data.
  *
- * fp		: Pointer to the image data file set to the beginning of the
+ * fp          : Pointer to the image data file set to the beginning of the
  *              : line record structure.
- * image	: The output seviri_image_data struct with the image data
- * marf_header	: The seviri_marf_header_data struct for the current image data
+ * image     : The output seviri_image_data struct with the image data
+ * marf_header     : The seviri_marf_header_data struct for the current image data
  *                file.
- * n_bands	: Described in the seviri_native_read() header
- * band_ids	: 	''
- * bounds	: 	''
- * line0	: 	''
- * line1	: 	''
- * column0	: 	''
- * column1	: 	''
- * lat0		: 	''
- * lat1		: 	''
- * lon0		: 	''
- * lon1		: 	''
- * aux		: Seviri_auxillary_io_data struct containing information related
+ * n_bands     : Described in the seviri_native_read() header
+ * band_ids     :      ''
+ * bounds     :      ''
+ * line0     :      ''
+ * line1     :      ''
+ * column0     :      ''
+ * column1     :      ''
+ * lat0          :      ''
+ * lat1          :      ''
+ * lon0          :      ''
+ * lon1          :      ''
+ * aux          : Seviri_auxillary_io_data struct containing information related
  *                to the read operation
  *
- * returns	: Non-zero on error
+ * returns     : Non-zero on error
  ******************************************************************************/
 static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
                              const struct seviri_marf_header_data *marf_header,
@@ -1642,7 +1642,7 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
      for (i = 0; i < 11; ++i) {
           if (marf_header->secondary.SelectedBandIDs.Value[i] == 'X'){
                n_bands_VIR++;
-	       bands_infile[i]=1;}
+            bands_infile[i]=1;}
      }
      n_bands_HRV = 0;
      if (marf_header->secondary.SelectedBandIDs.Value[11] == 'X'){
@@ -1724,10 +1724,10 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
           ii = dimens->i_line_in_output_VIR + i;
 
           for (i_band = 0; i_band < image->n_bands; ++i_band) {
-	       if (bands_infile[image->band_ids[i_band]-1]!=1) continue;
-		skipper=0;
-		for (q=0;q<image->band_ids[i_band]-1;q++) if (bands_infile[q]==1) skipper++;
-	       file_offset2 = file_offset + (skipper) * n_bytes_VIR_line + dimens->i_column_to_read_VIR / 4 * 5;
+            if (bands_infile[image->band_ids[i_band]-1]!=1) continue;
+          skipper=0;
+          for (q=0;q<image->band_ids[i_band]-1;q++) if (bands_infile[q]==1) skipper++;
+            file_offset2 = file_offset + (skipper) * n_bytes_VIR_line + dimens->i_column_to_read_VIR / 4 * 5;
 
                fseek(fp, file_offset2, SEEK_SET);
 
@@ -1780,13 +1780,13 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
 /*******************************************************************************
  * Write a VIS/IR line record structure - the actual image data.
  *
- * fp		: File pointer to where the line record structure is to be
+ * fp          : File pointer to where the line record structure is to be
  *                written.
- * image	: The input seviri_image_data struct
- * aux		: Seviri_auxillary_io_data struct containing information related
+ * image     : The input seviri_image_data struct
+ * aux          : Seviri_auxillary_io_data struct containing information related
  *                to the read operation
  *
- * returns	: Non-zero on error
+ * returns     : Non-zero on error
  *
  ******************************************************************************/
 static int seviri_image_write(FILE *fp, const struct seviri_image_data *image,
@@ -1873,9 +1873,9 @@ static int seviri_image_write(FILE *fp, const struct seviri_image_data *image,
  * Free memory allocated by seviri_image_read() to hold seviri_image_data struct
  * fields.
  *
- * image	: The input seviri_image_data struct
+ * image     : The input seviri_image_data struct
  *
- * returns	: Non-zero on error
+ * returns     : Non-zero on error
  ******************************************************************************/
 static int seviri_image_free(struct seviri_image_data *d) {
 
@@ -1935,26 +1935,26 @@ int seviri_auxillary_free(struct seviri_auxillary_io_data *d) {
  * Convenience function that returns the number of lines and columns in the
  * image to be read with the given choice of offset and dimension parameters.
  *
- * filename	: Native SEVIRI level 1.5 filename
- * i_line	: Output line offset to the beginning of the actual image
+ * filename     : Native SEVIRI level 1.5 filename
+ * i_line     : Output line offset to the beginning of the actual image
  *                within the full disk
- * i_column	: Output column offset to the beginning of the actual image
+ * i_column     : Output column offset to the beginning of the actual image
  *                within the full disk
- * n_lines	: Output number of lines of the actual image
- * n_columns	: Output number of columns of the actual image
- * bounds	: Described in the seviri_native_read() header.
- * line0	: 	''
- * line1	: 	''
- * column0	: 	''
- * column1	: 	''
- * lat0		: 	''
- * lat1		: 	''
- * lon0		: 	''
- * lon1		: 	''
- * aux		: Seviri_auxillary_io_data struct containing information related
+ * n_lines     : Output number of lines of the actual image
+ * n_columns     : Output number of columns of the actual image
+ * bounds     : Described in the seviri_native_read() header.
+ * line0     :      ''
+ * line1     :      ''
+ * column0     :      ''
+ * column1     :      ''
+ * lat0          :      ''
+ * lat1          :      ''
+ * lon0          :      ''
+ * lon1          :      ''
+ * aux          : Seviri_auxillary_io_data struct containing information related
  *                to the read operation
  *
- * returns	: Non-zero on error
+ * returns     : Non-zero on error
  ******************************************************************************/
 int seviri_native_get_dimens(const char *filename, uint *i_line, uint *i_column,
                              uint *n_lines, uint *n_columns, enum seviri_bounds bounds,
@@ -2011,39 +2011,39 @@ int seviri_native_get_dimens(const char *filename, uint *i_line, uint *i_column,
 /*******************************************************************************
  * The main read function.
  *
- * filename	: Native SEVIRI level 1.5 filename
- * d		: The output seviri_native_data struct with the U-MARF header,
+ * filename     : Native SEVIRI level 1.5 filename
+ * d          : The output seviri_native_data struct with the U-MARF header,
  *                level 1.5 header and trailer, and the image data.
- * n_bands	: The desired number of bands to read
- * band_ids	: Array of band Ids to read of length n_bands
- * bounds	: Type of image sub-setting desired.  Valid choices are:
- *	SEVIRI_BOUNDS_FULL_DISK		: Produce a full disk image even though
- *					  the actual image may be smaller.
- *					  fill_value is used for the rest of the
- *					  image.
- *	SEVIRI_BOUNDS_ACTUAL_IMAGE	: Read the actual sub-image
- *	SEVIRI_BOUNDS_LINE_COLUMN	: Produce a sub-image based on pixel
- *					  coordinates.  fill_value is used for
- *					  when the desired image is bigger than
- *					  the actual image.
- *	SEVIRI_BOUNDS_LAT_LON		: Produce a sub-image based on lat/lon
- *					  coordinates.  fill_value is used when
- *					  the desired image is bigger than the
+ * n_bands     : The desired number of bands to read
+ * band_ids     : Array of band Ids to read of length n_bands
+ * bounds     : Type of image sub-setting desired.  Valid choices are:
+ *     SEVIRI_BOUNDS_FULL_DISK          : Produce a full disk image even though
+ *                           the actual image may be smaller.
+ *                           fill_value is used for the rest of the
+ *                           image.
+ *     SEVIRI_BOUNDS_ACTUAL_IMAGE     : Read the actual sub-image
+ *     SEVIRI_BOUNDS_LINE_COLUMN     : Produce a sub-image based on pixel
+ *                           coordinates.  fill_value is used for
+ *                           when the desired image is bigger than
+ *                           the actual image.
+ *     SEVIRI_BOUNDS_LAT_LON          : Produce a sub-image based on lat/lon
+ *                           coordinates.  fill_value is used when
+ *                           the desired image is bigger than the
  *                                        actual image.
  *
  * The following are used with bounds = SEVIRI_BOUNDS_LINE_COLUMN
- * line0	: Starting line within the full disk of the desired sub-image
- * line1	: Ending line within the full disk of the desired sub-image
- * column0	: Starting column within the full disk of the desired sub-image
- * column1	: Ending column within the full disk of the desired sub-image
+ * line0     : Starting line within the full disk of the desired sub-image
+ * line1     : Ending line within the full disk of the desired sub-image
+ * column0     : Starting column within the full disk of the desired sub-image
+ * column1     : Ending column within the full disk of the desired sub-image
  *
  * The following are used with bounds = SEVIRI_BOUNDS_LAT_LON
- * lat0		: Starting latitude of the desired sub-image
- * lat1		: Ending latitude of the desired sub-image
- * lon0		: Starting longitude of the desired sub-image
- * lon1		: Ending longitude of the desired sub-image
+ * lat0          : Starting latitude of the desired sub-image
+ * lat1          : Ending latitude of the desired sub-image
+ * lon0          : Starting longitude of the desired sub-image
+ * lon1          : Ending longitude of the desired sub-image
  *
- * returns	: Non-zero on error
+ * returns     : Non-zero on error
  ******************************************************************************/
 int seviri_native_read(const char *filename, struct seviri_native_data *d,
                        uint n_bands, const uint *band_ids,
@@ -2118,11 +2118,11 @@ int seviri_native_read(const char *filename, struct seviri_native_data *d,
 /*******************************************************************************
  * The main write function.
  *
- * filename	: Native SEVIRI level 1.5 filename
- * d		: The input seviri_native_data struct with the U-MARF header,
+ * filename     : Native SEVIRI level 1.5 filename
+ * d          : The input seviri_native_data struct with the U-MARF header,
  *                level 1.5 header and trailer, and the image data.
  *
- * returns	: Non-zero on error
+ * returns     : Non-zero on error
  ******************************************************************************/
 int seviri_native_write(const char *filename, const struct seviri_native_data *d) {
 
@@ -2197,9 +2197,9 @@ int seviri_native_write(const char *filename, const struct seviri_native_data *d
  * Free memory allocated by seviri_native_read() to hold seviri_native_data
  * struct fields.
  *
- * image	: The input seviri_native_data struct
+ * image     : The input seviri_native_data struct
  *
- * returns	: Non-zero on error
+ * returns     : Non-zero on error
  ******************************************************************************/
 int seviri_native_free(struct seviri_native_data *d) {
 
