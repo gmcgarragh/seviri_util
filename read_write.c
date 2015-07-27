@@ -42,56 +42,6 @@
 
 
 
-/*******************************************************************************
- * Struct containing auxiliary variables related to configuring the read/write
- * functions.
- ******************************************************************************/
-struct seviri_auxillary_io_data {
-     int operation;
-
-     int swap_bytes;
-
-     ushort *temp_2;
-     uint   *temp_4;
-     ulong  *temp_8;
-};
-
-
-
-/*******************************************************************************
- * Struct containing offsets and dimensions that will passed from the read to
- * write functions.
- ******************************************************************************/
-struct seviri_dimension_data {
-     uint n_lines_selected_VIR;
-     uint n_columns_selected_VIR;
-
-     uint i0_line_selected_VIR;
-     uint i1_line_selected_VIR;
-     uint i0_column_selected_VIR;
-     uint i1_column_selected_VIR;
-
-
-     uint i_line_requested_VIR;
-     uint i_column_requested_VIR;
-
-     uint n_lines_requested_VIR;
-     uint n_columns_requested_VIR;
-
-     uint i_line_to_read_VIR;
-     uint i_column_to_read_VIR;
-
-     uint n_lines_to_read_VIR;
-     uint n_columns_to_read_VIR;
-
-     uint i_line_in_output_VIR;
-     uint i_column_in_output_VIR;
-
-
-     uint n_lines_selected_HRV;
-     uint n_columns_selected_HRV;
-};
-
 
 
 /*******************************************************************************
