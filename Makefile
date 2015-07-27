@@ -25,7 +25,7 @@ OBJECTS = internal.o \
 # Uncomment to compile the Fortran interface
 OBJECTS += seviri_native_util.o
 
-all: libseviri_native_util.a example_c_nat example_c_hrit example_f90
+all: libseviri_native_util.a example_c_nat example_c_hrit example_f90_hrit example_f90_nat
 
 libseviri_native_util.a: $(OBJECTS)
 	ar -rs libseviri_native_util.a $(OBJECTS)
@@ -37,8 +37,10 @@ example_c_nat: example_c_nat.c libseviri_native_util.a
 example_c_hrit: example_c_hrit.c libseviri_native_util.a
 	$(CC) $(CCFLAGS) -o example_c_hrit example_c_hrit.c libseviri_native_util.a -lm
 
-example_f90: example_f90.f90 libseviri_native_util.a
-	$(F90) $(F90FLAGS) -o example_f90 example_f90.f90 libseviri_native_util.a -lm
+example_f90_hrit: example_f90_hrit.f90 libseviri_native_util.a
+	$(F90) $(F90FLAGS) -o example_f90_hrit example_f90_hrit.f90 libseviri_native_util.a -lm
+example_f90_nat: example_f90_nat.f90 libseviri_native_util.a
+	$(F90) $(F90FLAGS) -o example_f90_nat example_f90_nat.f90 libseviri_native_util.a -lm
 
 README: readme_source.txt
 	fold --spaces --width=80 readme_source.txt > README

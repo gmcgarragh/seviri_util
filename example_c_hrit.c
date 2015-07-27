@@ -16,8 +16,8 @@ int main(int argc, char *argv[]) {
      char *timeslot  =     argv[2];
      int satnum      =     atoi(argv[3]);
 
-     int nbands = 5;
-     unsigned int band_ids[] = { 1,3,7,9,10};
+     int nbands = 4;
+     unsigned int band_ids[] = { 1,3,7,9};
 
 
 /*      Set up the band units. Counts or Radiances are easy, for BRF/BT must subset by channel*/
@@ -46,8 +46,8 @@ int main(int argc, char *argv[]) {
      }
      
      /* Print the values for the central pixel. */
-     i_line   = 55;
-     i_column = 55;
+     i_line   = preproc.n_lines / 2;
+     i_column = preproc.n_columns / 2;
      i_pixel  = i_line * preproc.n_columns + i_column;
 
      printf("i_line:			%d\n", i_line);
@@ -63,11 +63,10 @@ int main(int argc, char *argv[]) {
      printf("\n");
 
 /*      Print the image values for each band that was processed.*/
-     printf("VIS006:			%08.4f\n",preproc.data[0][i_pixel]);
-     printf("IR_016:			%08.4f\n",preproc.data[1][i_pixel]);
-     printf("IR_087:			%08.4f\n",preproc.data[2][i_pixel]);
-     printf("IR_108:			%08.4f\n",preproc.data[3][i_pixel]);
-     printf("IR_120:			%08.4f\n",preproc.data[4][i_pixel]);
+     printf("0.635 reflectance:		%08.4f\n",preproc.data[0][i_pixel]);
+     printf("1.64  reflectance:		%08.4f\n",preproc.data[1][i_pixel]);
+     printf("8.70  brightness temperature:	%08.4f\n",preproc.data[2][i_pixel]);
+     printf("10.80 brightness temperature:	%08.4f\n",preproc.data[3][i_pixel]);
     
      /* Free memory allocated by seviri_read_and_preproc(). */
 /*      seviri_preproc_free(&preproc);*/

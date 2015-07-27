@@ -3,14 +3,18 @@
 ! image file and preprocess it to obtain several fields.
 
 
-program examle_f90
+program example_f90_hrit
 
      ! Use the seviri_native_util interface module.
      use seviri_native_util
 
      implicit none
 
-     character(1024) :: filename
+     character(1024) :: indir
+     character(13) :: timeslot
+     character(4) :: satnums
+
+     integer :: satnum
 
      integer :: i_line
      integer :: i_column
@@ -27,20 +31,23 @@ program examle_f90
                                                    SEVIRI_UNIT_BT/)
 
      ! We want to read a sub-image defined by pixel coordinates.
-     integer, parameter :: line0   = 2942
-     integer, parameter :: line1   = 3174
-     integer, parameter :: column0 = 1792
-     integer, parameter :: column1 = 2643
+     integer, parameter :: line0   = 1800
+     integer, parameter :: line1   = 1900
+     integer, parameter :: column0 = 1800
+     integer, parameter :: column1 = 1903
 
      ! This struct will contain the image data and some metadata.
      type(seviri_preproc_t_f90) :: preproc
 
-     call get_command_argument(1,filename)
+     call get_command_argument(1,indir)
+     call get_command_argument(2,timeslot)
+     call get_command_argument(3,satnums)
+     read(satnums, '(I2)') satnum
 
      ! Read and preprocess the data.  Note: the last four arguments are unused
      ! in this case. Please see the functionn header for a complete discussion
      ! of the arrguments.
-     if (seviri_read_and_preproc_f90(trim(filename), preproc, n_bands, band_ids, &
+     if (seviri_read_and_preproc_hrit_f90(trim(indir), trim(timeslot), satnum, preproc, n_bands, band_ids, &
                             band_units, SEVIRI_BOUNDS_LINE_COLUMN, line0, line1, &
                             column0, column1, 0.d0, 0.d0, 0.d0, 0.d0, .false.) &
                             .ne. 0) then
@@ -72,4 +79,4 @@ program examle_f90
         stop -1
      end if
 
-end program examle_f90
+end program example_f90_hrit
