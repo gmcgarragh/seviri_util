@@ -8,11 +8,18 @@
 #*******************************************************************************
 .SUFFIXES: .c .f90
 
+include $(ORAC_LIB)
+include $(ORAC_ARCH)
+
 CC      = gcc
 CCFLAGS = -g -O2
 
 F90      = gfortran
 F90FLAGS = -g -O2
+
+LIBBASE=/home/proud/Desktop/ORAC/Libraries
+HDF5LIB=$(LIBBASE)/hdf5/lib
+HDF5INCLUDE=$(LIBBASE)/hdf5/include
 
 OBJECTS = internal.o \
           nav_util.o \
@@ -25,12 +32,26 @@ OBJECTS = internal.o \
 # Uncomment to compile the Fortran interface
 OBJECTS += seviri_native_util.o
 
-all: libseviri_native_util.a example_c_nat example_c_hrit example_f90_hrit example_f90_nat
+# Compilation rules
+$(OBJS)/%.o: %.f90
+	$(F90) -o $@ -c $(FFLAGS) $(INC) -I$(ORAC_COMMON)/obj $(AUXFLAGS) $<
+
+$(OBJS)/%.o: %.F90
+	$(F90) -o $@ -c $(FFLAGS) $(INC) -I$(ORAC_COMMON)/obj $(AUXFLAGS) $<
+
+$(OBJS)/%.o: %.c
+	$(CC) -o $@ -c $(CFLAGS) $(CINC) $<
+
+all: libseviri_native_util.a example_c_nat example_c_hrit example_f90_hrit example_f90_nat SEVIRI_util
 
 libseviri_native_util.a: $(OBJECTS)
 	ar -rs libseviri_native_util.a $(OBJECTS)
 
 seviri_native_util.o: seviri_native_util.f90
+
+SEVIRI_util: SEVIRI_util.c SEVIRI_util_funcs.c SEVIRI_util_prog.c libseviri_native_util.a
+	$(CC) $(CCFLAGS) -o  SEVIRI_util SEVIRI_util_funcs.c SEVIRI_util_prog.c SEVIRI_util.c libseviri_native_util.a -lm -ltiff -I./$(OBJS) $(LIBS)
+
 
 example_c_nat: example_c_nat.c libseviri_native_util.a
 	$(CC) $(CCFLAGS) -o example_c_nat example_c_nat.c libseviri_native_util.a -lm
@@ -47,7 +68,7 @@ README: readme_source.txt
 	sed -i 's/[ \t]*$$//' README
 
 clean:
-	rm -f *.a *.o *.mod example_c_nat example_c_hrit example_f90
+	rm -f *.a *.o *.mod example_c_nat example_c_hrit example_f90_hrit example_f90_nat SEVIRI_util
 
 .c.o:
 	$(CC) $(CCFLAGS) -c -o $*.o $<

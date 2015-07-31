@@ -239,11 +239,10 @@ int read_data_oneseg(char* fname,int segnum,int cnum,struct seviri_native_data *
           int offset=segnum*464;
           ushort tmpline[ncols];
      
+          data10 = malloc(ncols / 4 * 5 * sizeof(uchar));
 /*           Loop over all lines in segment*/
-          for (x=offset;x<offset+464;x++)     {
-
-               data10 = malloc(ncols / 4 * 5 * sizeof(uchar));
-
+          for (x=offset;x<offset+464;x++)     
+          {
                out_d_line=(x-first_line)*(last_col-first_col+1);
 /*                If we're outside the requested image boundary: move file pointed and skip*/
                if (x<first_line || x>last_line){fseek(fp,ncols/4*5,SEEK_CUR);continue;}
@@ -266,6 +265,7 @@ int read_data_oneseg(char* fname,int segnum,int cnum,struct seviri_native_data *
                     jj++;
                }
           }
+          free(data10);
      }
 
 /*      Same as above, but for HRV*/
@@ -288,6 +288,7 @@ int read_data_oneseg(char* fname,int segnum,int cnum,struct seviri_native_data *
                     jj++;
                }
           }
+          free(data10);
      }     
      if (cnum<=0 || cnum>12) return -1;
      fclose(fp);

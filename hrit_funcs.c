@@ -252,6 +252,9 @@ int seviri_native_read_hrit(const char *indir, const char *timeslot, int *sat, s
 
 /*      Tidy up*/
      seviri_auxillary_free(&aux);
+     free(proname);
+     free(epiname);
+     for (i=0;i<n_bands;i++) for (j=0;j<8;j++)     free(bnames[i][j]);
 
      return 0;
 }

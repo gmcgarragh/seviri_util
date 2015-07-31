@@ -218,7 +218,6 @@ int seviri_native_preproc(const struct seviri_native_data *d,
                &d->header.SatelliteStatus.OrbitPolynomial[i].StartTime);
           jtime_end   = TIME_CDS_SHORT_to_jtime(
                &d->header.SatelliteStatus.OrbitPolynomial[i].EndTime);
-
           if (jtime >= jtime_start && jtime <= jtime_end)
                break;
      }
@@ -434,7 +433,7 @@ int seviri_native_preproc(const struct seviri_native_data *d,
  *
  * returns     : Non-zero on error
  ******************************************************************************/
-int seviri_read_and_preproc_hrit(const char *indir,const char *timeslot,const char *satnum,
+int seviri_read_and_preproc_hrit(const char *indir,const char *timeslot,const int satnum,
                             struct seviri_preproc_data *preproc,
                             uint n_bands, const uint *band_ids,
                             const enum seviri_units *band_units,
@@ -458,10 +457,12 @@ int seviri_read_and_preproc_hrit(const char *indir,const char *timeslot,const ch
 /*      We cannot use seviri_native_free as not all data was*/
 /*      read from the HRIT file (missing headers).*/
 /*      So manually free image data instead.*/
-     int i;
+     int i,proc_hrv=0;
      for (i = 0; i < native.image.n_bands; ++i)
-          free(native.image.data_vir[i]);
+          if (native.image.band_ids[i]<12)free(native.image.data_vir[i]);
+          if (native.image.band_ids[i]==12)proc_hrv=1;
      free(native.image.data_vir);
+     if (proc_hrv==1)free(native.image.data_hrv);
      free(native.image.dimens);
 
      return 0;

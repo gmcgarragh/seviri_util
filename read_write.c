@@ -1916,9 +1916,8 @@ static int seviri_image_free(struct seviri_image_data *d) {
 int seviri_auxillary_alloc(struct seviri_auxillary_io_data *d) {
 
      uint n = 134915;
-
-     d->temp_2 = malloc(n * sizeof(ushort));
      d->temp_4 = malloc(n * sizeof(uint));
+     d->temp_2 = malloc(n * sizeof(ushort));
      d->temp_8 = malloc(n * sizeof(ulong));
 
      return 0;
