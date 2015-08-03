@@ -60,15 +60,15 @@ int read_hrit_epilogue(const char *fname, struct seviri_native_data *d,struct se
 /*      Read first part of prologue and check contents to see if correct filetype*/
      out=fread((char*)probeBuf, probeSize,1,fp);
      
-     if (probeBuf[0] == 0 && probeBuf[1] == 0 && probeBuf[2] == 16)     if (fxxxx_swap(&hdrlen,     4, 1,  fp, aux) < 0) E_L_R();
+     if (probeBuf[0] == 0 && probeBuf[1] == 0 && probeBuf[2] == 16)     if (fxxxx_swap(&hdrlen,     4, 1,  fp, aux) < 0) {E_L_R();return -1;}
 
      fseek(fp,hdrlen+1,SEEK_SET);
-     if (fxxxx_swap(&d->trailer.ImageProductionStats.SatelliteID,     sizeof(short), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->trailer.ImageProductionStats.SatelliteID,     sizeof(short), 1,  fp, aux) < 0) {E_L_R();return -1;}
      
-     if (fxxxx_swap(&d->trailer.ImageProductionStats.NominalImageScanning,         sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->trailer.ImageProductionStats.ReducedScan,                  sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (seviri_TIME_CDS_SHORT_read(fp, &d->trailer.ImageProductionStats.ActScanForwardStart,             aux))     E_L_R();
-     if (seviri_TIME_CDS_SHORT_read(fp, &d->trailer.ImageProductionStats.ActScanForwardEnd,               aux))     E_L_R();
+     if (fxxxx_swap(&d->trailer.ImageProductionStats.NominalImageScanning,         sizeof(uchar), 1,  fp, aux) < 0) {E_L_R();return -1;}
+     if (fxxxx_swap(&d->trailer.ImageProductionStats.ReducedScan,                  sizeof(uchar), 1,  fp, aux) < 0) {E_L_R();return -1;}
+     if (seviri_TIME_CDS_SHORT_read(fp, &d->trailer.ImageProductionStats.ActScanForwardStart,             aux))     {E_L_R();return -1;}
+     if (seviri_TIME_CDS_SHORT_read(fp, &d->trailer.ImageProductionStats.ActScanForwardEnd,               aux))     {E_L_R();return -1;}
 
 /*      Tidy up*/
      fclose(fp);
@@ -105,7 +105,7 @@ int read_hrit_prologue(const char *fname, struct seviri_native_data *d,struct se
 
 /*      Read first part of prologue and check contents to see if correct filetype*/
      out=fread((char*)probeBuf, probeSize,1,fp);
-     if (probeBuf[0] == 0 && probeBuf[1] == 0 && probeBuf[2] == 16)     if (fxxxx_swap(&hdrlen,     4, 1,  fp, aux) < 0) E_L_R();
+     if (probeBuf[0] == 0 && probeBuf[1] == 0 && probeBuf[2] == 16)     if (fxxxx_swap(&hdrlen,     4, 1,  fp, aux) < 0) {E_L_R();return -1;}
      fseek(fp,hdrlen,SEEK_SET);
 
      seviri_15HEADER_SatelliteStatus_read(fp,&d->header.SatelliteStatus,aux);
@@ -115,9 +115,9 @@ int read_hrit_prologue(const char *fname, struct seviri_native_data *d,struct se
      fseek(fp,386982,SEEK_SET);
 
 /*      Read the image description data*/
-     if (seviri_15HEADER_ImageDescription_read     (fp, &d->header.ImageDescription,      aux)) E_L_R();
+     if (seviri_15HEADER_ImageDescription_read     (fp, &d->header.ImageDescription,      aux)) {E_L_R();return -1;}
 /*      Read the per-channel calibration data*/
-     if (seviri_15HEADER_RadiometricProcessing_read(fp, &d->header.RadiometricProcessing, aux)) E_L_R();
+     if (seviri_15HEADER_RadiometricProcessing_read(fp, &d->header.RadiometricProcessing, aux)) {E_L_R();return -1;}
 
 /*      Tidy up*/
      fclose(fp);

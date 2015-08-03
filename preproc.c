@@ -518,7 +518,62 @@ int seviri_read_and_preproc(const char *filename,
      return 0;
 }
 
+/*******************************************************************************
+ * Helper function that examines if input file is HRIT or NAT and calls the
+ * appropriate processing functions.
+ *
+ * filename     : Native SEVIRI level 1.5 filename
+ * preproc     : The struct containing the preprocessed output
+ * n_bands     : Described in the seviri_native_read() header (read_write.c)
+ * band_ids     :      ''
+ * band_units     : Array of band_unit types of length n_bands
+ * bounds     : Described in the seviri_native_read() header (read_write.c)
+ * line0     :      ''
+ * line1     :      ''
+ * column0     :      ''
+ * column1     :      ''
+ * lat0          :      ''
+ * lat1          :      ''
+ * lon0          :      ''
+ * lon1          :      ''
+ * do_not_alloc     : Flag indicating not to allocate space for the output data.
+ *                Useful for avoiding unnecessary memory allocations and use.
+ *
+ * returns     : Non-zero on error
+ ******************************************************************************/
+int seviri_read_and_preproc_main(const char *filename,
+                            struct seviri_preproc_data *preproc,
+                            uint n_bands, const uint *band_ids,
+                            const enum seviri_units *band_units,
+                            enum seviri_bounds bounds,
+                            uint line0, uint line1, uint column0, uint column1,
+                            double lat0, double lat1, double lon0, double lon1,
+                            int do_not_alloc) {
 
+
+	if(strstr(filename, ".nat") != NULL)
+	{
+		seviri_read_and_preproc(filename,preproc,n_bands,band_ids,band_units,bounds,line0,line1,column0,column1,lat0,lat1,lon0,lon1,do_not_alloc);
+	}
+	else 
+	{
+		int startfnam, satnum;
+		char *ptr;
+		char timeslot[13];
+		char *indir;
+		ptr=strstr(filename,"H-000-MSG");
+		if (ptr==NULL){printf("Incorrectly formatted HRIT! Quitting\n");return -1;}
+		startfnam=ptr-filename;
+		indir=(char*)malloc(sizeof(char)*startfnam);
+		strncpy(indir,filename,startfnam);
+		int gopos=startfnam+46;
+		strncpy(timeslot,filename+gopos,12);
+		timeslot[12]='\0';
+		satnum=atoi(&filename[startfnam+9]);
+		seviri_read_and_preproc_hrit(indir,timeslot,satnum, preproc, n_bands, band_ids,band_units, bounds,line0, line1, column0, column1,lat0,lat1,lon0,lon1,do_not_alloc);
+	};
+     return 0;
+}
 
 /*******************************************************************************
  * Free memory allocated by seviri_native_preproc() for the pre-processing

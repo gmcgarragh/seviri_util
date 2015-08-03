@@ -27,6 +27,7 @@ typedef unsigned int	uint;
 typedef unsigned long	ulong;
 
 
+
 enum seviri_bounds {
      SEVIRI_BOUNDS_FULL_DISK,
      SEVIRI_BOUNDS_ACTUAL_IMAGE,

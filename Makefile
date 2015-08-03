@@ -11,15 +11,11 @@
 include $(ORAC_LIB)
 include $(ORAC_ARCH)
 
-CC      = gcc
+CC      = icc
 CCFLAGS = -g -O2
 
-F90      = gfortran
+F90      = ifort
 F90FLAGS = -g -O2
-
-LIBBASE=/home/proud/Desktop/ORAC/Libraries
-HDF5LIB=$(LIBBASE)/hdf5/lib
-HDF5INCLUDE=$(LIBBASE)/hdf5/include
 
 OBJECTS = internal.o \
           nav_util.o \

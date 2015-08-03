@@ -38,13 +38,18 @@ int main(int argc, char *argv[]) {
         in this case. Please see the function header for a complete discussion
         of the arguments. */
 
-     if (seviri_read_and_preproc(filename, &preproc, nbands, band_ids,
+/*     if (seviri_read_and_preproc(filename, &preproc, nbands, band_ids,*/
+/*                                 band_units, SEVIRI_BOUNDS_LINE_COLUMN,*/
+/*                                 line0, line1, column0, column1,*/
+/*                                 0., 0., 0., 0., 0)) {*/
+/*          fprintf(stderr, "ERROR: seviri_read_and_preproc()\n");*/
+/*          return -1;*/
+/*     }*/
+
+	seviri_read_and_preproc_main(filename, &preproc, nbands, band_ids,
                                  band_units, SEVIRI_BOUNDS_LINE_COLUMN,
                                  line0, line1, column0, column1,
-                                 0., 0., 0., 0., 0)) {
-          fprintf(stderr, "ERROR: seviri_read_and_preproc()\n");
-          return -1;
-     }
+                                 0., 0., 0., 0., 0);
      
      /* Print the values for the central pixel. */
      i_line   = preproc.n_lines / 2;
