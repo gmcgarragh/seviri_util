@@ -103,7 +103,7 @@ char* chan_name(int cnum)
  * 
  * returns:     Zero if successful
  ******************************************************************************/
-int assemble_fnames(char ****fnam, char *indir, char *timeslot, int nbands, uint *bids, int sat)
+int assemble_fnames(char ****fnam, const char *indir, const char *timeslot, int nbands, const uint *bids, int sat)
 {
      int c,totsegs=0, nsegs[nbands];
      for (c=0;c<nbands;c++){ if (bids[c]==12) nsegs[c]=24; else nsegs[c]=8; totsegs+=nsegs[c];}
@@ -147,7 +147,7 @@ int assemble_fnames(char ****fnam, char *indir, char *timeslot, int nbands, uint
  * 
  * returns:     Zero if successful
  ******************************************************************************/
-int assemble_epiname(char **enam, char *indir, char *timeslot, int sat)
+int assemble_epiname(char **enam, const char *indir, const char *timeslot, int sat)
 {
 /*     HRIT filename is 61 so use that plus indir len*/
      char* arr = malloc(61+strlen(indir)+1);     
@@ -175,7 +175,7 @@ int assemble_epiname(char **enam, char *indir, char *timeslot, int sat)
  * 
  * returns:     Zero if successful
  ******************************************************************************/
-int assemble_proname(char **pnam, char *indir, char *timeslot, int sat)
+int assemble_proname(char **pnam, const char *indir, const char *timeslot, int sat)
 {
 /*     HRIT filename is 61 so use that plus indir len*/
      char* arr = malloc(61+strlen(indir)+1);     

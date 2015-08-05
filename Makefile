@@ -32,11 +32,11 @@ SEVIRI_util: SEVIRI_util.o SEVIRI_util_funcs.o SEVIRI_util_prog.o libseviri_nati
 	$(CC) $(CCFLAGS) -o SEVIRI_util SEVIRI_util_funcs.o SEVIRI_util_prog.o SEVIRI_util.o \
         libseviri_native_util.a $(INCDIRS) $(LIBDIRS) $(LINKS)
 
-example_c_nat: example_c_nat.c libseviri_native_util.a
-	$(CC) $(CCFLAGS) -o example_c_nat example_c_nat.c libseviri_native_util.a -lm
-
 example_c_hrit: example_c_hrit.c libseviri_native_util.a
 	$(CC) $(CCFLAGS) -o example_c_hrit example_c_hrit.c libseviri_native_util.a -lm
+
+example_c_nat: example_c_nat.c libseviri_native_util.a
+	$(CC) $(CCFLAGS) -o example_c_nat example_c_nat.c libseviri_native_util.a -lm
 
 example_f90_hrit: example_f90_hrit.f90 libseviri_native_util.a
 	$(F90) $(F90FLAGS) -o example_f90_hrit example_f90_hrit.f90 libseviri_native_util.a -lm

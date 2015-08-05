@@ -17,14 +17,14 @@
 #define E_L_R() do { \
      fprintf(stderr, "ERROR: file = %s, line = %d, function = %s()\n", \
              __FILE__, __LINE__, __func__); \
-     return; \
+     return -1; \
 } while (0)
 
 
 #define E_L_R_MSG(MSG) do { \
      fprintf(stderr, "ERROR: file = %s, line = %d, function = %s(): %s\n", \
              __FILE__, __LINE__, __func__, MSG); \
-     return; \
+     return -1; \
 } while (0)
 
 /*******************************************************************************
@@ -60,15 +60,15 @@ int read_hrit_epilogue(const char *fname, struct seviri_native_data *d,struct se
 /*      Read first part of prologue and check contents to see if correct filetype*/
      out=fread((char*)probeBuf, probeSize,1,fp);
      
-     if (probeBuf[0] == 0 && probeBuf[1] == 0 && probeBuf[2] == 16)     if (fxxxx_swap(&hdrlen,     4, 1,  fp, aux) < 0) {E_L_R();return -1;}
+     if (probeBuf[0] == 0 && probeBuf[1] == 0 && probeBuf[2] == 16)     if (fxxxx_swap(&hdrlen,     4, 1,  fp, aux) < 0) {E_L_R();}
 
      fseek(fp,hdrlen+1,SEEK_SET);
-     if (fxxxx_swap(&d->trailer.ImageProductionStats.SatelliteID,     sizeof(short), 1,  fp, aux) < 0) {E_L_R();return -1;}
+     if (fxxxx_swap(&d->trailer.ImageProductionStats.SatelliteID,     sizeof(short), 1,  fp, aux) < 0) {E_L_R();}
      
-     if (fxxxx_swap(&d->trailer.ImageProductionStats.NominalImageScanning,         sizeof(uchar), 1,  fp, aux) < 0) {E_L_R();return -1;}
-     if (fxxxx_swap(&d->trailer.ImageProductionStats.ReducedScan,                  sizeof(uchar), 1,  fp, aux) < 0) {E_L_R();return -1;}
-     if (seviri_TIME_CDS_SHORT_read(fp, &d->trailer.ImageProductionStats.ActScanForwardStart,             aux))     {E_L_R();return -1;}
-     if (seviri_TIME_CDS_SHORT_read(fp, &d->trailer.ImageProductionStats.ActScanForwardEnd,               aux))     {E_L_R();return -1;}
+     if (fxxxx_swap(&d->trailer.ImageProductionStats.NominalImageScanning,         sizeof(uchar), 1,  fp, aux) < 0) {E_L_R();}
+     if (fxxxx_swap(&d->trailer.ImageProductionStats.ReducedScan,                  sizeof(uchar), 1,  fp, aux) < 0) {E_L_R();}
+     if (seviri_TIME_CDS_SHORT_read(fp, &d->trailer.ImageProductionStats.ActScanForwardStart,             aux))     {E_L_R();}
+     if (seviri_TIME_CDS_SHORT_read(fp, &d->trailer.ImageProductionStats.ActScanForwardEnd,               aux))     {E_L_R();}
 
 /*      Tidy up*/
      fclose(fp);
@@ -105,7 +105,7 @@ int read_hrit_prologue(const char *fname, struct seviri_native_data *d,struct se
 
 /*      Read first part of prologue and check contents to see if correct filetype*/
      out=fread((char*)probeBuf, probeSize,1,fp);
-     if (probeBuf[0] == 0 && probeBuf[1] == 0 && probeBuf[2] == 16)     if (fxxxx_swap(&hdrlen,     4, 1,  fp, aux) < 0) {E_L_R();return -1;}
+     if (probeBuf[0] == 0 && probeBuf[1] == 0 && probeBuf[2] == 16)     if (fxxxx_swap(&hdrlen,     4, 1,  fp, aux) < 0) {E_L_R();}
      fseek(fp,hdrlen,SEEK_SET);
 
      seviri_15HEADER_SatelliteStatus_read(fp,&d->header.SatelliteStatus,aux);
@@ -115,9 +115,9 @@ int read_hrit_prologue(const char *fname, struct seviri_native_data *d,struct se
      fseek(fp,386982,SEEK_SET);
 
 /*      Read the image description data*/
-     if (seviri_15HEADER_ImageDescription_read     (fp, &d->header.ImageDescription,      aux)) {E_L_R();return -1;}
+     if (seviri_15HEADER_ImageDescription_read     (fp, &d->header.ImageDescription,      aux)) {E_L_R();}
 /*      Read the per-channel calibration data*/
-     if (seviri_15HEADER_RadiometricProcessing_read(fp, &d->header.RadiometricProcessing, aux)) {E_L_R();return -1;}
+     if (seviri_15HEADER_RadiometricProcessing_read(fp, &d->header.RadiometricProcessing, aux)) {E_L_R();}
 
 /*      Tidy up*/
      fclose(fp);
@@ -181,7 +181,7 @@ int alloc_imagearr(uint nbands, const uint *band_ids,struct seviri_native_data *
  *
  * returns:     Zero if successful, nonzero if error
  ******************************************************************************/
-int seviri_native_read_hrit(const char *indir, const char *timeslot, int *sat, struct seviri_native_data *d,
+int seviri_native_read_hrit(const char *indir, const char *timeslot, int sat, struct seviri_native_data *d,
           uint n_bands, const uint *band_ids,enum seviri_bounds bounds,uint line0, uint line1, uint column0,
           uint column1, double lat0, double lat1, double lon0, double lon1)
 {

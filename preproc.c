@@ -11,6 +11,7 @@
 **
 *******************************************************************************/
 #include "internal.h"
+#include "hrit_funcs.h"
 #include "seviri_native_util.h"
 
 
