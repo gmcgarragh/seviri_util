@@ -8,54 +8,41 @@
 #*******************************************************************************
 .SUFFIXES: .c .f90
 
-include $(ORAC_LIB)
-include $(ORAC_ARCH)
-
-CC      = icc
-CCFLAGS = -g -O2
-
-F90      = ifort
-F90FLAGS = -g -O2
-
 OBJECTS = internal.o \
-          nav_util.o \
           misc_util.o \
+          nav_util.o \
           preproc.o \
           read_write.o \
 	  hrit_funcs.o \
 	  hrit_anc_funcs.o
 
-# Uncomment to compile the Fortran interface
-OBJECTS += seviri_native_util.o
+include make.inc
 
-# Compilation rules
-$(OBJS)/%.o: %.f90
-	$(F90) -o $@ -c $(FFLAGS) $(INC) -I$(ORAC_COMMON)/obj $(AUXFLAGS) $<
-
-$(OBJS)/%.o: %.F90
-	$(F90) -o $@ -c $(FFLAGS) $(INC) -I$(ORAC_COMMON)/obj $(AUXFLAGS) $<
-
-$(OBJS)/%.o: %.c
-	$(CC) -o $@ -c $(CFLAGS) $(CINC) $<
-
-all: libseviri_native_util.a example_c_nat example_c_hrit example_f90_hrit example_f90_nat SEVIRI_util
+all: libseviri_native_util.a \
+     example_c_hrit \
+     example_c_nat \
+     example_f90_hrit \
+     example_f90_nat \
+     $(OPTIONAL_PROGRAMS)
 
 libseviri_native_util.a: $(OBJECTS)
 	ar -rs libseviri_native_util.a $(OBJECTS)
 
 seviri_native_util.o: seviri_native_util.f90
 
-SEVIRI_util: SEVIRI_util.c SEVIRI_util_funcs.c SEVIRI_util_prog.c libseviri_native_util.a
-	$(CC) $(CCFLAGS) -o  SEVIRI_util SEVIRI_util_funcs.c SEVIRI_util_prog.c SEVIRI_util.c libseviri_native_util.a -lm -ltiff -I./$(OBJS) $(LIBS)
-
+SEVIRI_util: SEVIRI_util.o SEVIRI_util_funcs.o SEVIRI_util_prog.o libseviri_native_util.a
+	$(CC) $(CCFLAGS) -o SEVIRI_util SEVIRI_util_funcs.o SEVIRI_util_prog.o SEVIRI_util.o \
+        libseviri_native_util.a $(INCDIRS) $(LIBDIRS) $(LINKS)
 
 example_c_nat: example_c_nat.c libseviri_native_util.a
 	$(CC) $(CCFLAGS) -o example_c_nat example_c_nat.c libseviri_native_util.a -lm
+
 example_c_hrit: example_c_hrit.c libseviri_native_util.a
 	$(CC) $(CCFLAGS) -o example_c_hrit example_c_hrit.c libseviri_native_util.a -lm
 
 example_f90_hrit: example_f90_hrit.f90 libseviri_native_util.a
 	$(F90) $(F90FLAGS) -o example_f90_hrit example_f90_hrit.f90 libseviri_native_util.a -lm
+
 example_f90_nat: example_f90_nat.f90 libseviri_native_util.a
 	$(F90) $(F90FLAGS) -o example_f90_nat example_f90_nat.f90 libseviri_native_util.a -lm
 
@@ -64,14 +51,14 @@ README: readme_source.txt
 	sed -i 's/[ \t]*$$//' README
 
 clean:
-	rm -f *.a *.o *.mod example_c_nat example_c_hrit example_f90_hrit example_f90_nat SEVIRI_util
+	rm -f *.a *.o *.mod example_c_hrit example_c_nat example_f90_hrit example_f90_nat $(OPTIONAL_PROGRAMS)
 
 .c.o:
-	$(CC) $(CCFLAGS) -c -o $*.o $<
+	$(CC) $(CCFLAGS) $(INCDIRS) -c -o $*.o $<
 
 %.o : %.mod
 
 .f90.o:
-	$(F90) $(F90FLAGS) -c -o $*.o $<
+	$(F90) $(F90FLAGS) $(INCDIRS) -c -o $*.o $<
 
 include dep.inc
