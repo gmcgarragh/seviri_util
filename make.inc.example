@@ -2,7 +2,7 @@
 CC      = gcc
 CCFLAGS = -O2
 
-# Fortran compiler and Forran compiler flags (required for the Fortran
+# Fortran compiler and Fortan compiler flags (required for the Fortran
 # interface)
 F90      = gfortran
 F90FLAGS = -O2
@@ -13,8 +13,9 @@ LIBDIRS = -L$(HOME)/opt/hdf5/lib     -L$(HOME)/opt/netcdf/lib
 
 LINKS   = -lhdf5 -lnetcdf -ltiff -lm
 
-# Uncomment to compile the Fortran interface
+# Uncomment to compile the Fortran interface and examples
 # OBJECTS += seviri_native_util.o
+# OPTIONAL_PROGRAMS += example_f90_hrit example_f90_nat
 
 # Uncomment to compile optional utilities that may have external dependencies
 # OPTIONAL_PROGRAMS += SEVIRI_util

@@ -21,8 +21,6 @@ include make.inc
 all: libseviri_native_util.a \
      example_c_hrit \
      example_c_nat \
-     example_f90_hrit \
-     example_f90_nat \
      $(OPTIONAL_PROGRAMS)
 
 libseviri_native_util.a: $(OBJECTS)
