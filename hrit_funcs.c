@@ -140,7 +140,7 @@ int alloc_imagearr(uint nbands, const uint *band_ids,struct seviri_native_data *
      long length_vir,length_hrv;
      virb=nbands;
      for (i = 0; i < nbands; ++i) {d->image.band_ids[i]=band_ids[i];if (band_ids[i]==12) {virb-=1; proc_hrv=1;}}
-     d->image.fill_value=65535;
+     d->image.fill_value=FILL_VALUE_US;
      d->image.n_bands=nbands;
 
 
