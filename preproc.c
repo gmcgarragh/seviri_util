@@ -12,6 +12,7 @@
 *******************************************************************************/
 #include "internal.h"
 #include "hrit_funcs.h"
+#include "hrit_anc_funcs.h"
 #include "seviri_native_util.h"
 
 
@@ -551,6 +552,9 @@ int seviri_read_and_preproc_main(const char *filename,
                             double lat0, double lat1, double lon0, double lon1,
                             int do_not_alloc) {
 
+	char *indir;
+	int satnum;
+	char timeslot[13];
 
 	if(strstr(filename, ".nat") != NULL)
 	{
@@ -558,20 +562,14 @@ int seviri_read_and_preproc_main(const char *filename,
 	}
 	else 
 	{
-		int startfnam, satnum;
-		char *ptr;
-		char timeslot[13];
-		char *indir;
-		ptr=strstr(filename,"H-000-MSG");
-		if (ptr==NULL){printf("Incorrectly formatted HRIT! Quitting\n");return -1;}
-		startfnam=ptr-filename;
-		indir=(char*)malloc(sizeof(char)*startfnam);
-		strncpy(indir,filename,startfnam);
-		int gopos=startfnam+46;
-		strncpy(timeslot,filename+gopos,12);
-		timeslot[12]='\0';
-		satnum=atoi(&filename[startfnam+9]);
+		if ((indir = extract_path_sat_id_timeslot(filename, &satnum, timeslot)) == NULL) {
+                	fprintf(stderr, "ERROR: extract_path_sat_id_timeslot()\n");
+                	exit(1);
+		}
+
 		seviri_read_and_preproc_hrit(indir,timeslot,satnum, preproc, n_bands, band_ids,band_units, bounds,line0, line1, column0, column1,lat0,lat1,lon0,lon1,do_not_alloc);
+
+                free(indir);
 	};
      return 0;
 }

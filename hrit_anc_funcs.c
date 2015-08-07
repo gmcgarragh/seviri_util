@@ -89,6 +89,27 @@ char* chan_name(int cnum)
 }
 
 /*******************************************************************************
+ *
+ ******************************************************************************/
+char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *timeslot)
+{
+     int startfnam;
+     char *ptr;
+     char *indir;
+     ptr=strstr(filename,"H-000-MSG");
+     if (ptr==NULL){printf("Incorrectly formatted HRIT! Quitting\n");return NULL;}
+     startfnam=ptr-filename;
+     indir=(char*)malloc(sizeof(char)*startfnam);
+     strncpy(indir,filename,startfnam);
+     int gopos=startfnam+46;
+     strncpy(timeslot,filename+gopos,12);
+     timeslot[12]='\0';
+     *sat_id=atoi(&filename[startfnam+9]);
+
+     return indir;
+}
+
+/*******************************************************************************
  * Builds the filenames for a given channel
  *
  * NOTE: Only supports full disk scanning. RSS and SRSS not supported
