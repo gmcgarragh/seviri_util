@@ -72,12 +72,8 @@ int seviri_native_preproc(const struct seviri_native_data *d,
 
      double jtime_end;
      double jtime_start;
-
-
-/*      SRP: Add in new variables to store the image start/stop time*/
-     double jtime_i;
-     double jtime_end_i;
-     double jtime_start_i;
+     double jtime_end2;
+     double jtime_start2;
 
      double t;
 
@@ -205,22 +201,16 @@ int seviri_native_preproc(const struct seviri_native_data *d,
      snu_jul_to_cal_date((long) floor(jtime       + .5), &year, &month, &day);
      day_of_year = jtime       - (snu_cal_to_jul_day(year, 1, 0) - .5);
 
-/*     SRP:     Store the start/stop times so they're not overwritten by the orbit*/
-/*          polynomial values below.*/
-     jtime_start_i = jtime_start;
-     jtime_end_i = jtime_end;
-     jtime_i = jtime;
-
 
      /*-------------------------------------------------------------------------
       * Compute the satellite position vector in Cartesian coordinates (km).
       *-----------------------------------------------------------------------*/
      for (i = 0; i < 100; ++i) {
-          jtime_start = TIME_CDS_SHORT_to_jtime(
+          jtime_start2 = TIME_CDS_SHORT_to_jtime(
                &d->header.SatelliteStatus.OrbitPolynomial[i].StartTime);
-          jtime_end   = TIME_CDS_SHORT_to_jtime(
+          jtime_end2   = TIME_CDS_SHORT_to_jtime(
                &d->header.SatelliteStatus.OrbitPolynomial[i].EndTime);
-          if (jtime >= jtime_start && jtime <= jtime_end)
+          if (jtime >= jtime_start2 && jtime <= jtime_end2)
                break;
      }
 
@@ -230,8 +220,8 @@ int seviri_native_preproc(const struct seviri_native_data *d,
           return -1;
      }
 
-     t = (jtime - (jtime_start + jtime_end)   / 2.) /
-                 ((jtime_end   - jtime_start) / 2.);
+     t = (jtime - (jtime_start2 + jtime_end2)   / 2.) /
+                 ((jtime_end2   - jtime_start2) / 2.);
 
      X = d->header.SatelliteStatus.OrbitPolynomial[i].X[0] +
          d->header.SatelliteStatus.OrbitPolynomial[i].X[1] * t;
@@ -250,9 +240,8 @@ int seviri_native_preproc(const struct seviri_native_data *d,
      for (i = 0; i < d->image.n_lines; ++i) {
           ii = d->image.i_line + i;
 
-/*      SRP: Change times from orbit polynomial to image start/stop scan*/
-          jtime2 = jtime_start_i + (double) ii / (double) (IMAGE_SIZE_VIR_LINES - 1) *
-                   (jtime_end_i - jtime_start_i);
+          jtime2 = jtime_start + (double) ii / (double) (IMAGE_SIZE_VIR_LINES - 1) *
+                   (jtime_end - jtime_start);
 
           for (j = 0; j < d->image.n_columns; ++j) {
                i_image = i * d->image.n_columns + j;
@@ -264,8 +253,7 @@ int seviri_native_preproc(const struct seviri_native_data *d,
                if (d2->lat[i_image] != FILL_VALUE_F && d2->lon[i_image] != FILL_VALUE_F) {
                     d2->time[i_image] = jtime2;
 
-/*     SRP: Changed jtime here too.*/
-                    snu_solar_params2(jtime_i, d2->lat[i_image] * D2R,
+                    snu_solar_params2(jtime, d2->lat[i_image] * D2R,
                                       d2->lon[i_image] * D2R, &mu0, &theta0,
                                       &phi0, NULL);
                     d2->sza[i_image] = theta0 * R2D;
