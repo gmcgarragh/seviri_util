@@ -546,19 +546,26 @@ int seviri_read_and_preproc_main(const char *filename,
 
 	if(strstr(filename, ".nat") != NULL)
 	{
-		seviri_read_and_preproc(filename,preproc,n_bands,band_ids,band_units,bounds,line0,line1,column0,column1,lat0,lat1,lon0,lon1,do_not_alloc);
+		if (seviri_read_and_preproc(filename,preproc,n_bands,band_ids,band_units,bounds,line0,line1,column0,column1,lat0,lat1,lon0,lon1,do_not_alloc)) {
+		 	fprintf(stderr, "ERROR: seviri_read_and_preproc()\n");
+			exit(1);
+		}
 	}
-	else 
+	else
 	{
 		if ((indir = extract_path_sat_id_timeslot(filename, &satnum, timeslot)) == NULL) {
-                	fprintf(stderr, "ERROR: extract_path_sat_id_timeslot()\n");
-                	exit(1);
+		 	fprintf(stderr, "ERROR: extract_path_sat_id_timeslot()\n");
+			exit(1);
 		}
 
-		seviri_read_and_preproc_hrit(indir,timeslot,satnum, preproc, n_bands, band_ids,band_units, bounds,line0, line1, column0, column1,lat0,lat1,lon0,lon1,do_not_alloc);
+		if (seviri_read_and_preproc_hrit(indir,timeslot,satnum, preproc, n_bands, band_ids,band_units, bounds,line0, line1, column0, column1,lat0,lat1,lon0,lon1,do_not_alloc)) {
+		 	fprintf(stderr, "ERROR: seviri_read_and_preproc_hrit()\n");
+			exit(1);
+		}
 
                 free(indir);
 	};
+
      return 0;
 }
 
