@@ -10,6 +10,7 @@ extern "C" {
 
 int ishrv(int band);
 char* chan_name(int cnum);
+char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *timeslot);
 int assemble_fnames(char ****fnam, const char *indir, const char *timeslot, int nbands, const uint *bids, int sat);
 int assemble_proname(char **pnam, const char *indir, const char *timeslot, int sat);
 int assemble_epiname(char **enam, const char *indir, const char *timeslot, int sat);
