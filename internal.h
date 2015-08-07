@@ -65,7 +65,7 @@ extern "C" {
 /*******************************************************************************
  * Fill values for various data types
  ******************************************************************************/
-#define FILL_VALUE_US		SHRT_MAX
+#define FILL_VALUE_US		USHRT_MAX
 #define FILL_VALUE_I		INT_MAX
 #define FILL_VALUE_F		-999.
 
