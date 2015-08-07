@@ -239,8 +239,8 @@ int read_data_oneseg(char* fname,int segnum,int cnum,struct seviri_native_data *
 
 /*      Required to align with NAT format reader*/
 /*      4 must be subtracted form the column as we read 4 pixels simultaneously*/
-     int first_line=dims->i_line_requested_VIR-1;
-     int first_col=dims->i_column_requested_VIR-4;
+     int first_line=dims->i_line_requested_VIR;
+     int first_col=dims->i_column_requested_VIR;
 
         int last_line= first_line+dims->n_lines_requested_VIR-1;
         int last_col= first_col+dims->n_columns_requested_VIR-1;
