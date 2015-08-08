@@ -137,7 +137,6 @@ int assemble_fnames(char ****fnam, const char *indir, const char *timeslot, int 
           arr[c]=malloc(sizeof(char *) * nsegs[c]);
           uint cnum=bids[c];
           int i;
-          char buf[7];
           char *band;
           band=chan_name(cnum);
           if (cnum>0 && cnum<=12) 
@@ -173,8 +172,6 @@ int assemble_epiname(char **enam, const char *indir, const char *timeslot, int s
 {
 /*     HRIT filename is 61 so use that plus indir len*/
      char* arr = malloc(61+strlen(indir)+1);     
-     int i;
-     char buf[7];
      char *band;
      band=chan_name(0);
      sprintf(arr, "%sH-000-MSG%d__-MSG%d________-%s___-EPI______-%s-__", indir, sat, sat, band, timeslot);
@@ -201,8 +198,6 @@ int assemble_proname(char **pnam, const char *indir, const char *timeslot, int s
 {
 /*     HRIT filename is 61 so use that plus indir len*/
      char* arr = malloc(61+strlen(indir)+1);     
-     int i;
-     char buf[7];
      char *band;
      band=chan_name(0);
      sprintf(arr, "%sH-000-MSG%d__-MSG%d________-%s___-PRO______-%s-__", indir, sat, sat, band, timeslot);
@@ -235,7 +230,7 @@ int read_data_oneseg(char* fname,int segnum,int cnum,struct seviri_native_data *
      const uchar shifts[] = {6, 4, 2, 0};
      ushort temp;
      const ushort masks[] = {0xFFC0, 0x3FF0, 0x0FFC, 0x03FF};
-     int x,y,out,j,jj,k;
+     int x,out,j,jj,k;
 
 
 /*      Required to align with NAT format reader*/
@@ -246,7 +241,7 @@ int read_data_oneseg(char* fname,int segnum,int cnum,struct seviri_native_data *
         int last_line= first_line+dims->n_lines_requested_VIR-1;
         int last_col= first_col+dims->n_columns_requested_VIR-1;
 
-     long int out_d_col,out_d_line,posser;
+     long int out_d_col,out_d_line;
      FILE *fp;
      fp=fopen(fname,"rb");
 
@@ -254,7 +249,6 @@ int read_data_oneseg(char* fname,int segnum,int cnum,struct seviri_native_data *
      fseek(fp,6198,SEEK_SET);
 
      if (cnum>0 && cnum<12)     {
-          int nlines= dims->n_lines_selected_VIR;
           int ncols= dims->n_columns_selected_VIR;
 
 /*           Each segment if 464 lines, so skip to correct part of image based on segnum*/
@@ -271,6 +265,7 @@ int read_data_oneseg(char* fname,int segnum,int cnum,struct seviri_native_data *
 
 /*                OTherwise read the data and store in the image memory space*/
                out=fread(data10, sizeof(char), ncols / 4 * 5, fp);
+               out=out;
 
                for (j = 0, jj = 0; j < ncols; ) {
                     for (k = 0; k < 4; ++k) {

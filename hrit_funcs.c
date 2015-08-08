@@ -43,7 +43,6 @@ int read_hrit_epilogue(const char *fname, struct seviri_native_data *d,struct se
      int out;
      const unsigned int probeSize = 4;
      long hdrlen=10;
-     long fileLen=0;
      unsigned char probeBuf[probeSize];
 
 /*      Open prologue*/
@@ -52,14 +51,14 @@ int read_hrit_epilogue(const char *fname, struct seviri_native_data *d,struct se
           return -1;
      }
 
-     ushort satval;
      fseek(fp,0,SEEK_SET);
 
 /*     if (seviri_15HEADER_SatelliteStatus_read      (fp, &d->header.SatelliteStatus,       aux)) E_L_R();*/
 
 /*      Read first part of prologue and check contents to see if correct filetype*/
      out=fread((char*)probeBuf, probeSize,1,fp);
-     
+     out=out;
+
      if (probeBuf[0] == 0 && probeBuf[1] == 0 && probeBuf[2] == 16)     if (fxxxx_swap(&hdrlen,     4, 1,  fp, aux) < 0) {E_L_R();}
 
      fseek(fp,hdrlen+1,SEEK_SET);
@@ -91,7 +90,6 @@ int read_hrit_prologue(const char *fname, struct seviri_native_data *d,struct se
      int out;
      const unsigned int probeSize = 4;
      long hdrlen=10;
-     long fileLen=0;
      unsigned char probeBuf[probeSize];
 
 /*      Open prologue*/
@@ -100,11 +98,12 @@ int read_hrit_prologue(const char *fname, struct seviri_native_data *d,struct se
           return -1;
      }
 
-     ushort satval;
      fseek(fp,0,SEEK_SET);
 
 /*      Read first part of prologue and check contents to see if correct filetype*/
      out=fread((char*)probeBuf, probeSize,1,fp);
+     out=out;
+
      if (probeBuf[0] == 0 && probeBuf[1] == 0 && probeBuf[2] == 16)     if (fxxxx_swap(&hdrlen,     4, 1,  fp, aux) < 0) {E_L_R();}
      fseek(fp,hdrlen,SEEK_SET);
 
