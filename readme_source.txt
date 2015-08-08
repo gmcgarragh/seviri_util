@@ -36,17 +36,20 @@ Bug reports are greatly appreciated!  If you would like to report a bug please i
 
 REFERENCES
 ----------
-ROSENFELD_D_2004:
-	D. Rosenfeld, I. Lensky, J. Kerkmann, S. Tjemkes Y. Govaerts, and H.P. Roesli. Applications of METEOSAT Second Generation (MSG) - Conversion from counts to radiances and from radiances to brightness temperatures and reflectances.  Version 1.1, 30 June 2004
-
-PDF_MSG_SEVIRI_RAD2REFL:
-	Conversion from radiances to reflectances for SEVIRI warm channels, Issue v4, 25 October 2012, Doc. No. EUM/MET/TEN/12/0332
-
-PDF_CGMS_LRIT_HRIT_2_6:
-	LRIT/HRIT global specification, Issue 2.6, 12 August 1999, Doc. No. CGMS 03
-
-PDF_TEN_05105_MSG_IMG_DATA:
-	MSG level 1.5 image data format description, Issue v7, 4 December 2013, Doc. No. EUM/MSG/ICD/105
-
 GIESKE_A_S_M:
 	A.S.M. Gieske, J. Hendrikse, V. Retsios , B. van Leeuwen, B.H.P. Maathuis , M. Romaguera, J.A. Sobrino, W.J. Timmermans, and Z. Su. Processing of MSG-1 SEVIRI data in the thermal infrared - Algorithm development with the use of the SPARC2004 data set.
+
+PDF_MSG_SEVIRI_RAD2REFL:
+	Conversion from radiances to reflectances for SEVIRI warm channels, Issue v4, 25 October 2012, EUMETSAT, Doc. No. EUM/MET/TEN/12/0332
+
+PDF_CGMS_LRIT_HRIT_2_6:
+	LRIT/HRIT global specification, Issue 2.6, 12 August 1999, CGMS, Doc. No. CGMS 03
+
+PDF_EFFECT_RAD_TO_BRIGHTNESS-1:
+	The Conversion from Effective Radiances to Equivalent Brightness Temperatures, Issue v1, 5 October 2012, EUMETSAT, Doc. No. EUM/MET/TEN/11/0569
+
+PDF_TEN_05105_MSG_IMG_DATA:
+	MSG level 1.5 image data format description, Issue v7, 4 December 2013, EUMETSAT, Doc. No. EUM/MSG/ICD/105
+
+ROSENFELD_D_2004:
+	D. Rosenfeld, I. Lensky, J. Kerkmann, S. Tjemkes Y. Govaerts, and H.P. Roesli. Applications of METEOSAT Second Generation (MSG) - Conversion from counts to radiances and from radiances to brightness temperatures and reflectances.  Version 1.1, 30 June 2004

@@ -5,11 +5,6 @@
 **    This source code is licensed under the GNU General Public License (GPL),
 **    Version 3.  See the file COPYING for more details.
 **
-**
-**    17th Jul 2015: SRP updated Rad to BT coefficients for MSG-1
-**                   added coefficients for MSG-3 and MSG-4
-**
-**
 *******************************************************************************/
 #include "internal.h"
 #include "seviri_native_util.h"
@@ -45,9 +40,7 @@ const double band_solar_irradiance[][SEVIRI_N_BANDS] =
       -999., 79.0035}
 };
 
-/* Ref: ROSENFELD_D_2004, Page 6 */
-/* Updated from The Conversion from Effective Radiances to Equivalent Brightness Temperatures, EUMETSAT 2012
-   http://www.eumetsat.int/website/home/Data/Products/Calibration/MSGCalibration/index.html */
+/* Ref: PDF_EFFECT_RAD_TO_BRIGHTNESS-1 */
 
 const double bt_nu_c[][SEVIRI_N_BANDS] =
 {
