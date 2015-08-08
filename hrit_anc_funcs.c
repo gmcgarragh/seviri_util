@@ -99,8 +99,9 @@ char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *time
      ptr=strstr(filename,"H-000-MSG");
      if (ptr==NULL){printf("Incorrectly formatted HRIT! Quitting\n");return NULL;}
      startfnam=ptr-filename;
-     indir=(char*)malloc(sizeof(char)*startfnam);
+     indir=(char*)malloc(sizeof(char)*startfnam+1);
      strncpy(indir,filename,startfnam);
+     indir[startfnam] = '\0';
      int gopos=startfnam+46;
      strncpy(timeslot,filename+gopos,12);
      timeslot[12]='\0';
