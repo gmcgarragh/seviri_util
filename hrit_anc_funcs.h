@@ -18,13 +18,15 @@ extern "C" {
 #endif
 
 
-int ishrv(int band);
-char* chan_name(int cnum);
+int is_hrv(int band);
+char *chan_name(int cnum);
 char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *timeslot);
-int assemble_fnames(char ****fnam, const char *indir, const char *timeslot, int nbands, const uint *bids, int sat);
-int assemble_proname(char **pnam, const char *indir, const char *timeslot, int sat);
+int assemble_fnames(char ****fnam, const char *indir, const char *timeslot,
+                    int nbands, const uint *bids, int sat);
 int assemble_epiname(char **enam, const char *indir, const char *timeslot, int sat);
-int read_data_oneseg(char* fname, int segnum, int cnum, struct seviri_data *d, struct seviri_dimension_data *dims);
+int assemble_proname(char **pnam, const char *indir, const char *timeslot, int sat);
+int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d,
+                     struct seviri_dimension_data *dims);
 
 
 #ifdef __cplusplus
