@@ -16,9 +16,9 @@
 /* Sets up the band names. good for telling which band is which, easier than
    channel number */
 
-static const char *bnames[] = {"VIS006", "VIS008", "IR_016", "IR_039", "WV_062",
-                               "WV_073", "IR_087", "IR_097", "IR_108", "IR_120",
-                               "IR_134"};
+const char *bnames[] = {"VIS006", "VIS008", "IR_016", "IR_039", "WV_062",
+                        "WV_073", "IR_087", "IR_097", "IR_108", "IR_120",
+                        "IR_134"};
 
 /*    Prints a message that shows how to use the utility.*/
 void show_usage()
@@ -152,11 +152,13 @@ int print_preproc_out(struct driver_data driver, struct seviri_preproc_data prep
 {
      int i;
 
+     unsigned int i_pixel;
+
      printf("****************************** PREPROC INFO ******************************\n");
 
      /* Print the values for the central pixel. */
 
-     unsigned int i_pixel  = i_line * preproc.n_columns + i_column;
+     i_pixel  = i_line * preproc.n_columns + i_column;
 
      printf("i_line:                %d\n", i_line);
      printf("i_column:              %d\n", i_column);
@@ -210,6 +212,7 @@ int free_driver(struct driver_data *driver)
 int parse_driver(char *fname,struct driver_data *driver)
 {
      int i;
+     int iline;
      size_t len=0;
      char *line = NULL;
 
@@ -290,7 +293,7 @@ int parse_driver(char *fname,struct driver_data *driver)
 /*     Read the initial line*/
      if (getline(&line,&len,fp)==-1) {printf("Failure reading input initial line line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
-     int iline     =     atoi(line);
+     iline     =     atoi(line);
      driver->bounds = SEVIRI_BOUNDS_LINE_COLUMN;
      if (iline==-100) { driver->bounds = SEVIRI_BOUNDS_FULL_DISK; setline(driver);}
      if (iline==-200) { driver->bounds = SEVIRI_BOUNDS_ACTUAL_IMAGE; setline(driver);}

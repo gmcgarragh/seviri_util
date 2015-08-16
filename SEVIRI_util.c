@@ -78,13 +78,13 @@ int main(int argc, char *argv[])
 {
      struct driver_data driver;
 
+     /* This struct will contain the image data and some metadata. */
+     struct seviri_preproc_data preproc;
+
      /* Parse the input driver file into the driver structure */
      if (argc!=2){show_usage();exit(-1);}
      if (parse_driver(argv[1],&driver)!=0) {E_L_R();}
      if (VERBOSE) if (print_driver(driver)!=0) {E_L_R();}
-
-     /* This struct will contain the image data and some metadata. */
-     struct seviri_preproc_data preproc;
 
      /* Run the appropriate processing chain, HRIT or NAT */
      if (driver.infrmt==SEVIRI_INFILE_HRIT) if (run_sev_hrit(driver,&preproc)!=0) {E_L_R();}

@@ -23,6 +23,9 @@ enum seviri_outtypes     {SEVIRI_OUTFILE_HDF,     SEVIRI_OUTFILE_CDF,     SEVIRI
 enum sat_nums          {SAT_MSG1,          SAT_MSG2,          SAT_MSG3,          SAT_MSG4,     N_SEVIRI_SATNUMS};
 
 
+extern const char *bnames[];
+
+
 /*******************************************************************************
  * Error, location and return macros.
  ******************************************************************************/

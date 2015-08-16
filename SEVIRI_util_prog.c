@@ -154,13 +154,6 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
      static char title_brf[]          = "SEVIRI data in solar reflectance format";
      static char title_bt[]          = "SEVIRI data in brightness temperature format";
 
-/*     Set up the band names, used for variable names in the CDF file*/
-     char bnames[12][7];
-     strcpy(bnames[0],"VIS006");     strcpy(bnames[1], "VIS008");     strcpy(bnames[2], "IR_016");
-     strcpy(bnames[3], "IR_039");     strcpy(bnames[4], "WV_062");     strcpy(bnames[5], "WV_073");
-     strcpy(bnames[6], "IR_087");     strcpy(bnames[7], "IR_097");     strcpy(bnames[8], "IR_108");
-     strcpy(bnames[9], "IR_120");     strcpy(bnames[10], "IR_134");
-
      int nbands=preproc.n_bands,i=0;
      for (i=0;i<7;i++)if (driver.ancsave[i]==1)nbands+=1;
      int ncid, x_dimid, y_dimid;
@@ -283,13 +276,6 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
      static char title_brf[]          = "SEVIRI data in solar reflectance format";
      static char title_bt[]          = "SEVIRI data in brightness temperature format";
 */
-/*     Set up the band names, used for variable names in the HDF5 file*/
-     char bnames[12][7];
-     strcpy(bnames[0],"VIS006");     strcpy(bnames[1], "VIS008");     strcpy(bnames[2], "IR_016");
-     strcpy(bnames[3], "IR_039");     strcpy(bnames[4], "WV_062");     strcpy(bnames[5], "WV_073");
-     strcpy(bnames[6], "IR_087");     strcpy(bnames[7], "IR_097");     strcpy(bnames[8], "IR_108");
-     strcpy(bnames[9], "IR_120");     strcpy(bnames[10], "IR_134");
-
      int nbands=preproc.n_bands,i=0;
      for (i=0;i<7;i++)if (driver.ancsave[i]==1)nbands+=1;
      int *varid;

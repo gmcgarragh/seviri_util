@@ -197,6 +197,7 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      char *epiname;
      char ***bnames;
 
+     struct seviri_auxillary_io_data aux;
      struct seviri_dimension_data *dimens;
 
      /* Get the names of the prologue, epilogue and data files. */
@@ -218,7 +219,6 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      }
 
      /* Set up the aux data struct and check endianness */
-     struct seviri_auxillary_io_data aux;
      seviri_auxillary_alloc(&aux);
      aux.operation  = 0;
      aux.swap_bytes = snu_is_little_endian();
