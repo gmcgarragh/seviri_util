@@ -18,15 +18,15 @@ extern "C" {
 #endif
 
 
-int seviri_native_get_dimens(const char *filename, uint *i_line, uint *i_column,
-                             uint *n_lines, uint *n_columns, enum seviri_bounds bounds,
-                             uint line0, uint line1, uint column0, uint column1,
-                             double lat0, double lat1, double lon0, double lon1);
-int seviri_native_read(const char *filename, struct seviri_native_data *d,
-                       uint n_bands, const uint *band_ids, enum seviri_bounds bounds,
-                       uint line0, uint line1, uint column0, uint column1,
-                       double lat0, double lat1, double lon0, double lon1);
-int seviri_native_write(const char *filename, const struct seviri_native_data *d);
+int seviri_get_dimens_nat(const char *filename, uint *i_line, uint *i_column,
+                          uint *n_lines, uint *n_columns, enum seviri_bounds bounds,
+                          uint line0, uint line1, uint column0, uint column1,
+                          double lat0, double lat1, double lon0, double lon1);
+int seviri_read_nat(const char *filename, struct seviri_data *d,
+                    uint n_bands, const uint *band_ids, enum seviri_bounds bounds,
+                    uint line0, uint line1, uint column0, uint column1,
+                    double lat0, double lat1, double lon0, double lon1);
+int seviri_write_nat(const char *filename, const struct seviri_data *d);
 
 
 #ifdef __cplusplus

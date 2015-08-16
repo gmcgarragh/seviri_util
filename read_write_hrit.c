@@ -24,7 +24,7 @@
  *
  * returns:     Zero if successful, nonzero if error
  ******************************************************************************/
-int read_hrit_epilogue(const char *fname, struct seviri_native_data *d,struct seviri_auxillary_io_data *aux)
+int read_hrit_epilogue(const char *fname, struct seviri_data *d,struct seviri_auxillary_io_data *aux)
 {
      FILE *fp;
      int out;
@@ -71,7 +71,7 @@ int read_hrit_epilogue(const char *fname, struct seviri_native_data *d,struct se
  *
  * returns:     Zero if successful, nonzero if error
  ******************************************************************************/
-int read_hrit_prologue(const char *fname, struct seviri_native_data *d,struct seviri_auxillary_io_data *aux)
+int read_hrit_prologue(const char *fname, struct seviri_data *d,struct seviri_auxillary_io_data *aux)
 {
      FILE *fp;
      int out;
@@ -120,7 +120,7 @@ int read_hrit_prologue(const char *fname, struct seviri_native_data *d,struct se
  *
  * returns:     Zero if successful, nonzero if error
  ******************************************************************************/
-int alloc_imagearr(uint nbands, const uint *band_ids,struct seviri_native_data *d)
+int alloc_imagearr(uint nbands, const uint *band_ids,struct seviri_data *d)
 {
      int i,proc_hrv,virb;
      long length_vir,length_hrv;
@@ -167,7 +167,7 @@ int alloc_imagearr(uint nbands, const uint *band_ids,struct seviri_native_data *
  *
  * returns:     Zero if successful, nonzero if error
  ******************************************************************************/
-int seviri_native_read_hrit(const char *indir, const char *timeslot, int sat, struct seviri_native_data *d,
+int seviri_read_hrit(const char *indir, const char *timeslot, int sat, struct seviri_data *d,
           uint n_bands, const uint *band_ids,enum seviri_bounds bounds,uint line0, uint line1, uint column0,
           uint column1, double lat0, double lat1, double lon0, double lon1)
 {

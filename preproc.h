@@ -40,26 +40,25 @@ struct seviri_preproc_data {
 };
 
 
-int seviri_native_preproc(const struct seviri_native_data *d,
-                          struct seviri_preproc_data *d2,
-                          const enum seviri_units *band_units, int do_not_alloc);
-int seviri_read_and_preproc(const char *filename,
-                            struct seviri_preproc_data *preproc,
-                            uint n_bands, const uint *band_ids,
-                            const enum seviri_units *band_units,
-                            enum seviri_bounds bounds, uint line0, uint line1,
-                            uint column0, uint column1, double lat0, double lat1,
-                            double lon0, double lon1, int do_not_alloc);
+int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
+                   const enum seviri_units *band_units, int do_not_alloc);
+int seviri_read_and_preproc_nat(const char *filename,
+                                struct seviri_preproc_data *preproc,
+                                uint n_bands, const uint *band_ids,
+                                const enum seviri_units *band_units,
+                                enum seviri_bounds bounds, uint line0, uint line1,
+                                uint column0, uint column1, double lat0, double lat1,
+                                double lon0, double lon1, int do_not_alloc);
 int seviri_read_and_preproc_hrit(const char *indir,const char *timeslot,const int satnum,
-                            struct seviri_preproc_data *preproc,
-                            uint n_bands, const uint *band_ids,
-                            const enum seviri_units *band_units,
-                            enum seviri_bounds bounds,
-                            uint line0, uint line1, uint column0, uint column1,
-                            double lat0, double lat1, double lon0, double lon1,
-                            int do_not_alloc);
+                                struct seviri_preproc_data *preproc,
+                                uint n_bands, const uint *band_ids,
+                                const enum seviri_units *band_units,
+                                enum seviri_bounds bounds,
+                                uint line0, uint line1, uint column0, uint column1,
+                                double lat0, double lat1, double lon0, double lon1,
+                                int do_not_alloc);
 int seviri_preproc_free(struct seviri_preproc_data *d);
-int seviri_read_and_preproc_main(const char *filename,
+int seviri_read_and_preproc(const char *filename,
                             struct seviri_preproc_data *preproc,
                             uint n_bands, const uint *band_ids,
                             const enum seviri_units *band_units,

@@ -1266,7 +1266,7 @@ int seviri_LineSideInfo_read(
  * d		: The output seviri_dimension_data struct
  * marf_header	: The seviri_marf_header_data struct for the current image data
  *                file.
- * bounds	: Described in the seviri_native_read() header.
+ * bounds	: Described in the seviri_read_nat() header.
  * line0	: 	''
  * line1	: 	''
  * column0	: 	''
@@ -1557,14 +1557,14 @@ static int seviri_image_free(struct seviri_image_data *d) {
 
 
 /*******************************************************************************
- * Free memory allocated by seviri_native_read() to hold seviri_native_data
- * struct fields.
+ * Free memory allocated by seviri_read_hrit() or seviri_read_hrit() to hold
+ * seviri_data struct fields.
  *
- * image	: The input seviri_native_data struct
+ * image	: The input seviri_data struct
  *
  * returns	: Non-zero on error
  ******************************************************************************/
-int seviri_native_free(struct seviri_native_data *d) {
+int seviri_free(struct seviri_data *d) {
 
      if (seviri_image_free(&d->image)) {
           fprintf(stderr, "ERROR: seviri_image_free()\n");

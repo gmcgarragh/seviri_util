@@ -1,6 +1,7 @@
 /*
-Example program calling seviri_native_util to read a native SEVIRI level 1.5
-image file and preprocess it to obtain several fields.
+Example program calling seviri_native_util to read a SEVIRI level 1.5 file in
+either the HRIT or native format image file and preprocess it to obtain several
+fields.
 */
 
 #include <stdio.h>
@@ -42,7 +43,7 @@ int main(int argc, char *argv[]) {
      /* Read and preprocess the data.  Note: the last four arguments are unused
         in this case. Please see the function header for a complete discussion
         of the arguments. */
-     if (seviri_read_and_preproc_main(filename, &preproc, n_bands, band_ids,
+     if (seviri_read_and_preproc(filename, &preproc, n_bands, band_ids,
                                  band_units, SEVIRI_BOUNDS_LINE_COLUMN,
                                  line0, line1, column0, column1,
                                  0., 0., 0., 0., 0)) {

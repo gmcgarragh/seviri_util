@@ -956,7 +956,7 @@ struct seviri_image_data {
 /*******************************************************************************
  * The main SEVIRI data struct with arrays of digital counts
  ******************************************************************************/
-struct seviri_native_data {
+struct seviri_data {
      struct seviri_marf_header_data marf_header;
 
      struct seviri_packet_header_data packet_header1;
@@ -1050,7 +1050,7 @@ int seviri_get_dimension_data(
           uint line0, uint line1, uint column0, uint column1,
           double lat0, double lat1, double lon0, double lon1);
 
-int seviri_native_free(struct seviri_native_data *d);
+int seviri_free(struct seviri_data *d);
 
 
 #ifdef __cplusplus

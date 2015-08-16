@@ -21,16 +21,11 @@ module seviri_native_util
 
    private
 
-   public :: seviri_preproc_t, &
-             seviri_preproc_t_f90, &
-             seviri_native_get_dimens, &
-             seviri_read_and_preproc, &
-             seviri_read_and_preproc_hrit, &
-             seviri_preproc_free, &
-             seviri_native_get_dimens_f90, &
-             seviri_read_and_preproc_f90, &
+   public :: seviri_preproc_t_f90, &
+             seviri_get_dimens_nat_f90, &
+             seviri_read_and_preproc_nat_f90, &
              seviri_read_and_preproc_hrit_f90, &
-             seviri_read_and_preproc_main_f90, &
+             seviri_read_and_preproc_f90, &
              seviri_preproc_free_f90
 
 
@@ -82,10 +77,10 @@ module seviri_native_util
 
 
    interface
-      integer(c_int) function seviri_native_get_dimens(filename, &
+      integer(c_int) function seviri_get_dimens_nat(filename, &
          i_line, i_column, n_lines, n_columns, bounds, line0, line1, &
          column0, column1, lat0, lat1, lon0, lon1) &
-         bind(C, name = 'seviri_native_get_dimens')
+         bind(C, name = 'seviri_get_dimens_nat')
 
          use iso_c_binding
 
@@ -98,13 +93,13 @@ module seviri_native_util
          integer(c_int),    intent(in), value :: line0, line1, &
                                                  column0, column1
          real(c_double),    intent(in), value :: lat0, lat1, lon0, lon1
-      end function seviri_native_get_dimens
+      end function seviri_get_dimens_nat
    end interface
 
    interface
-      integer(c_int) function seviri_read_and_preproc(filename, preproc, &
+      integer(c_int) function seviri_read_and_preproc_nat(filename, preproc, &
          n_bands, band_ids, band_units, bounds, line0, line1, column0, column1, &
-         lat0, lat1, lon0, lon1, do_not_alloc) bind(C, name = 'seviri_read_and_preproc')
+         lat0, lat1, lon0, lon1, do_not_alloc) bind(C, name = 'seviri_read_and_preproc_nat')
 
          use iso_c_binding
 
@@ -122,7 +117,7 @@ module seviri_native_util
                                                       column0, column1
          real(c_double),         intent(in), value :: lat0, lat1, lon0, lon1
          integer(c_int),         intent(in), value :: do_not_alloc
-      end function seviri_read_and_preproc
+      end function seviri_read_and_preproc_nat
    end interface
 
    interface
@@ -153,9 +148,9 @@ module seviri_native_util
    end interface
 
    interface
-      integer(c_int) function seviri_read_and_preproc_main(filename, preproc, &
+      integer(c_int) function seviri_read_and_preproc(filename, preproc, &
          n_bands, band_ids, band_units, bounds, line0, line1, column0, column1, &
-         lat0, lat1, lon0, lon1, do_not_alloc) bind(C, name = 'seviri_read_and_preproc_main')
+         lat0, lat1, lon0, lon1, do_not_alloc) bind(C, name = 'seviri_read_and_preproc')
 
          use iso_c_binding
 
@@ -173,7 +168,7 @@ module seviri_native_util
                                                       column0, column1
          real(c_double),         intent(in), value :: lat0, lat1, lon0, lon1
          integer(c_int),         intent(in), value :: do_not_alloc
-      end function seviri_read_and_preproc_main
+      end function seviri_read_and_preproc
    end interface
 
    interface
@@ -192,7 +187,7 @@ module seviri_native_util
 
 contains
 
-integer function seviri_native_get_dimens_f90(filename, i_line, i_column, &
+integer function seviri_get_dimens_nat_f90(filename, i_line, i_column, &
    n_lines, n_columns, bounds, line0, line1, column0, column1, lat0, lat1, &
    lon0, lon1) result(status)
 
@@ -206,11 +201,158 @@ integer function seviri_native_get_dimens_f90(filename, i_line, i_column, &
                                         column0, column1
    real(kind = 8), intent(in), value :: lat0, lat1, lon0, lon1
 
-   status = seviri_native_get_dimens(trim(filename)//C_NULL_CHAR, &
+   status = seviri_get_dimens_nat(trim(filename)//C_NULL_CHAR, &
          i_line, i_column, n_lines, n_columns, bounds, line0, line1, &
          column0, column1, lat0, lat1, lon0, lon1)
 
-end function seviri_native_get_dimens_f90
+end function seviri_get_dimens_nat_f90
+
+
+integer function seviri_read_and_preproc_nat_f90(filename, preproc_f90, n_bands, &
+   band_ids, band_units, bounds, line0, line1, column0, column1, lat0, lat1, &
+   lon0, lon1, do_not_alloc_f90) result(status)
+
+   implicit none
+
+   character(*),               intent(in)        :: filename
+   type(seviri_preproc_t_f90), intent(out)       :: preproc_f90
+   integer,                    intent(in), value :: n_bands
+   integer,                    intent(in)        :: band_ids(*)
+   integer,                    intent(in)        :: band_units(*)
+   integer,                    intent(in), value :: bounds
+   integer,                    intent(in), value :: line0, line1, &
+                                                    column0, column1
+   real(kind = 8),             intent(in), value :: lat0, lat1, lon0, lon1
+   logical,                    intent(in), value :: do_not_alloc_f90
+
+   integer                :: do_not_alloc
+   type(seviri_preproc_t) :: preproc
+   integer                :: shape1(2)
+   integer                :: shape2(3)
+
+   do_not_alloc = 0
+   if (do_not_alloc_f90) &
+      do_not_alloc = 1
+
+   if (do_not_alloc_f90) then
+      preproc%time  = c_loc(preproc_f90%time(1, 1))
+      preproc%lat   = c_loc(preproc_f90%lat (1, 1))
+      preproc%lon   = c_loc(preproc_f90%lon (1, 1))
+      preproc%sza   = c_loc(preproc_f90%sza (1, 1))
+      preproc%saa   = c_loc(preproc_f90%saa (1, 1))
+      preproc%vza   = c_loc(preproc_f90%vza (1, 1))
+      preproc%vaa   = c_loc(preproc_f90%vaa (1, 1))
+      preproc%data2 = c_loc(preproc_f90%data(1, 1, 1))
+   end if
+
+   status = seviri_read_and_preproc_nat(trim(filename)//C_NULL_CHAR, preproc, &
+                                        n_bands, band_ids, band_units, bounds, &
+                                        line0, line1, column0, column1, lat0, lat1, &
+                                        lon0, lon1, do_not_alloc)
+
+   preproc_f90%memory_alloc_d = .false.
+   if (preproc%memory_alloc_d .ne. 0) &
+      preproc_f90%memory_alloc_d = .true.
+
+   preproc_f90%n_bands    = preproc%n_bands
+   preproc_f90%n_lines    = preproc%n_lines
+   preproc_f90%n_columns  = preproc%n_columns
+   preproc_f90%fill_value = preproc%fill_value
+
+   shape1 = [preproc_f90%n_columns, preproc_f90%n_lines]
+
+   if (.not. do_not_alloc_f90) then
+      call c_f_pointer(preproc%time,  preproc_f90%time, shape1)
+      call c_f_pointer(preproc%lat,   preproc_f90%lat,  shape1)
+      call c_f_pointer(preproc%lon,   preproc_f90%lon,  shape1)
+      call c_f_pointer(preproc%sza,   preproc_f90%sza,  shape1)
+      call c_f_pointer(preproc%saa,   preproc_f90%saa,  shape1)
+      call c_f_pointer(preproc%vza,   preproc_f90%vza,  shape1)
+      call c_f_pointer(preproc%vaa,   preproc_f90%vaa,  shape1)
+
+      shape2 = [preproc_f90%n_columns, preproc_f90%n_lines, n_bands]
+
+      call c_f_pointer(preproc%data2, preproc_f90%data, shape2)
+   end if
+
+   preproc_f90%preproc = preproc
+
+end function seviri_read_and_preproc_nat_f90
+
+
+integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
+   preproc_f90, n_bands, band_ids, band_units, bounds, line0, line1, column0, &
+   column1, lat0, lat1, lon0, lon1, do_not_alloc_f90) result(status)
+
+   implicit none
+
+   character(*),               intent(in)        :: filename
+   character(*),               intent(in)        :: timeslot
+   integer,                    intent(in)        :: satnum
+   type(seviri_preproc_t_f90), intent(out)       :: preproc_f90
+   integer,                    intent(in), value :: n_bands
+   integer,                    intent(in)        :: band_ids(*)
+   integer,                    intent(in)        :: band_units(*)
+   integer,                    intent(in), value :: bounds
+   integer,                    intent(in), value :: line0, line1, &
+                                                    column0, column1
+   real(kind = 8),             intent(in), value :: lat0, lat1, lon0, lon1
+   logical,                    intent(in), value :: do_not_alloc_f90
+
+   integer                :: do_not_alloc
+   type(seviri_preproc_t) :: preproc
+   integer                :: shape1(2)
+   integer                :: shape2(3)
+
+   do_not_alloc = 0
+   if (do_not_alloc_f90) &
+      do_not_alloc = 1
+
+   if (do_not_alloc_f90) then
+      preproc%time  = c_loc(preproc_f90%time(1, 1))
+      preproc%lat   = c_loc(preproc_f90%lat (1, 1))
+      preproc%lon   = c_loc(preproc_f90%lon (1, 1))
+      preproc%sza   = c_loc(preproc_f90%sza (1, 1))
+      preproc%saa   = c_loc(preproc_f90%saa (1, 1))
+      preproc%vza   = c_loc(preproc_f90%vza (1, 1))
+      preproc%vaa   = c_loc(preproc_f90%vaa (1, 1))
+      preproc%data2 = c_loc(preproc_f90%data(1, 1, 1))
+   end if
+
+   status = seviri_read_and_preproc_hrit(trim(filename)//C_NULL_CHAR, &
+                                         trim(timeslot)//C_NULL_CHAR, satnum, &
+                                         preproc, n_bands, band_ids, band_units, &
+                                         bounds, line0, line1, column0, column1, &
+                                         lat0, lat1, lon0, lon1, do_not_alloc)
+
+   preproc_f90%memory_alloc_d = .false.
+   if (preproc%memory_alloc_d .ne. 0) &
+      preproc_f90%memory_alloc_d = .true.
+
+   preproc_f90%n_bands    = preproc%n_bands
+   preproc_f90%n_lines    = preproc%n_lines
+   preproc_f90%n_columns  = preproc%n_columns
+   preproc_f90%fill_value = preproc%fill_value
+
+   shape1 = [preproc_f90%n_columns, preproc_f90%n_lines]
+
+   if (.not. do_not_alloc_f90) then
+      call c_f_pointer(preproc%time,  preproc_f90%time, shape1)
+      call c_f_pointer(preproc%lat,   preproc_f90%lat,  shape1)
+      call c_f_pointer(preproc%lon,   preproc_f90%lon,  shape1)
+      call c_f_pointer(preproc%sza,   preproc_f90%sza,  shape1)
+      call c_f_pointer(preproc%saa,   preproc_f90%saa,  shape1)
+      call c_f_pointer(preproc%vza,   preproc_f90%vza,  shape1)
+      call c_f_pointer(preproc%vaa,   preproc_f90%vaa,  shape1)
+
+      shape2 = [preproc_f90%n_columns, preproc_f90%n_lines, n_bands]
+
+      call c_f_pointer(preproc%data2, preproc_f90%data, shape2)
+   end if
+
+   preproc_f90%preproc = preproc
+
+end function seviri_read_and_preproc_hrit_f90
 
 
 integer function seviri_read_and_preproc_f90(filename, preproc_f90, n_bands, &
@@ -283,153 +425,6 @@ integer function seviri_read_and_preproc_f90(filename, preproc_f90, n_bands, &
    preproc_f90%preproc = preproc
 
 end function seviri_read_and_preproc_f90
-
-
-integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
-   preproc_f90, n_bands, band_ids, band_units, bounds, line0, line1, column0, &
-   column1, lat0, lat1, lon0, lon1, do_not_alloc_f90) result(status)
-
-   implicit none
-
-   character(*),               intent(in)        :: filename
-   character(*),               intent(in)        :: timeslot
-   integer,                    intent(in)        :: satnum
-   type(seviri_preproc_t_f90), intent(out)       :: preproc_f90
-   integer,                    intent(in), value :: n_bands
-   integer,                    intent(in)        :: band_ids(*)
-   integer,                    intent(in)        :: band_units(*)
-   integer,                    intent(in), value :: bounds
-   integer,                    intent(in), value :: line0, line1, &
-                                                    column0, column1
-   real(kind = 8),             intent(in), value :: lat0, lat1, lon0, lon1
-   logical,                    intent(in), value :: do_not_alloc_f90
-
-   integer                :: do_not_alloc
-   type(seviri_preproc_t) :: preproc
-   integer                :: shape1(2)
-   integer                :: shape2(3)
-
-   do_not_alloc = 0
-   if (do_not_alloc_f90) &
-      do_not_alloc = 1
-
-   if (do_not_alloc_f90) then
-      preproc%time  = c_loc(preproc_f90%time(1, 1))
-      preproc%lat   = c_loc(preproc_f90%lat (1, 1))
-      preproc%lon   = c_loc(preproc_f90%lon (1, 1))
-      preproc%sza   = c_loc(preproc_f90%sza (1, 1))
-      preproc%saa   = c_loc(preproc_f90%saa (1, 1))
-      preproc%vza   = c_loc(preproc_f90%vza (1, 1))
-      preproc%vaa   = c_loc(preproc_f90%vaa (1, 1))
-      preproc%data2 = c_loc(preproc_f90%data(1, 1, 1))
-   end if
-
-   status = seviri_read_and_preproc_hrit(trim(filename)//C_NULL_CHAR, &
-                                    trim(timeslot)//C_NULL_CHAR, satnum, &
-                                    preproc, n_bands, band_ids, band_units, &
-                                    bounds, line0, line1, column0, column1, &
-                                    lat0, lat1, lon0, lon1, do_not_alloc)
-
-   preproc_f90%memory_alloc_d = .false.
-   if (preproc%memory_alloc_d .ne. 0) &
-      preproc_f90%memory_alloc_d = .true.
-
-   preproc_f90%n_bands    = preproc%n_bands
-   preproc_f90%n_lines    = preproc%n_lines
-   preproc_f90%n_columns  = preproc%n_columns
-   preproc_f90%fill_value = preproc%fill_value
-
-   shape1 = [preproc_f90%n_columns, preproc_f90%n_lines]
-
-   if (.not. do_not_alloc_f90) then
-      call c_f_pointer(preproc%time,  preproc_f90%time, shape1)
-      call c_f_pointer(preproc%lat,   preproc_f90%lat,  shape1)
-      call c_f_pointer(preproc%lon,   preproc_f90%lon,  shape1)
-      call c_f_pointer(preproc%sza,   preproc_f90%sza,  shape1)
-      call c_f_pointer(preproc%saa,   preproc_f90%saa,  shape1)
-      call c_f_pointer(preproc%vza,   preproc_f90%vza,  shape1)
-      call c_f_pointer(preproc%vaa,   preproc_f90%vaa,  shape1)
-
-      shape2 = [preproc_f90%n_columns, preproc_f90%n_lines, n_bands]
-
-      call c_f_pointer(preproc%data2, preproc_f90%data, shape2)
-   end if
-
-   preproc_f90%preproc = preproc
-
-end function seviri_read_and_preproc_hrit_f90
-
-
-integer function seviri_read_and_preproc_main_f90(filename, preproc_f90, n_bands, &
-   band_ids, band_units, bounds, line0, line1, column0, column1, lat0, lat1, &
-   lon0, lon1, do_not_alloc_f90) result(status)
-
-   implicit none
-
-   character(*),               intent(in)        :: filename
-   type(seviri_preproc_t_f90), intent(out)       :: preproc_f90
-   integer,                    intent(in), value :: n_bands
-   integer,                    intent(in)        :: band_ids(*)
-   integer,                    intent(in)        :: band_units(*)
-   integer,                    intent(in), value :: bounds
-   integer,                    intent(in), value :: line0, line1, &
-                                                    column0, column1
-   real(kind = 8),             intent(in), value :: lat0, lat1, lon0, lon1
-   logical,                    intent(in), value :: do_not_alloc_f90
-
-   integer                :: do_not_alloc
-   type(seviri_preproc_t) :: preproc
-   integer                :: shape1(2)
-   integer                :: shape2(3)
-
-   do_not_alloc = 0
-   if (do_not_alloc_f90) &
-      do_not_alloc = 1
-
-   if (do_not_alloc_f90) then
-      preproc%time  = c_loc(preproc_f90%time(1, 1))
-      preproc%lat   = c_loc(preproc_f90%lat (1, 1))
-      preproc%lon   = c_loc(preproc_f90%lon (1, 1))
-      preproc%sza   = c_loc(preproc_f90%sza (1, 1))
-      preproc%saa   = c_loc(preproc_f90%saa (1, 1))
-      preproc%vza   = c_loc(preproc_f90%vza (1, 1))
-      preproc%vaa   = c_loc(preproc_f90%vaa (1, 1))
-      preproc%data2 = c_loc(preproc_f90%data(1, 1, 1))
-   end if
-
-   status = seviri_read_and_preproc_main(trim(filename)//C_NULL_CHAR, preproc, &
-                                    n_bands, band_ids, band_units, bounds, &
-                                    line0, line1, column0, column1, lat0, lat1, &
-                                    lon0, lon1, do_not_alloc)
-
-   preproc_f90%memory_alloc_d = .false.
-   if (preproc%memory_alloc_d .ne. 0) &
-      preproc_f90%memory_alloc_d = .true.
-
-   preproc_f90%n_bands    = preproc%n_bands
-   preproc_f90%n_lines    = preproc%n_lines
-   preproc_f90%n_columns  = preproc%n_columns
-   preproc_f90%fill_value = preproc%fill_value
-
-   shape1 = [preproc_f90%n_columns, preproc_f90%n_lines]
-
-   if (.not. do_not_alloc_f90) then
-      call c_f_pointer(preproc%time,  preproc_f90%time, shape1)
-      call c_f_pointer(preproc%lat,   preproc_f90%lat,  shape1)
-      call c_f_pointer(preproc%lon,   preproc_f90%lon,  shape1)
-      call c_f_pointer(preproc%sza,   preproc_f90%sza,  shape1)
-      call c_f_pointer(preproc%saa,   preproc_f90%saa,  shape1)
-      call c_f_pointer(preproc%vza,   preproc_f90%vza,  shape1)
-      call c_f_pointer(preproc%vaa,   preproc_f90%vaa,  shape1)
-
-      shape2 = [preproc_f90%n_columns, preproc_f90%n_lines, n_bands]
-
-      call c_f_pointer(preproc%data2, preproc_f90%data, shape2)
-   end if
-
-   preproc_f90%preproc = preproc
-
-end function seviri_read_and_preproc_main_f90
 
 
 integer function seviri_preproc_free_f90(preproc_f90) result(status)

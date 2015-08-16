@@ -40,7 +40,7 @@ program example_f90
      ! Read and preprocess the data.  Note: the last four arguments are unused
      ! in this case. Please see the functionn header for a complete discussion
      ! of the arrguments.
-     if (seviri_read_and_preproc_main_f90(trim(filename), preproc, n_bands, band_ids, &
+     if (seviri_read_and_preproc_f90(trim(filename), preproc, n_bands, band_ids, &
                             band_units, SEVIRI_BOUNDS_LINE_COLUMN, line0, line1, &
                             column0, column1, 0.d0, 0.d0, 0.d0, 0.d0, .false.) &
                             .ne. 0) then

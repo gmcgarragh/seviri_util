@@ -36,7 +36,7 @@
  * image	: The output seviri_image_data struct with the image data
  * marf_header	: The seviri_marf_header_data struct for the current image data
  *                file.
- * n_bands	: Described in the seviri_native_read() header
+ * n_bands	: Described in the seviri_read_nat() header
  * band_ids	: 	''
  * bounds	: 	''
  * line0	: 	''
@@ -422,7 +422,7 @@ static int seviri_image_free(struct seviri_image_data *d) {
  *                within the full disk
  * n_lines	: Output number of lines of the actual image
  * n_columns	: Output number of columns of the actual image
- * bounds	: Described in the seviri_native_read() header.
+ * bounds	: Described in the seviri_read_nat() header.
  * line0	: 	''
  * line1	: 	''
  * column0	: 	''
@@ -436,10 +436,10 @@ static int seviri_image_free(struct seviri_image_data *d) {
  *
  * returns	: Non-zero on error
  ******************************************************************************/
-int seviri_native_get_dimens(const char *filename, uint *i_line, uint *i_column,
-                             uint *n_lines, uint *n_columns, enum seviri_bounds bounds,
-                             uint line0, uint line1, uint column0, uint column1,
-                             double lat0, double lat1, double lon0, double lon1) {
+int seviri_get_dimens_nat(const char *filename, uint *i_line, uint *i_column,
+                          uint *n_lines, uint *n_columns, enum seviri_bounds bounds,
+                          uint line0, uint line1, uint column0, uint column1,
+                          double lat0, double lat1, double lon0, double lon1) {
 
      FILE *fp;
 
@@ -492,8 +492,8 @@ int seviri_native_get_dimens(const char *filename, uint *i_line, uint *i_column,
  * The main read function.
  *
  * filename	: Native SEVIRI level 1.5 filename
- * d		: The output seviri_native_data struct with the U-MARF header,
- *                level 1.5 header and trailer, and the image data.
+ * d		: The output seviri_data struct with the U-MARF header, level
+ *                1.5 header and trailer, and the image data.
  * n_bands	: The desired number of bands to read
  * band_ids	: Array of band Ids to read of length n_bands
  * bounds	: Type of image sub-setting desired.  Valid choices are:
@@ -525,11 +525,11 @@ int seviri_native_get_dimens(const char *filename, uint *i_line, uint *i_column,
  *
  * returns	: Non-zero on error
  ******************************************************************************/
-int seviri_native_read(const char *filename, struct seviri_native_data *d,
-                       uint n_bands, const uint *band_ids,
-                       enum seviri_bounds bounds,
-                       uint line0, uint line1, uint column0, uint column1,
-                       double lat0, double lat1, double lon0, double lon1) {
+int seviri_read_nat(const char *filename, struct seviri_data *d,
+                    uint n_bands, const uint *band_ids,
+                    enum seviri_bounds bounds,
+                    uint line0, uint line1, uint column0, uint column1,
+                    double lat0, double lat1, double lon0, double lon1) {
 
      FILE *fp;
 
@@ -599,12 +599,12 @@ int seviri_native_read(const char *filename, struct seviri_native_data *d,
  * The main write function.
  *
  * filename	: Native SEVIRI level 1.5 filename
- * d		: The input seviri_native_data struct with the U-MARF header,
- *                level 1.5 header and trailer, and the image data.
+ * d		: The input seviri_data struct with the U-MARF header, level 1.5
+ *                header and trailer, and the image data.
  *
  * returns	: Non-zero on error
  ******************************************************************************/
-int seviri_native_write(const char *filename, const struct seviri_native_data *d) {
+int seviri_write_nat(const char *filename, const struct seviri_data *d) {
 
      FILE *fp;
 

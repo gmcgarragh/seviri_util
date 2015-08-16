@@ -189,7 +189,7 @@ int assemble_proname(char **pnam, const char *indir, const char *timeslot, int s
  * 
  * returns:     Zero if successful
  ******************************************************************************/
-int read_data_oneseg(char* fname,int segnum,int cnum,struct seviri_native_data *d,struct seviri_dimension_data *dims)
+int read_data_oneseg(char* fname,int segnum,int cnum,struct seviri_data *d,struct seviri_dimension_data *dims)
 {
 
 /*      Set up the various data that is required*/
