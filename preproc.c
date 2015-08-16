@@ -7,10 +7,12 @@
 **
 *******************************************************************************/
 
-#include "hrit_funcs.h"
+#include "external.h"
 #include "hrit_anc_funcs.h"
 #include "internal.h"
-#include "seviri_native_util.h"
+#include "preproc.h"
+#include "read_write_hrit.h"
+#include "read_write_nat.h"
 
 
 /*******************************************************************************

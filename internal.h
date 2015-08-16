@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "seviri_native_util.h"
+#include "external.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -101,6 +101,7 @@ extern const struct nav_scaling_factors nav_scaling_factors_hrv;
  ******************************************************************************/
 #include "misc_util.h"
 #include "nav_util.h"
+#include "read_write.h"
 
 
 #ifdef __cplusplus

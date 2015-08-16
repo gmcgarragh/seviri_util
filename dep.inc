@@ -1,22 +1,28 @@
-SEVIRI_util.o: SEVIRI_util.c SEVIRI_util.h seviri_native_util.h preproc.h \
- read_write.h
+SEVIRI_util.o: SEVIRI_util.c SEVIRI_util.h seviri_native_util.h \
+ external.h preproc.h read_write.h internal.h misc_util.h nav_util.h \
+ read_write_hrit.h read_write_nat.h
 SEVIRI_util_funcs.o: SEVIRI_util_funcs.c SEVIRI_util.h \
- seviri_native_util.h preproc.h read_write.h
+ seviri_native_util.h external.h preproc.h read_write.h internal.h \
+ misc_util.h nav_util.h read_write_hrit.h read_write_nat.h
 SEVIRI_util_prog.o: SEVIRI_util_prog.c SEVIRI_util.h seviri_native_util.h \
- preproc.h read_write.h
-example_c.o: example_c.c seviri_native_util.h preproc.h read_write.h
-hrit_anc_funcs.o: hrit_anc_funcs.c internal.h seviri_native_util.h \
- preproc.h read_write.h misc_util.h nav_util.h hrit_funcs.h \
- hrit_anc_funcs.h
-hrit_funcs.o: hrit_funcs.c internal.h seviri_native_util.h preproc.h \
- read_write.h misc_util.h nav_util.h hrit_funcs.h hrit_anc_funcs.h
-internal.o: internal.c internal.h seviri_native_util.h preproc.h \
- read_write.h misc_util.h nav_util.h
-misc_util.o: misc_util.c internal.h seviri_native_util.h preproc.h \
- read_write.h misc_util.h nav_util.h
-nav_util.o: nav_util.c internal.h seviri_native_util.h preproc.h \
- read_write.h misc_util.h nav_util.h
-preproc.o: preproc.c internal.h seviri_native_util.h preproc.h \
- read_write.h misc_util.h nav_util.h hrit_funcs.h hrit_anc_funcs.h
-read_write.o: read_write.c internal.h seviri_native_util.h preproc.h \
- read_write.h misc_util.h nav_util.h
+ external.h preproc.h read_write.h internal.h misc_util.h nav_util.h \
+ read_write_hrit.h read_write_nat.h
+example_c.o: example_c.c seviri_native_util.h external.h preproc.h \
+ read_write.h internal.h misc_util.h nav_util.h read_write_hrit.h \
+ read_write_nat.h
+hrit_anc_funcs.o: hrit_anc_funcs.c external.h hrit_anc_funcs.h \
+ read_write.h internal.h misc_util.h nav_util.h
+internal.o: internal.c external.h internal.h misc_util.h nav_util.h \
+ read_write.h
+misc_util.o: misc_util.c external.h internal.h misc_util.h nav_util.h \
+ read_write.h
+nav_util.o: nav_util.c external.h internal.h misc_util.h nav_util.h \
+ read_write.h
+preproc.o: preproc.c external.h hrit_anc_funcs.h read_write.h internal.h \
+ misc_util.h nav_util.h preproc.h read_write_hrit.h read_write_nat.h
+read_write.o: read_write.c external.h internal.h misc_util.h nav_util.h \
+ read_write.h
+read_write_hrit.o: read_write_hrit.c external.h hrit_anc_funcs.h \
+ read_write.h internal.h misc_util.h nav_util.h read_write_hrit.h
+read_write_nat.o: read_write_nat.c external.h hrit_anc_funcs.h \
+ read_write.h internal.h misc_util.h nav_util.h read_write_nat.h

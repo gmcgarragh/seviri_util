@@ -6,8 +6,10 @@
 **    Version 3.  See the file COPYING for more details.
 **
 *******************************************************************************/
+
+#include "external.h"
 #include "internal.h"
-#include "seviri_native_util.h"
+#include "nav_util.h"
 
 
 #define T_U 2451545.

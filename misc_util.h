@@ -10,6 +10,8 @@
 #ifndef MISC_UTIL_H
 #define MISC_UTIL_H
 
+#include "external.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

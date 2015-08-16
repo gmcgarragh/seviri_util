@@ -7,25 +7,12 @@
 **
 *******************************************************************************/
 
-#include "internal.h"
-#include "hrit_funcs.h"
+#include "external.h"
 #include "hrit_anc_funcs.h"
+#include "internal.h"
+#include "read_write.h"
+#include "read_write_hrit.h"
 
-/*******************************************************************************
- * Error, location and return macros.
- ******************************************************************************/
-#define E_L_R() do { \
-     fprintf(stderr, "ERROR: file = %s, line = %d, function = %s()\n", \
-             __FILE__, __LINE__, __func__); \
-     return -1; \
-} while (0)
-
-
-#define E_L_R_MSG(MSG) do { \
-     fprintf(stderr, "ERROR: file = %s, line = %d, function = %s(): %s\n", \
-             __FILE__, __LINE__, __func__, MSG); \
-     return -1; \
-} while (0)
 
 /*******************************************************************************
  * Read the EPI file associated with a SEVIRI timeslot.

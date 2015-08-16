@@ -18,37 +18,10 @@ extern "C" {
 #define SEVIRI_NATIVE_UTIL_VERSION "0.01"
 
 
-#define SEVIRI_N_BANDS 12
-
-
-typedef unsigned char	uchar;
-typedef unsigned short	ushort;
-typedef unsigned int	uint;
-typedef unsigned long	ulong;
-
-
-enum seviri_bounds {
-     SEVIRI_BOUNDS_FULL_DISK,
-     SEVIRI_BOUNDS_ACTUAL_IMAGE,
-     SEVIRI_BOUNDS_LINE_COLUMN,
-     SEVIRI_BOUNDS_LAT_LON,
-
-     N_SEVIRI_BOUNDS
-};
-
-
-enum seviri_units {
-     SEVIRI_UNIT_CNT,
-     SEVIRI_UNIT_RAD,
-     SEVIRI_UNIT_BRF,
-     SEVIRI_UNIT_BT,
-
-     N_SEVIRI_UNITS
-};
-
-
+#include "external.h"
 #include "preproc.h"
-#include "read_write.h"
+#include "read_write_hrit.h"
+#include "read_write_nat.h"
 
 
 #ifdef __cplusplus

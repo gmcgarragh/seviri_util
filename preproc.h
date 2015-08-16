@@ -10,6 +10,7 @@
 #ifndef PREPROC_H
 #define PREPROC_H
 
+#include "external.h"
 #include "read_write.h"
 
 #ifdef __cplusplus

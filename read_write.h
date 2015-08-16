@@ -10,60 +10,50 @@
 #ifndef READ_WRITE_H
 #define READ_WRITE_H
 
+#include "external.h"
+#include <stdio.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
 /*******************************************************************************
- * Struct containing auxiliary variables related to configuring the read/write
- * functions.
+ * Error, location and return macros.
  ******************************************************************************/
-struct seviri_auxillary_io_data {
-     int operation;
+#define E_L_R() do { \
+     fprintf(stderr, "ERROR: file = %s, line = %d, function = %s()\n", \
+             __FILE__, __LINE__, __func__); \
+     return -1; \
+} while (0)
 
-     int swap_bytes;
 
-     ushort *temp_2;
-     uint   *temp_4;
-     ulong  *temp_8;
-};
+#define E_L_R_MSG(MSG) do { \
+     fprintf(stderr, "ERROR: file = %s, line = %d, function = %s(): %s\n", \
+             __FILE__, __LINE__, __func__, MSG); \
+     return -1; \
+} while (0)
 
 
 /*******************************************************************************
- * Struct containing offsets and dimensions that will passed from the read to
- * write functions.
+ * Byte swapping macros to convert Endianness.
  ******************************************************************************/
-struct seviri_dimension_data {
-     uint n_lines_selected_VIR;
-     uint n_columns_selected_VIR;
-
-     uint i0_line_selected_VIR;
-     uint i1_line_selected_VIR;
-     uint i0_column_selected_VIR;
-     uint i1_column_selected_VIR;
+#define SWAP_2(x, y) do {	\
+     y = (x << 8) | (x >> 8);	\
+} while (0)
 
 
-     uint i_line_requested_VIR;
-     uint i_column_requested_VIR;
-
-     uint n_lines_requested_VIR;
-     uint n_columns_requested_VIR;
-
-     uint i_line_to_read_VIR;
-     uint i_column_to_read_VIR;
-
-     uint n_lines_to_read_VIR;
-     uint n_columns_to_read_VIR;
-
-     uint i_line_in_output_VIR;
-     uint i_column_in_output_VIR;
+#define SWAP_4(x, y) do {					\
+     y = ((x << 8 ) & 0xFF00FF00 ) | ((x >> 8 ) & 0x00FF00FF ); \
+     y =  (y << 16)                |  (y >> 16);		\
+} while (0)
 
 
-     uint n_lines_selected_HRV;
-     uint n_columns_selected_HRV;
-};
-
+#define SWAP_8(x, y) do {							\
+     y = ((x << 8 ) & 0xFF00FF00FF00FF00U) | ((x >> 8 ) & 0x00FF00FF00FF00FFU);	\
+     y = ((y << 16) & 0xFFFF0000FFFF0000U) | ((y >> 16) & 0x0000FFFF0000FFFFU);	\
+     y =  (y << 32)                        |  (y >> 32);			\
+} while (0)
 
 
 /*******************************************************************************
@@ -884,6 +874,55 @@ struct seviri_LineSideInfo_data {
 };
 
 
+/*******************************************************************************
+ * Struct containing auxiliary variables related to configuring the read/write
+ * functions.
+ ******************************************************************************/
+struct seviri_auxillary_io_data {
+     int operation;
+
+     int swap_bytes;
+
+     ushort *temp_2;
+     uint   *temp_4;
+     ulong  *temp_8;
+};
+
+
+/*******************************************************************************
+ * Struct containing offsets and dimensions that will passed from the read to
+ * write functions.
+ ******************************************************************************/
+struct seviri_dimension_data {
+     uint n_lines_selected_VIR;
+     uint n_columns_selected_VIR;
+
+     uint i0_line_selected_VIR;
+     uint i1_line_selected_VIR;
+     uint i0_column_selected_VIR;
+     uint i1_column_selected_VIR;
+
+
+     uint i_line_requested_VIR;
+     uint i_column_requested_VIR;
+
+     uint n_lines_requested_VIR;
+     uint n_columns_requested_VIR;
+
+     uint i_line_to_read_VIR;
+     uint i_column_to_read_VIR;
+
+     uint n_lines_to_read_VIR;
+     uint n_columns_to_read_VIR;
+
+     uint i_line_in_output_VIR;
+     uint i_column_in_output_VIR;
+
+
+     uint n_lines_selected_HRV;
+     uint n_columns_selected_HRV;
+};
+
 
 /*******************************************************************************
  * Digital count image data
@@ -944,6 +983,9 @@ int seviri_l15_ph_data_id_read(FILE *fp,
                                struct seviri_marf_l15_ph_data_id_data *d,
                                struct seviri_auxillary_io_data *aux);
 
+int seviri_marf_header_read(FILE *fp, struct seviri_marf_header_data *d,
+                            struct seviri_auxillary_io_data *aux);
+
 int seviri_TIME_CDS_read(FILE *fp,
                          struct seviri_TIME_CDS_data *d,
                          struct seviri_auxillary_io_data *aux);
@@ -958,15 +1000,47 @@ int seviri_15HEADER_SatelliteStatus_read(
           FILE *fp,
           struct seviri_15HEADER_SatelliteStatus_data *d,
           struct seviri_auxillary_io_data *aux);
-
+int seviri_15HEADER_ImageAcquisition_read(
+          FILE *fp,
+          struct seviri_15HEADER_ImageAcquisition_data *d,
+          struct seviri_auxillary_io_data *aux);
+int seviri_15HEADER_CelestialEvents_read(
+          FILE *fp,
+          struct seviri_15HEADER_CelestialEvents_data *d,
+          struct seviri_auxillary_io_data *aux);
 int seviri_15HEADER_ImageDescription_read(
           FILE *fp,
           struct seviri_15HEADER_ImageDescription_data *d,
           struct seviri_auxillary_io_data *aux);
-
 int seviri_15HEADER_RadiometricProcessing_read(
           FILE *fp,
           struct seviri_15HEADER_RadiometricProcessing_data *d,
+          struct seviri_auxillary_io_data *aux);
+int seviri_15HEADER_GeometricProcessing_read(
+          FILE *fp,
+          struct seviri_15HEADER_GeometricProcessing_data *d,
+          struct seviri_auxillary_io_data *aux);
+int seviri_15HEADER_IMPFConfiguration_read(
+          FILE *fp,
+          struct seviri_15HEADER_IMPFConfiguration_data *d,
+          struct seviri_auxillary_io_data *aux);
+int seviri_15HEADER_read(
+          FILE *fp,
+          struct seviri_15HEADER_data *d,
+          struct seviri_auxillary_io_data *aux);
+
+int seviri_15TRAILER_read(
+          FILE *fp,
+          struct seviri_15TRAILER_data *d,
+          struct seviri_auxillary_io_data *aux);
+
+int seviri_packet_header_read(
+          FILE *fp,
+          struct seviri_packet_header_data *d,
+          struct seviri_auxillary_io_data *aux);
+int seviri_LineSideInfo_read(
+          FILE *fp,
+          struct seviri_LineSideInfo_data *d,
           struct seviri_auxillary_io_data *aux);
 
 int seviri_get_dimension_data(
@@ -976,16 +1050,6 @@ int seviri_get_dimension_data(
           uint line0, uint line1, uint column0, uint column1,
           double lat0, double lat1, double lon0, double lon1);
 
-
-int seviri_native_get_dimens(const char *filename, uint *i_line, uint *i_column,
-                             uint *n_lines, uint *n_columns, enum seviri_bounds bounds,
-                             uint line0, uint line1, uint column0, uint column1,
-                             double lat0, double lat1, double lon0, double lon1);
-int seviri_native_read(const char *filename, struct seviri_native_data *d,
-                       uint n_bands, const uint *band_ids, enum seviri_bounds bounds,
-                       uint line0, uint line1, uint column0, uint column1,
-                       double lat0, double lat1, double lon0, double lon1);
-int seviri_native_write(const char *filename, const struct seviri_native_data *d);
 int seviri_native_free(struct seviri_native_data *d);
 
 

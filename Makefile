@@ -13,7 +13,8 @@ OBJECTS = internal.o \
           nav_util.o \
           preproc.o \
           read_write.o \
-	  hrit_funcs.o \
+          read_write_hrit.o \
+          read_write_nat.o \
 	  hrit_anc_funcs.o
 
 include make.inc

@@ -7,43 +7,10 @@
 **
 *******************************************************************************/
 
-#include "internal.h"
-#include "hrit_funcs.h"
+#include "external.h"
 #include "hrit_anc_funcs.h"
+#include "internal.h"
 
-/*******************************************************************************
- * Error, location and return macros.
- ******************************************************************************/
-#define E_L_R() do { \
-     fprintf(stderr, "ERROR: file = %s, line = %d, function = %s()\n", \
-             __FILE__, __LINE__, __func__); \
-     return -1; \
-} while (0)
-
-
-#define E_L_R_MSG(MSG) do { \
-     fprintf(stderr, "ERROR: file = %s, line = %d, function = %s(): %s\n", \
-             __FILE__, __LINE__, __func__, MSG); \
-     return -1; \
-} while (0)
-
-
-#define SWAP_2(x, y) do {     \
-     y = (x << 8) | (x >> 8);     \
-} while (0)
-
-
-#define SWAP_4(x, y) do {                         \
-     y = ((x << 8 ) & 0xFF00FF00 ) | ((x >> 8 ) & 0x00FF00FF ); \
-     y =  (y << 16)                |  (y >> 16);          \
-} while (0)
-
-
-#define SWAP_8(x, y) do {                                   \
-     y = ((x << 8 ) & 0xFF00FF00FF00FF00U) | ((x >> 8 ) & 0x00FF00FF00FF00FFU);     \
-     y = ((y << 16) & 0xFFFF0000FFFF0000U) | ((y >> 16) & 0x0000FFFF0000FFFFU);     \
-     y =  (y << 32)                        |  (y >> 32);               \
-} while (0)
 
 /*******************************************************************************
  * Check if input band is HRV. If yes, 24 segments for HRIT image. Otherwise 8

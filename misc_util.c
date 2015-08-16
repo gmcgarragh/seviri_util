@@ -6,9 +6,10 @@
 **    Version 3.  See the file COPYING for more details.
 **
 *******************************************************************************/
-#include "internal.h"
-#include "seviri_native_util.h"
 
+#include "external.h"
+#include "internal.h"
+#include "misc_util.h"
 
 
 /*******************************************************************************
