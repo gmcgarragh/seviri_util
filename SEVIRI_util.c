@@ -80,27 +80,27 @@ int main(int argc, char *argv[])
 
      /* Parse the input driver file into the driver structure */
      if (argc!=2){show_usage();exit(-1);}
-     if (parse_driver(argv[1],&driver)!=0) {E_L_R(); return -1;}
-     if (VERBOSE) if (print_driver(driver)!=0) {E_L_R(); return -1;}
+     if (parse_driver(argv[1],&driver)!=0) {E_L_R();}
+     if (VERBOSE) if (print_driver(driver)!=0) {E_L_R();}
 
      /* This struct will contain the image data and some metadata. */
      struct seviri_preproc_data preproc;
 
      /* Run the appropriate processing chain, HRIT or NAT */
-     if (driver.infrmt==SEVIRI_INFILE_HRIT) if (run_sev_hrit(driver,&preproc)!=0) {E_L_R(); return -1;}
-     if (driver.infrmt==SEVIRI_INFILE_NAT) if (run_sev_native(driver,&preproc)!=0) {E_L_R(); return -1;}
+     if (driver.infrmt==SEVIRI_INFILE_HRIT) if (run_sev_hrit(driver,&preproc)!=0) {E_L_R();}
+     if (driver.infrmt==SEVIRI_INFILE_NAT) if (run_sev_native(driver,&preproc)!=0) {E_L_R();}
 
      /* If we're in verbose mode then print info about a sample pixel in the preprocessed data
         By default we'll examine the central pixel in the image */
-     if (VERBOSE) if (print_preproc_out(preproc, preproc.n_lines/2-1, preproc.n_columns/2-1)!=0) {E_L_R(); return -1;}
+     if (VERBOSE) if (print_preproc_out(preproc, preproc.n_lines/2-1, preproc.n_columns/2-1)!=0) {E_L_R();}
 
-     if (driver.outfrmt==SEVIRI_OUTFILE_HDF)if (save_sev_hdf(driver,preproc)!=0) {E_L_R(); return -1;}
-     if (driver.outfrmt==SEVIRI_OUTFILE_CDF)if (save_sev_cdf(driver,preproc)!=0) {E_L_R(); return -1;}
-     if (driver.outfrmt==SEVIRI_OUTFILE_TIF)if (save_sev_tiff(driver,preproc)!=0) {E_L_R(); return -1;}
+     if (driver.outfrmt==SEVIRI_OUTFILE_HDF)if (save_sev_hdf(driver,preproc)!=0) {E_L_R();}
+     if (driver.outfrmt==SEVIRI_OUTFILE_CDF)if (save_sev_cdf(driver,preproc)!=0) {E_L_R();}
+     if (driver.outfrmt==SEVIRI_OUTFILE_TIF)if (save_sev_tiff(driver,preproc)!=0) {E_L_R();}
 
-     if (free_driver(&driver)!=0) {E_L_R(); return -1;}
+     if (free_driver(&driver)!=0) {E_L_R();}
      /* Free memory allocated by seviri_read_and_preproc(). */
-     if (seviri_preproc_free(&preproc)!=0) {E_L_R(); return -1;}
+     if (seviri_preproc_free(&preproc)!=0) {E_L_R();}
 
      return 0;
 }

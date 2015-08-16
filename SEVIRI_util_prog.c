@@ -29,7 +29,7 @@ int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc
 {
      if (seviri_read_and_preproc(driver.infdir,preproc, driver.sev_bands.nbands, driver.sev_bands.band_ids,
      driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., 0., 0))
-     {E_L_R();return -1;}
+     {E_L_R();}
      return 0;
 }
 
@@ -47,7 +47,7 @@ int run_sev_hrit(struct driver_data driver,struct seviri_preproc_data *preproc)
 {
      if (seviri_read_and_preproc_hrit(driver.infdir,driver.timeslot,driver.satnum, preproc, driver.sev_bands.nbands, driver.sev_bands.band_ids,
      driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., 0., 0))
-     {E_L_R();return -1;}
+     {E_L_R();}
      return 0;
 }
 
@@ -106,7 +106,7 @@ int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc)
      float oneline[nbands*preproc.n_columns];
      for (i=0;i<preproc.n_lines;i++)
      {
-          if (init_outline(oneline,nbands*preproc.n_columns,preproc.fill_value)!=0) {E_L_R(); return -1;}
+          if (init_outline(oneline,nbands*preproc.n_columns,preproc.fill_value)!=0) {E_L_R();}
 
           k=0;
           for (j=0;j<nbands*preproc.n_columns;j=j+nbands)
@@ -123,7 +123,7 @@ int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc)
                if(driver.ancsave[6]==1){oneline[j+band]=(float)preproc.vaa[col];band++;}
                k=k+1;
           }
-          if (TIFFWriteScanline(tif, oneline, i, 0) !=1) {E_L_R(); return -1;}
+          if (TIFFWriteScanline(tif, oneline, i, 0) !=1) {E_L_R();}
      }
      TIFFClose(tif);
      return 0;
@@ -171,9 +171,9 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
      varid     =     (int*) malloc(sizeof(int)*nbands);
 
 /*     Create the NetCDF file and initialise the data*/
-     if(nc_create(driver.outf, NC_CLOBBER|NC_NETCDF4 , &ncid)) {E_L_R(); return -1;};
-     if(nc_def_dim(ncid, "x", preproc.n_lines, &x_dimid)) {E_L_R(); return -1;};
-     if(nc_def_dim(ncid, "y", preproc.n_columns, &y_dimid)) {E_L_R(); return -1;};
+     if(nc_create(driver.outf, NC_CLOBBER|NC_NETCDF4 , &ncid)) {E_L_R();};
+     if(nc_def_dim(ncid, "x", preproc.n_lines, &x_dimid)) {E_L_R();};
+     if(nc_def_dim(ncid, "y", preproc.n_columns, &y_dimid)) {E_L_R();};
      dimids[0] = x_dimid;
      dimids[1] = y_dimid;
 
@@ -181,88 +181,88 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
 /*     Initialise each variable, loop first over all bands included in the preproc data*/
      for (i=0;i<preproc.n_bands;i++)
      {
-          if(nc_def_var(ncid, bnames[driver.sev_bands.band_ids[i-1]], NC_FLOAT, 2,dimids, &varid[i])) {E_L_R(); return -1;};
-          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R(); return -1;};
-          if(nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value)) {E_L_R(); return -1;};
-          if (driver.outtype[i] == SEVIRI_UNIT_CNT){if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, cnt_range)) {E_L_R(); return -1;};if(nc_put_att_text (ncid, NC_GLOBAL, "title",strlen(title_cnt), title_cnt)) {E_L_R(); return -1;};}
-          if (driver.outtype[i] == SEVIRI_UNIT_RAD){if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, rad_range)) {E_L_R(); return -1;};if(nc_put_att_text (ncid, NC_GLOBAL, "title",strlen(title_rad), title_rad)) {E_L_R(); return -1;};}
-          if (driver.outtype[i] == SEVIRI_UNIT_BRF){if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, brf_range)) {E_L_R(); return -1;};if(nc_put_att_text (ncid, NC_GLOBAL, "title",strlen(title_brf), title_brf)) {E_L_R(); return -1;};}
-          if (driver.outtype[i] == SEVIRI_UNIT_BT){if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, bt_range)) {E_L_R(); return -1;};if(nc_put_att_text (ncid, NC_GLOBAL, "title",strlen(title_bt), title_bt)) {E_L_R(); return -1;};}
+          if(nc_def_var(ncid, bnames[driver.sev_bands.band_ids[i-1]], NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
+          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
+          if(nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value)) {E_L_R();};
+          if (driver.outtype[i] == SEVIRI_UNIT_CNT){if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, cnt_range)) {E_L_R();};if(nc_put_att_text (ncid, NC_GLOBAL, "title",strlen(title_cnt), title_cnt)) {E_L_R();};}
+          if (driver.outtype[i] == SEVIRI_UNIT_RAD){if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, rad_range)) {E_L_R();};if(nc_put_att_text (ncid, NC_GLOBAL, "title",strlen(title_rad), title_rad)) {E_L_R();};}
+          if (driver.outtype[i] == SEVIRI_UNIT_BRF){if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, brf_range)) {E_L_R();};if(nc_put_att_text (ncid, NC_GLOBAL, "title",strlen(title_brf), title_brf)) {E_L_R();};}
+          if (driver.outtype[i] == SEVIRI_UNIT_BT){if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, bt_range)) {E_L_R();};if(nc_put_att_text (ncid, NC_GLOBAL, "title",strlen(title_bt), title_bt)) {E_L_R();};}
      }
 
 /*     Now initialise the ancilliary data*/
      if(driver.ancsave[0]==1)
      {
-          if(nc_def_var(ncid, "Time", NC_DOUBLE, 2,dimids, &varid[i])) {E_L_R(); return -1;};
-          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R(); return -1;};
+          if(nc_def_var(ncid, "Time", NC_DOUBLE, 2,dimids, &varid[i])) {E_L_R();};
+          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           i++;
      }
      if(driver.ancsave[1]==1)
      {
-          if(nc_def_var(ncid, "Latitude", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R(); return -1;};
-          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R(); return -1;};
+          if(nc_def_var(ncid, "Latitude", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
+          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value);
-          if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, latlon_range)) {E_L_R(); return -1;};
+          if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, latlon_range)) {E_L_R();};
           i++;
      }
      if(driver.ancsave[2]==1)
      {
-          if(nc_def_var(ncid, "Longitude", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R(); return -1;};
-          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R(); return -1;};
+          if(nc_def_var(ncid, "Longitude", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
+          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value);
-          if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, latlon_range)) {E_L_R(); return -1;};
+          if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, latlon_range)) {E_L_R();};
           i++;
      }
      if(driver.ancsave[3]==1)
      {
-          if(nc_def_var(ncid, "Solar Zenith Angle", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R(); return -1;};
-          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R(); return -1;};
+          if(nc_def_var(ncid, "Solar Zenith Angle", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
+          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value);
-          if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, zen_range)) {E_L_R(); return -1;};
+          if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, zen_range)) {E_L_R();};
           i++;
      }
      if(driver.ancsave[4]==1)
      {
-          if(nc_def_var(ncid, "Solar Azimuth Angle", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R(); return -1;};
-          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R(); return -1;};
+          if(nc_def_var(ncid, "Solar Azimuth Angle", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
+          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value);
-          if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, azi_range)) {E_L_R(); return -1;};
+          if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, azi_range)) {E_L_R();};
           i++;
      }
      if(driver.ancsave[5]==1)
      {
-          if(nc_def_var(ncid, "View Zenith Angle", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R(); return -1;};
-          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R(); return -1;};
+          if(nc_def_var(ncid, "View Zenith Angle", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
+          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value);
-          if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, zen_range)) {E_L_R(); return -1;};
+          if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, zen_range)) {E_L_R();};
           i++;
      }
      if(driver.ancsave[6]==1)
      {
-          if(nc_def_var(ncid, "View Azimuth Angle", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R(); return -1;};
-          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R(); return -1;};
+          if(nc_def_var(ncid, "View Azimuth Angle", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
+          if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           i++;
           nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value);
-          if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, azi_range)) {E_L_R(); return -1;};
+          if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, azi_range)) {E_L_R();};
      }
 
-     if(nc_enddef(ncid)) {E_L_R(); return -1;};
+     if(nc_enddef(ncid)) {E_L_R();};
 
 /*     This will actually put the data into the file*/
      for (i=0;i<preproc.n_bands;i++)
      {
-          if(nc_put_var_float(ncid, varid[i], &preproc.data[i][0])) {E_L_R(); return -1;};
+          if(nc_put_var_float(ncid, varid[i], &preproc.data[i][0])) {E_L_R();};
      }
-     if(driver.ancsave[0]==1){if(nc_put_var_double(ncid, varid[i], &preproc.time[0])) {E_L_R(); return -1;};i++;}
-     if(driver.ancsave[1]==1){if(nc_put_var_float(ncid, varid[i], &preproc.lat[0])) {E_L_R(); return -1;};i++;}
-     if(driver.ancsave[2]==1){if(nc_put_var_float(ncid, varid[i], &preproc.lon[0])) {E_L_R(); return -1;};i++;}
-     if(driver.ancsave[3]==1){if(nc_put_var_float(ncid, varid[i], &preproc.sza[0])) {E_L_R(); return -1;};i++;}
-     if(driver.ancsave[4]==1){if(nc_put_var_float(ncid, varid[i], &preproc.saa[0])) {E_L_R(); return -1;};i++;}
-     if(driver.ancsave[5]==1){if(nc_put_var_float(ncid, varid[i], &preproc.vza[0])) {E_L_R(); return -1;};i++;}
-     if(driver.ancsave[6]==1){if(nc_put_var_float(ncid, varid[i], &preproc.vaa[0])) {E_L_R(); return -1;};i++;}
+     if(driver.ancsave[0]==1){if(nc_put_var_double(ncid, varid[i], &preproc.time[0])) {E_L_R();};i++;}
+     if(driver.ancsave[1]==1){if(nc_put_var_float(ncid, varid[i], &preproc.lat[0])) {E_L_R();};i++;}
+     if(driver.ancsave[2]==1){if(nc_put_var_float(ncid, varid[i], &preproc.lon[0])) {E_L_R();};i++;}
+     if(driver.ancsave[3]==1){if(nc_put_var_float(ncid, varid[i], &preproc.sza[0])) {E_L_R();};i++;}
+     if(driver.ancsave[4]==1){if(nc_put_var_float(ncid, varid[i], &preproc.saa[0])) {E_L_R();};i++;}
+     if(driver.ancsave[5]==1){if(nc_put_var_float(ncid, varid[i], &preproc.vza[0])) {E_L_R();};i++;}
+     if(driver.ancsave[6]==1){if(nc_put_var_float(ncid, varid[i], &preproc.vaa[0])) {E_L_R();};i++;}
 
 /*     Now we are done, so close the file*/
-     if(nc_close(ncid)) {E_L_R(); return -1;};
+     if(nc_close(ncid)) {E_L_R();};
 
      return 0;
 }

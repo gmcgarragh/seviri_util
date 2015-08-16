@@ -216,25 +216,25 @@ int parse_driver(char *fname,struct driver_data *driver)
      char *line = NULL;
 
      FILE *fp = fopen(fname,"r");
-     if (fp == NULL) {printf("Unable to open the driver file: %s\n",fname);E_L_R();return -1;}
+     if (fp == NULL) {printf("Unable to open the driver file: %s\n",fname);E_L_R();}
 
 /*     Read the type of input file from line 1 of the driver->*/
-     if (getline(&line,&len,fp)==-1) {printf("Failure reading HRIT line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+     if (getline(&line,&len,fp)==-1) {printf("Failure reading HRIT line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
      if (!strcmp(line,"HRIT"))     driver->infrmt = SEVIRI_INFILE_HRIT;
      else if (!strcmp(line,"NAT"))     driver->infrmt = SEVIRI_INFILE_NAT;
-     else {printf("Incorrect input type in driver file. Must be HRIT or NAT.\n");free(line);fclose(fp);E_L_R();return -1;}
+     else {printf("Incorrect input type in driver file. Must be HRIT or NAT.\n");free(line);fclose(fp);E_L_R();}
 
 /*     Read the filename / input file directory.*/
-     if (getline(&line,&len,fp)==-1) {printf("Failure reading input file/dir line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
-     if (strlen(line)<4) {printf("Failure reading input file/dir line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+     if (getline(&line,&len,fp)==-1) {printf("Failure reading input file/dir line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+     if (strlen(line)<4) {printf("Failure reading input file/dir line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
      driver->infdir     =     (char*) malloc(sizeof(char)*strlen(line));
      strncpy(driver->infdir,line,strlen(line));
 
 /*     Read the timeslot (HRIT only)*/
-     if (getline(&line,&len,fp)==-1) {printf("Failure reading input timeslot line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
-     if (strlen(line)<12 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading input timeslot line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+     if (getline(&line,&len,fp)==-1) {printf("Failure reading input timeslot line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+     if (strlen(line)<12 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading input timeslot line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (driver->infrmt==SEVIRI_INFILE_HRIT)
      {
           line[strlen(line)-1]='\0';
@@ -243,8 +243,8 @@ int parse_driver(char *fname,struct driver_data *driver)
      }
 
 /*     Read the satellite number (HRIT only)*/
-     if (getline(&line,&len,fp)==-1) {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
-     if (strlen(line)<1 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+     if (getline(&line,&len,fp)==-1) {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+     if (strlen(line)<1 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (driver->infrmt==SEVIRI_INFILE_HRIT)
      {
           line[strlen(line)-1]='\0';
@@ -252,38 +252,38 @@ int parse_driver(char *fname,struct driver_data *driver)
           else if (atoi(line)==2) driver->satnum     =     SAT_MSG2+1;
           else if (atoi(line)==3) driver->satnum     =     SAT_MSG3+1;
           else if (atoi(line)==4) driver->satnum     =     SAT_MSG4+1;
-          else {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+          else {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      }
 
 /*     Read the bands to process*/
-     if (getline(&line,&len,fp)==-1) {printf("Failure reading bands to process line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+     if (getline(&line,&len,fp)==-1) {printf("Failure reading bands to process line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
      parsebands(line,&driver->sev_bands);
      driver->outtype     =     (enum seviri_units*) malloc(sizeof(enum seviri_units)*driver->sev_bands.nbands);
-     if (driver->outtype == NULL) {printf("Failure reading bands to process line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
-     if (driver->sev_bands.nbands<=0 || driver->sev_bands.nbands>11) {printf("Failure reading bands to process line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+     if (driver->outtype == NULL) {printf("Failure reading bands to process line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+     if (driver->sev_bands.nbands<=0 || driver->sev_bands.nbands>11) {printf("Failure reading bands to process line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
 
 /*     Read the output file type*/
-     if (getline(&line,&len,fp)==-1) {printf("Failure reading output file type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+     if (getline(&line,&len,fp)==-1) {printf("Failure reading output file type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
      if (!strcmp(line,"HDF"))     driver->outfrmt = SEVIRI_OUTFILE_HDF;
      else if (!strcmp(line,"CDF"))     driver->outfrmt = SEVIRI_OUTFILE_CDF;
      else if (!strcmp(line,"TIF"))     driver->outfrmt = SEVIRI_OUTFILE_TIF;
-     else {printf("Failure reading output file type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+     else {printf("Failure reading output file type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
 
 /*     Read the output units type*/
-     if (getline(&line,&len,fp)==-1) {printf("Failure reading output units type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+     if (getline(&line,&len,fp)==-1) {printf("Failure reading output units type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
      if (!strcmp(line,"CNT"))     for (i=0;i<driver->sev_bands.nbands;i++) driver->outtype[i] = SEVIRI_UNIT_CNT;
      else if (!strcmp(line,"RAD"))     for (i=0;i<driver->sev_bands.nbands;i++) driver->outtype[i] = SEVIRI_UNIT_RAD;
      else if (!strcmp(line,"RBT"))     for (i=0;i<driver->sev_bands.nbands;i++)
                               if (driver->sev_bands.band_ids[i]<=3) driver->outtype[i] = SEVIRI_UNIT_BRF; else driver->outtype[i] = SEVIRI_UNIT_BT;
-     else {printf("Failure reading output units type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+     else {printf("Failure reading output units type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
 
 /*     Read the output filename.*/
-     if (getline(&line,&len,fp)==-1) {printf("Failure reading output filename line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+     if (getline(&line,&len,fp)==-1) {printf("Failure reading output filename line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      len = strlen(line);
-     if (len<4) {printf("Failure reading utput filename line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+     if (len<4) {printf("Failure reading utput filename line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (len > 0 && line[len-1] == '\n') line[len-1] = '\0';
      driver->outf     =     (char*) malloc(sizeof(char)*len);
      strncpy(driver->outf,line,len);
@@ -292,7 +292,7 @@ int parse_driver(char *fname,struct driver_data *driver)
      if (driver->outfrmt == SEVIRI_OUTFILE_TIF)strcat(driver->outf,".tiff");
 
 /*     Read the initial line*/
-     if (getline(&line,&len,fp)==-1) {printf("Failure reading input initial line line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+     if (getline(&line,&len,fp)==-1) {printf("Failure reading input initial line line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
      int iline     =     atoi(line);
      driver->bounds = SEVIRI_BOUNDS_LINE_COLUMN;
@@ -302,15 +302,15 @@ int parse_driver(char *fname,struct driver_data *driver)
      {
           driver->iline     =     iline;
 /*     Read the final line*/
-          if (getline(&line,&len,fp)==-1) {printf("Failure reading input final line line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+          if (getline(&line,&len,fp)==-1) {printf("Failure reading input final line line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
           line[strlen(line)-1]='\0';
           driver->fline     =     atoi(line);
 /*     Read the initial column*/
-          if (getline(&line,&len,fp)==-1) {printf("Failure reading input initial column line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+          if (getline(&line,&len,fp)==-1) {printf("Failure reading input initial column line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
           line[strlen(line)-1]='\0';
           driver->icol     =     atoi(line);
 /*     Read the final column*/
-          if (getline(&line,&len,fp)==-1) {printf("Failure reading input final column line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
+          if (getline(&line,&len,fp)==-1) {printf("Failure reading input final column line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
           line[strlen(line)-1]='\0';
           driver->fcol     =     atoi(line);
 
@@ -320,13 +320,13 @@ int parse_driver(char *fname,struct driver_data *driver)
           if (driver->fline>3711) driver->fline=3711;
           if (driver->fcol>3711) driver->fcol=3711;
 
-          if (driver->iline>3711) {printf("The initial processing line cannot be greater than 3711. You used: %i\n",driver->iline);free(line);fclose(fp);E_L_R();return -1;}
-          if (driver->icol>3711) {printf("The initial processing column cannot be greater than 3711. You used: %i\n",driver->icol);free(line);fclose(fp);E_L_R();return -1;}
-          if (driver->fline<0) {printf("The final processing line cannot be less than 0. You used: %i\n",driver->fline);free(line);fclose(fp);E_L_R();return -1;}
-          if (driver->fcol<0) {printf("The final processing column cannot be less than 0. You used: %i\n",driver->fcol);free(line);fclose(fp);E_L_R();return -1;}
+          if (driver->iline>3711) {printf("The initial processing line cannot be greater than 3711. You used: %i\n",driver->iline);free(line);fclose(fp);E_L_R();}
+          if (driver->icol>3711) {printf("The initial processing column cannot be greater than 3711. You used: %i\n",driver->icol);free(line);fclose(fp);E_L_R();}
+          if (driver->fline<0) {printf("The final processing line cannot be less than 0. You used: %i\n",driver->fline);free(line);fclose(fp);E_L_R();}
+          if (driver->fcol<0) {printf("The final processing column cannot be less than 0. You used: %i\n",driver->fcol);free(line);fclose(fp);E_L_R();}
 
-          if (driver->icol>=driver->fcol) {printf("The initial processing column cannot be greater than the final processing column. You used: %i and %i\n",driver->icol,driver->fcol);free(line);fclose(fp);E_L_R();return -1;}
-          if (driver->iline>=driver->fline) {printf("The initial processing line cannot be greater than the final processing line. You used: %i and %i\n",driver->iline,driver->fline);free(line);fclose(fp);E_L_R();return -1;}
+          if (driver->icol>=driver->fcol) {printf("The initial processing column cannot be greater than the final processing column. You used: %i and %i\n",driver->icol,driver->fcol);free(line);fclose(fp);E_L_R();}
+          if (driver->iline>=driver->fline) {printf("The initial processing line cannot be greater than the final processing line. You used: %i and %i\n",driver->iline,driver->fline);free(line);fclose(fp);E_L_R();}
           if (driver->fline>3711) driver->fline=3711;
           if (driver->fcol>3711) driver->fcol=3711;
      }
