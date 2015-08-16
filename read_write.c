@@ -29,8 +29,8 @@
 /*******************************************************************************
  * Allocate and free data required by the low level read and write functions.
  ******************************************************************************/
-int seviri_auxillary_alloc(struct seviri_auxillary_io_data *d) {
-
+int seviri_auxillary_alloc(struct seviri_auxillary_io_data *d)
+{
      uint n = 134915;
      d->temp_4 = malloc(n * sizeof(uint));
      d->temp_2 = malloc(n * sizeof(ushort));
@@ -41,8 +41,8 @@ int seviri_auxillary_alloc(struct seviri_auxillary_io_data *d) {
 
 
 
-int seviri_auxillary_free(struct seviri_auxillary_io_data *d) {
-
+int seviri_auxillary_free(struct seviri_auxillary_io_data *d)
+{
      free(d->temp_2);
      free(d->temp_4);
      free(d->temp_8);
@@ -56,8 +56,8 @@ int seviri_auxillary_free(struct seviri_auxillary_io_data *d) {
  * Like fread() that also swaps bytes after reading as needed.
  ******************************************************************************/
 static int fread_swap(void *ptr, size_t size, size_t nmemb, FILE *stream,
-                      struct seviri_auxillary_io_data *aux) {
-
+                      struct seviri_auxillary_io_data *aux)
+{
      size_t i;
      size_t n;
 
@@ -110,8 +110,8 @@ static int fread_swap(void *ptr, size_t size, size_t nmemb, FILE *stream,
  * Like fwrite() that also swaps bytes before writing as needed.
  ******************************************************************************/
 static int fwrite_swap(const void *ptr, size_t size, size_t nmemb, FILE *stream,
-                       struct seviri_auxillary_io_data *aux) {
-
+                       struct seviri_auxillary_io_data *aux)
+{
      size_t i;
      size_t n;
 
@@ -171,8 +171,8 @@ static int fwrite_swap(const void *ptr, size_t size, size_t nmemb, FILE *stream,
  * High level function to handle the choice of operation.
  ******************************************************************************/
 int fxxxx_swap(void *ptr, size_t size, size_t nmemb, FILE *stream, struct
-               seviri_auxillary_io_data *aux) {
-
+               seviri_auxillary_io_data *aux)
+{
      if (aux->operation == 0)
           return fread_swap(ptr, size, nmemb, stream, aux);
      else
@@ -186,8 +186,8 @@ int fxxxx_swap(void *ptr, size_t size, size_t nmemb, FILE *stream, struct
  ******************************************************************************/
 int seviri_l15_ph_data_read(FILE *fp,
                             struct seviri_marf_l15_ph_data_data *d,
-                            struct seviri_auxillary_io_data *aux) {
-
+                            struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(d->Name,  1, 30, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(d->Value, 1, 50, fp, aux) < 0) E_L_R();
 
@@ -201,8 +201,8 @@ int seviri_l15_ph_data_read(FILE *fp,
  ******************************************************************************/
 int seviri_l15_ph_data_id_read(FILE *fp,
                                struct seviri_marf_l15_ph_data_id_data *d,
-                               struct seviri_auxillary_io_data *aux) {
-
+                               struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(d->Name,    1, 30, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(d->Size,    1, 16, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(d->Address, 1, 16, fp, aux) < 0) E_L_R();
@@ -218,8 +218,8 @@ int seviri_l15_ph_data_id_read(FILE *fp,
 static int seviri_marf_l15_main_product_header_read(
           FILE *fp,
           struct seviri_marf_l15_main_product_header_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      uint i;
 
      if (seviri_l15_ph_data_read(fp, &d->FormatName,           aux)) E_L_R();
@@ -262,8 +262,8 @@ static int seviri_marf_l15_main_product_header_read(
 static int seviri_marf_l15_secondary_product_header_read(
           FILE *fp,
           struct seviri_marf_l15_secondary_product_header_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (seviri_l15_ph_data_read(fp, &d->ABID,                        aux)) E_L_R();
      if (seviri_l15_ph_data_read(fp, &d->SMOD,                        aux)) E_L_R();
      if (seviri_l15_ph_data_read(fp, &d->APXS,                        aux)) E_L_R();
@@ -292,8 +292,8 @@ static int seviri_marf_l15_secondary_product_header_read(
  *
  ******************************************************************************/
 int seviri_marf_header_read(FILE *fp, struct seviri_marf_header_data *d,
-                            struct seviri_auxillary_io_data *aux) {
-
+                            struct seviri_auxillary_io_data *aux)
+{
      if (seviri_marf_l15_main_product_header_read(fp, &d->main, aux)) {
           fprintf(stderr, "ERROR: seviri_marf_l15_main_product_header_read()\n");
           return -1;
@@ -314,8 +314,8 @@ int seviri_marf_header_read(FILE *fp, struct seviri_marf_header_data *d,
  ******************************************************************************/
 int seviri_TIME_CDS_read(FILE *fp,
                          struct seviri_TIME_CDS_data *d,
-                         struct seviri_auxillary_io_data *aux) {
-
+                         struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->day,  sizeof(short), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->msec, sizeof(int),   1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->usec, sizeof(short), 1, fp, aux) < 0) E_L_R();
@@ -327,8 +327,8 @@ int seviri_TIME_CDS_read(FILE *fp,
 
 int seviri_TIME_CDS_SHORT_read(FILE *fp,
                                struct seviri_TIME_CDS_SHORT_data *d,
-                               struct seviri_auxillary_io_data *aux) {
-
+                               struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->day,  sizeof(short), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->msec, sizeof(int),   1, fp, aux) < 0) E_L_R();
 
@@ -339,8 +339,8 @@ int seviri_TIME_CDS_SHORT_read(FILE *fp,
 
 int seviri_TIME_CDS_EXPANDED_read(FILE *fp,
                                   struct seviri_TIME_CDS_EXPANDED_data *d,
-                                  struct seviri_auxillary_io_data *aux) {
-
+                                  struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->day,  sizeof(short), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->msec, sizeof(int),   1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->usec, sizeof(short), 1, fp, aux) < 0) E_L_R();
@@ -357,8 +357,8 @@ int seviri_TIME_CDS_EXPANDED_read(FILE *fp,
 static int seviri_15HEADER_SatelliteStatus_ORBITCOEF_read(
           FILE *fp,
           struct seviri_15HEADER_SatelliteStatus_ORBITCOEF_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (seviri_TIME_CDS_SHORT_read(fp, &d->StartTime, aux))     E_L_R();
      if (seviri_TIME_CDS_SHORT_read(fp, &d->EndTime,   aux))     E_L_R();
      if (fxxxx_swap(d->X,  sizeof(double), 8, fp,      aux) < 0) E_L_R();
@@ -376,8 +376,8 @@ static int seviri_15HEADER_SatelliteStatus_ORBITCOEF_read(
 int seviri_15HEADER_SatelliteStatus_read(
           FILE *fp,
           struct seviri_15HEADER_SatelliteStatus_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      uint i;
 
      if (fxxxx_swap(&d->SatelliteId,       sizeof(short),  1,     fp, aux) < 0) E_L_R();
@@ -412,8 +412,8 @@ int seviri_15HEADER_SatelliteStatus_read(
 int seviri_15HEADER_ImageAcquisition_read(
           FILE *fp,
           struct seviri_15HEADER_ImageAcquisition_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (seviri_TIME_CDS_EXPANDED_read(fp, &d->TrueRepeatCycleStart,   aux))     E_L_R();
      if (seviri_TIME_CDS_EXPANDED_read(fp, &d->PlannedForwardScanEnd,  aux))     E_L_R();
      if (seviri_TIME_CDS_EXPANDED_read(fp, &d->PlannedRepeatCycleEnd,  aux))     E_L_R();
@@ -480,8 +480,8 @@ int seviri_15HEADER_ImageAcquisition_read(
 static int seviri_15HEADER_CelestialEvents_TIME_GENERALIZED_read(
           FILE *fp,
           struct seviri_15HEADER_CelestialEvents_TIME_GENERALIZED_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->dummy, sizeof(uchar), 134915, fp, aux) < 134915) E_L_R();
 
      return 0;
@@ -492,8 +492,8 @@ static int seviri_15HEADER_CelestialEvents_TIME_GENERALIZED_read(
 static int seviri_15HEADER_CelestialEvents_EARTHMOONSUNCOEF_read(
           FILE *fp,
           struct seviri_15HEADER_CelestialEvents_EARTHMOONSUNCOEF_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (seviri_TIME_CDS_SHORT_read(fp, &d->StartTime,    aux))     E_L_R();
      if (seviri_TIME_CDS_SHORT_read(fp, &d->EndTime,      aux))     E_L_R();
      if (fxxxx_swap(&d->AlphaCoef, sizeof(double), 8, fp, aux) < 0) E_L_R();
@@ -507,8 +507,8 @@ static int seviri_15HEADER_CelestialEvents_EARTHMOONSUNCOEF_read(
 static int seviri_15HEADER_CelestialEvents_STARCOEF_read(
           FILE *fp,
           struct seviri_15HEADER_CelestialEvents_STARCOEF_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->StarId,    sizeof(ushort), 1, fp, aux) < 0) E_L_R();
      if (seviri_TIME_CDS_SHORT_read(fp, &d->StartTime,    aux))     E_L_R();
      if (seviri_TIME_CDS_SHORT_read(fp, &d->EndTime,      aux))     E_L_R();
@@ -523,8 +523,8 @@ static int seviri_15HEADER_CelestialEvents_STARCOEF_read(
 int seviri_15HEADER_CelestialEvents_read(
           FILE *fp,
           struct seviri_15HEADER_CelestialEvents_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      uint i;
 
      if (seviri_TIME_CDS_SHORT_read(fp, &d->PeriodStartTime,        aux))     E_L_R();
@@ -565,8 +565,8 @@ int seviri_15HEADER_CelestialEvents_read(
 static int seviri_15HEADER_ImageDescription_ReferenceGridVIS_IR_read(
           FILE *fp,
           struct seviri_15HEADER_ImageDescription_ReferenceGridVIS_IR_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->NumberOfLines,     sizeof(int),   1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->NumberOfColumns,   sizeof(int),   1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->LineDirGridStep,   sizeof(float), 1, fp, aux) < 0) E_L_R();
@@ -581,8 +581,8 @@ static int seviri_15HEADER_ImageDescription_ReferenceGridVIS_IR_read(
 static int seviri_15HEADER_ImageDescription_ReferenceGridHRV_read(
           FILE *fp,
           struct seviri_15HEADER_ImageDescription_ReferenceGridHRV_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->NumberOfLines,     sizeof(int),   1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->NumberOfColumns,   sizeof(int),   1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->LineDirGridStep,   sizeof(float), 1, fp, aux) < 0) E_L_R();
@@ -597,8 +597,8 @@ static int seviri_15HEADER_ImageDescription_ReferenceGridHRV_read(
 static int seviri_15HEADER_ImageDescription_PlannedCoverageVIS_IR_read(
           FILE *fp,
           struct seviri_15HEADER_ImageDescription_PlannedCoverageVIS_IR_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->SouthernLinePlanned,  sizeof(int), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->NorthernLinePlanned,  sizeof(int), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->EasternColumnPlanned, sizeof(int), 1, fp, aux) < 0) E_L_R();
@@ -612,8 +612,8 @@ static int seviri_15HEADER_ImageDescription_PlannedCoverageVIS_IR_read(
 static int seviri_15HEADER_ImageDescription_PlannedCoverageHRV_read(
           FILE *fp,
           struct seviri_15HEADER_ImageDescription_PlannedCoverageHRV_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->LowerSouthLinePlanned,  sizeof(int), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->LowerNorthLinePlanned,  sizeof(int), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->LowerEastColumnPlanned, sizeof(int), 1, fp, aux) < 0) E_L_R();
@@ -631,8 +631,8 @@ static int seviri_15HEADER_ImageDescription_PlannedCoverageHRV_read(
 int seviri_15HEADER_ImageDescription_read(
           FILE *fp,
           struct seviri_15HEADER_ImageDescription_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->TypeOfProjection,      sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->LongitudeOfSSP,        sizeof(float), 1,  fp, aux) < 0) E_L_R();
 
@@ -660,8 +660,8 @@ int seviri_15HEADER_ImageDescription_read(
 static int seviri_15HEADER_RadiometricProcessing_Level1_5ImageCalibration_read(
           FILE *fp,
           struct seviri_15HEADER_RadiometricProcessing_Level1_5ImageCalibration_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->Cal_Slope,  sizeof(double), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->Cal_Offset, sizeof(double), 1, fp, aux) < 0) E_L_R();
 
@@ -673,8 +673,8 @@ static int seviri_15HEADER_RadiometricProcessing_Level1_5ImageCalibration_read(
 int seviri_15HEADER_RadiometricProcessing_read(
           FILE *fp,
           struct seviri_15HEADER_RadiometricProcessing_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      uint i;
 
      if (fxxxx_swap(&d->RadianceLinearization,    sizeof(uchar), 12,    fp, aux) < 0) E_L_R();
@@ -701,8 +701,8 @@ int seviri_15HEADER_RadiometricProcessing_read(
 int seviri_15HEADER_GeometricProcessing_read(
           FILE *fp,
           struct seviri_15HEADER_GeometricProcessing_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(d->E_WFocalPlane,        sizeof(float),  42,       fp, aux) < 0) E_L_R();
      if (fxxxx_swap(d->N_SFocalPlane,        sizeof(float),  42,       fp, aux) < 0) E_L_R();
 
@@ -725,8 +725,8 @@ int seviri_15HEADER_GeometricProcessing_read(
 int seviri_15HEADER_IMPFConfiguration_read(
           FILE *fp,
           struct seviri_15HEADER_IMPFConfiguration_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(d->dummy, sizeof(uchar), 19786, fp, aux) < 0) E_L_R();
 
      return 0;
@@ -740,8 +740,8 @@ int seviri_15HEADER_IMPFConfiguration_read(
 int seviri_15HEADER_read(
           FILE *fp,
           struct seviri_15HEADER_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->_15HeaderVersion, sizeof(uchar), 1, fp, aux) < 0)                E_L_R();
 
      if (seviri_15HEADER_SatelliteStatus_read      (fp, &d->SatelliteStatus,       aux)) E_L_R();
@@ -763,8 +763,8 @@ int seviri_15HEADER_read(
 static int seviri_15TRAILER_ImageProductionStats_L15ImageValidity_read(
           FILE *fp,
           struct seviri_15TRAILER_ImageProductionStats_L15ImageValidity_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->NominalImage,                 sizeof(uchar), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->NonNominalBecauseIncomplete,  sizeof(uchar), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->NonNominalRadiometricQuality, sizeof(uchar), 1, fp, aux) < 0) E_L_R();
@@ -780,8 +780,8 @@ static int seviri_15TRAILER_ImageProductionStats_L15ImageValidity_read(
 static int seviri_15TRAILER_ImageProductionStats_read(
           FILE *fp,
           struct seviri_15TRAILER_ImageProductionStats_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      uint i;
 
      if (fxxxx_swap(&d->SatelliteID,                 sizeof(short), 1,  fp, aux) < 0) E_L_R();
@@ -838,8 +838,8 @@ static int seviri_15TRAILER_ImageProductionStats_read(
 static int seviri_15TRAILER_NavigationExtractionResults_HORIZONOBSERVATION_read(
           FILE *fp,
           struct seviri_15TRAILER_NavigationExtractionResults_HORIZONOBSERVATION_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->HorizonId,                sizeof(uchar),  1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->Alpha,                    sizeof(double), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->AlphaConfidence,          sizeof(double), 1, fp, aux) < 0) E_L_R();
@@ -858,8 +858,8 @@ static int seviri_15TRAILER_NavigationExtractionResults_HORIZONOBSERVATION_read(
 static int seviri_15TRAILER_NavigationExtractionResults_STAROBSERVATION_read(
           FILE *fp,
           struct seviri_15TRAILER_NavigationExtractionResults_STAROBSERVATION_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->StarId,                   sizeof(uchar),  1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->Alpha,                    sizeof(double), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->AlphaConfidence,          sizeof(double), 1, fp, aux) < 0) E_L_R();
@@ -878,8 +878,8 @@ static int seviri_15TRAILER_NavigationExtractionResults_STAROBSERVATION_read(
 static int seviri_15TRAILER_NavigationExtractionResults_LANDMARKOBSERVATION_read(
           FILE *fp,
           struct seviri_15TRAILER_NavigationExtractionResults_LANDMARKOBSERVATION_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->LandmarkId,               sizeof(uchar),  1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->LandmarkLongitude,        sizeof(double), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->LandmarkLatitude,         sizeof(double), 1, fp, aux) < 0) E_L_R();
@@ -900,8 +900,8 @@ static int seviri_15TRAILER_NavigationExtractionResults_LANDMARKOBSERVATION_read
 static int seviri_15TRAILER_NavigationExtractionResults_read(
           FILE *fp,
           struct seviri_15TRAILER_NavigationExtractionResults_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      uint i;
 
      for (i = 0; i < 4; ++i)
@@ -925,8 +925,8 @@ static int seviri_15TRAILER_NavigationExtractionResults_read(
 static int seviri_15TRAILER_RadiometricQuality_L10RadQuality_read(
           FILE *fp,
           struct seviri_15TRAILER_RadiometricQuality_L10RadQuality_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->FullImageMinimumCount,          sizeof(short), 1,   fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->FullImageMaximumCount,          sizeof(short), 1,   fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->EarthDiskMinimumCount,          sizeof(short), 1,   fp, aux) < 0) E_L_R();
@@ -979,8 +979,8 @@ static int seviri_15TRAILER_RadiometricQuality_L10RadQuality_read(
 static int seviri_15TRAILER_RadiometricQuality_L15RadQuality_read(
           FILE *fp,
           struct seviri_15TRAILER_RadiometricQuality_L15RadQuality_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->FullImageMinimumCount,      sizeof(short), 1,   fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->FullImageMaximumCount,      sizeof(short), 1,   fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->EarthDiskMinimumCount,      sizeof(short), 1,   fp, aux) < 0) E_L_R();
@@ -1018,8 +1018,8 @@ static int seviri_15TRAILER_RadiometricQuality_L15RadQuality_read(
 static int seviri_15TRAILER_RadiometricQuality_read(
           FILE *fp,
           struct seviri_15TRAILER_RadiometricQuality_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      uint i;
 
      for (i = 0; i < 42; ++i)
@@ -1040,8 +1040,8 @@ static int seviri_15TRAILER_RadiometricQuality_read(
 static int seviri_15TRAILER_GeometricQuality_Accuracy_read(
           FILE *fp,
           struct seviri_15TRAILER_GeometricQuality_Accuracy_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->QualityInfoValidity,      sizeof(uchar), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->EastWestAccuracyRMS,      sizeof(float), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->NorthSouthAccuracyRMS,    sizeof(float), 1, fp, aux) < 0) E_L_R();
@@ -1064,8 +1064,8 @@ static int seviri_15TRAILER_GeometricQuality_Accuracy_read(
 static int seviri_15TRAILER_GeometricQuality_MisregistrationResiduals_read(
           FILE *fp,
           struct seviri_15TRAILER_GeometricQuality_MisregistrationResiduals_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->QualityInfoValidity,            sizeof(uchar), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->EastWestResidual,               sizeof(float), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->NorthSouthResidual,             sizeof(float), 1, fp, aux) < 0) E_L_R();
@@ -1086,8 +1086,8 @@ static int seviri_15TRAILER_GeometricQuality_MisregistrationResiduals_read(
 static int seviri_15TRAILER_GeometricQuality_GeometricQualityStatus_read(
           FILE *fp,
           struct seviri_15TRAILER_GeometricQuality_GeometricQualityStatus_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->QualityNominal,                 sizeof(uchar), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->NominalAbsolute,                sizeof(uchar), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->NominalRelativeToPreviousImage, sizeof(uchar), 1, fp, aux) < 0) E_L_R();
@@ -1103,8 +1103,8 @@ static int seviri_15TRAILER_GeometricQuality_GeometricQualityStatus_read(
 static int seviri_15TRAILER_GeometricQuality_read(
           FILE *fp,
           struct seviri_15TRAILER_GeometricQuality_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      uint i;
 
      for (i = 0; i < 12; ++i)
@@ -1137,8 +1137,8 @@ static int seviri_15TRAILER_GeometricQuality_read(
 static int seviri_15TRAILER_TimelinessAndCompleteness_Completeness_read(
           FILE *fp,
           struct seviri_15TRAILER_TimelinessAndCompleteness_Completeness_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->PlannedL15ImageLines,    sizeof(ushort), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->GeneratedL15ImageLines,  sizeof(ushort), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->ValidL15ImageLines,      sizeof(ushort), 1, fp, aux) < 0) E_L_R();
@@ -1153,8 +1153,8 @@ static int seviri_15TRAILER_TimelinessAndCompleteness_Completeness_read(
 static int seviri_15TRAILER_TimelinessAndCompleteness_read(
           FILE *fp,
           struct seviri_15TRAILER_TimelinessAndCompleteness_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      uint i;
 
      if (fxxxx_swap(&d->MaxDelay,  sizeof(float), 1, fp, aux) < 0) E_L_R();
@@ -1176,8 +1176,8 @@ static int seviri_15TRAILER_TimelinessAndCompleteness_read(
 int seviri_15TRAILER_read(
           FILE *fp,
           struct seviri_15TRAILER_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->L15TrailerVersion, sizeof(uchar), 1, fp, aux) < 0) E_L_R();
 
      if (seviri_15TRAILER_ImageProductionStats_read
@@ -1204,8 +1204,8 @@ int seviri_15TRAILER_read(
 int seviri_packet_header_read(
           FILE *fp,
           struct seviri_packet_header_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      aux->swap_bytes = 0;
 
      if (fxxxx_swap(&d->HeaderVersionNo,    sizeof(uchar),  1, fp, aux) < 0) E_L_R();
@@ -1242,8 +1242,8 @@ int seviri_packet_header_read(
 int seviri_LineSideInfo_read(
           FILE *fp,
           struct seviri_LineSideInfo_data *d,
-          struct seviri_auxillary_io_data *aux) {
-
+          struct seviri_auxillary_io_data *aux)
+{
      if (fxxxx_swap(&d->_15LINEVersion,         sizeof(char),  1, fp,   aux) < 0) E_L_R();
      if (fxxxx_swap(&d->SatelliteId,            sizeof(short), 1, fp,   aux) < 0) E_L_R();
      if (seviri_TIME_CDS_EXPANDED_read(fp, &d->TrueRepeatCycleStart,    aux))     E_L_R();
@@ -1283,8 +1283,8 @@ int seviri_get_dimension_data(
           const struct seviri_marf_header_data *marf_header,
           enum seviri_bounds bounds,
           uint line0, uint line1, uint column0, uint column1,
-          double lat0, double lat1, double lon0, double lon1) {
-
+          double lat0, double lat1, double lon0, double lon1)
+{
      /*-------------------------------------------------------------------------
       * Get some fields from the U-MARF header file.
       *-----------------------------------------------------------------------*/
@@ -1346,8 +1346,7 @@ int seviri_get_dimension_data(
           d->i_line_in_output_VIR    = d->i0_line_selected_VIR;
           d->i_column_in_output_VIR  = d->i0_column_selected_VIR;
      }
-     else
-     if (bounds == SEVIRI_BOUNDS_ACTUAL_IMAGE) {
+     else if (bounds == SEVIRI_BOUNDS_ACTUAL_IMAGE) {
           d->i_line_requested_VIR    = d->i0_line_selected_VIR;
           d->i_column_requested_VIR  = d->i0_column_selected_VIR;
 
@@ -1363,8 +1362,7 @@ int seviri_get_dimension_data(
           d->i_line_in_output_VIR    = 0;
           d->i_column_in_output_VIR  = 0;
      }
-     else
-     if (bounds == SEVIRI_BOUNDS_LINE_COLUMN || bounds == SEVIRI_BOUNDS_LAT_LON) {
+     else if (bounds == SEVIRI_BOUNDS_LINE_COLUMN || bounds == SEVIRI_BOUNDS_LAT_LON) {
           if (bounds == SEVIRI_BOUNDS_LINE_COLUMN) {
                if ((column0 - d->i0_column_selected_VIR) % 4 ||
                    (column1 - d->i0_column_selected_VIR) % 4 != 3) {
@@ -1529,8 +1527,8 @@ int seviri_get_dimension_data(
  *
  * returns	: Non-zero on error
  ******************************************************************************/
-static int seviri_image_free(struct seviri_image_data *d) {
-
+static int seviri_image_free(struct seviri_image_data *d)
+{
      uint i;
 
      if (d->packet_header) {
@@ -1568,8 +1566,8 @@ static int seviri_image_free(struct seviri_image_data *d) {
  *
  * returns	: Non-zero on error
  ******************************************************************************/
-int seviri_free(struct seviri_data *d) {
-
+int seviri_free(struct seviri_data *d)
+{
      if (seviri_image_free(&d->image)) {
           fprintf(stderr, "ERROR: seviri_image_free()\n");
           return -1;

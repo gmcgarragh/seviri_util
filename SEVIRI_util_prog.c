@@ -104,13 +104,11 @@ int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc)
      TIFFSetField(tif, TIFFTAG_IMAGEDESCRIPTION, outstr);
 /*     Begin saving the actual image data */
      float oneline[nbands*preproc.n_columns];
-     for (i=0;i<preproc.n_lines;i++)
-     {
+     for (i=0;i<preproc.n_lines;i++) {
           if (init_outline(oneline,nbands*preproc.n_columns,preproc.fill_value)!=0) {E_L_R();}
 
           k=0;
-          for (j=0;j<nbands*preproc.n_columns;j=j+nbands)
-          {
+          for (j=0;j<nbands*preproc.n_columns;j=j+nbands) {
                band=0;
                col = (i*preproc.n_columns)+k;
                for (band=0;band<preproc.n_bands;band++) oneline[j+band]=(float)preproc.data[band][col];
@@ -179,8 +177,7 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
 
 
 /*     Initialise each variable, loop first over all bands included in the preproc data*/
-     for (i=0;i<preproc.n_bands;i++)
-     {
+     for (i=0;i<preproc.n_bands;i++) {
           if(nc_def_var(ncid, bnames[driver.sev_bands.band_ids[i-1]], NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
           if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           if(nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value)) {E_L_R();};
@@ -191,54 +188,47 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
      }
 
 /*     Now initialise the ancilliary data*/
-     if(driver.ancsave[0]==1)
-     {
+     if(driver.ancsave[0]==1) {
           if(nc_def_var(ncid, "Time", NC_DOUBLE, 2,dimids, &varid[i])) {E_L_R();};
           if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           i++;
      }
-     if(driver.ancsave[1]==1)
-     {
+     if(driver.ancsave[1]==1) {
           if(nc_def_var(ncid, "Latitude", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
           if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value);
           if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, latlon_range)) {E_L_R();};
           i++;
      }
-     if(driver.ancsave[2]==1)
-     {
+     if(driver.ancsave[2]==1) {
           if(nc_def_var(ncid, "Longitude", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
           if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value);
           if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, latlon_range)) {E_L_R();};
           i++;
      }
-     if(driver.ancsave[3]==1)
-     {
+     if(driver.ancsave[3]==1) {
           if(nc_def_var(ncid, "Solar Zenith Angle", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
           if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value);
           if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, zen_range)) {E_L_R();};
           i++;
      }
-     if(driver.ancsave[4]==1)
-     {
+     if(driver.ancsave[4]==1) {
           if(nc_def_var(ncid, "Solar Azimuth Angle", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
           if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value);
           if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, azi_range)) {E_L_R();};
           i++;
      }
-     if(driver.ancsave[5]==1)
-     {
+     if(driver.ancsave[5]==1) {
           if(nc_def_var(ncid, "View Zenith Angle", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
           if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value);
           if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, zen_range)) {E_L_R();};
           i++;
      }
-     if(driver.ancsave[6]==1)
-     {
+     if(driver.ancsave[6]==1) {
           if(nc_def_var(ncid, "View Azimuth Angle", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
           if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           i++;
@@ -250,9 +240,8 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
 
 /*     This will actually put the data into the file*/
      for (i=0;i<preproc.n_bands;i++)
-     {
           if(nc_put_var_float(ncid, varid[i], &preproc.data[i][0])) {E_L_R();};
-     }
+
      if(driver.ancsave[0]==1){if(nc_put_var_double(ncid, varid[i], &preproc.time[0])) {E_L_R();};i++;}
      if(driver.ancsave[1]==1){if(nc_put_var_float(ncid, varid[i], &preproc.lat[0])) {E_L_R();};i++;}
      if(driver.ancsave[2]==1){if(nc_put_var_float(ncid, varid[i], &preproc.lon[0])) {E_L_R();};i++;}
@@ -326,8 +315,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
      H5Pset_fill_value(dcpl, H5T_NATIVE_FLOAT, &preproc.fill_value);
 
 /*     Set up dataspaces for the SEVIRI band data and write to the file.*/
-     for (i=0;i<preproc.n_bands;i++)
-     {
+     for (i=0;i<preproc.n_bands;i++) {
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,bnames[driver.sev_bands.band_ids[i-1]],H5T_NATIVE_FLOAT,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.data[i][0]);
@@ -336,8 +324,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
      }
 
 /*     Set up dataspaces for the ancilliary data and write to the file.*/
-     if(driver.ancsave[0]==1)
-     {
+     if(driver.ancsave[0]==1) {
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"Time",H5T_NATIVE_DOUBLE,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_DOUBLE,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.time[0]);
@@ -345,8 +332,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           status=H5Dclose(dataset);
           i++;
      }
-     if(driver.ancsave[1]==1)
-     {
+     if(driver.ancsave[1]==1) {
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"Latitude",H5T_NATIVE_FLOAT,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.lat[0]);
@@ -354,8 +340,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           status=H5Dclose(dataset);
           i++;
      }
-     if(driver.ancsave[2]==1)
-     {
+     if(driver.ancsave[2]==1) {
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"Longitude",H5T_NATIVE_FLOAT,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.lon[0]);
@@ -363,8 +348,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           status=H5Dclose(dataset);
           i++;
      }
-     if(driver.ancsave[3]==1)
-     {
+     if(driver.ancsave[3]==1) {
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"Solar Zenith Angle",H5T_NATIVE_FLOAT,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.sza[0]);
@@ -372,8 +356,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           status=H5Dclose(dataset);
           i++;
      }
-     if(driver.ancsave[4]==1)
-     {
+     if(driver.ancsave[4]==1) {
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"Solar Azimuth Angle",H5T_NATIVE_DOUBLE,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.saa[0]);
@@ -381,8 +364,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           status=H5Dclose(dataset);
           i++;
      }
-     if(driver.ancsave[5]==1)
-     {
+     if(driver.ancsave[5]==1) {
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"View Zenith Angle",H5T_NATIVE_FLOAT,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.vza[0]);
@@ -390,8 +372,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           status=H5Dclose(dataset);
           i++;
      }
-     if(driver.ancsave[6]==1)
-     {
+     if(driver.ancsave[6]==1) {
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"View Azimuth Angle",H5T_NATIVE_FLOAT,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.vaa[0]);

@@ -16,8 +16,8 @@
  * Return non-zero if the current machine is Little-endian and zero if it is
  * Big-endian.
  ******************************************************************************/
-int snu_is_little_endian() {
-
+int snu_is_little_endian()
+{
      ushort x = 1;
 
      return ((char *) &x)[0];
@@ -29,8 +29,8 @@ int snu_is_little_endian() {
  * Round the argument to the nearest integer value with an upward rounding
  * direction.
  ******************************************************************************/
-double snu_rint(double x) {
-
+double snu_rint(double x)
+{
      return x >= 0. ? floor(x + .5) : ceil(x - .5);
 }
 
@@ -39,8 +39,8 @@ double snu_rint(double x) {
 /*******************************************************************************
  * Fill an array with a constant value.
  ******************************************************************************/
-void snu_init_array_uc(uchar *a, uint n, uchar x) {
-
+void snu_init_array_uc(uchar *a, uint n, uchar x)
+{
      uint i;
 
      for (i = 0; i < n; ++i)
@@ -49,8 +49,8 @@ void snu_init_array_uc(uchar *a, uint n, uchar x) {
 
 
 
-void snu_init_array_us(ushort *a, uint n, ushort x) {
-
+void snu_init_array_us(ushort *a, uint n, ushort x)
+{
      uint i;
 
      for (i = 0; i < n; ++i)
@@ -59,8 +59,8 @@ void snu_init_array_us(ushort *a, uint n, ushort x) {
 
 
 
-void snu_init_array_f(float *a, uint n, float x) {
-
+void snu_init_array_f(float *a, uint n, float x)
+{
      uint i;
 
      for (i = 0; i < n; ++i)
@@ -69,8 +69,8 @@ void snu_init_array_f(float *a, uint n, float x) {
 
 
 
-void snu_init_array_d(double *a, uint n, double x) {
-
+void snu_init_array_d(double *a, uint n, double x)
+{
      uint i;
 
      for (i = 0; i < n; ++i)
@@ -97,8 +97,8 @@ void snu_init_array_d(double *a, uint n, double x) {
 
 #define JUL_GREG 2299161
 
-void snu_jul_to_cal_date(long jul, int *y, int *m, int *d) {
-
+void snu_jul_to_cal_date(long jul, int *y, int *m, int *d)
+{
      if (jul >= JUL_GREG)
           jul += (long) (floor(floor((jul - 4479.5) / 36524.25) * 0.75 + 0.5) - 37.);
 
@@ -119,8 +119,8 @@ void snu_jul_to_cal_date(long jul, int *y, int *m, int *d) {
  ******************************************************************************/
 #define CAL_GREG (15+31L*(10+12L*1582))
 
-long snu_cal_to_jul_day(int y, int m, int d) {
-
+long snu_cal_to_jul_day(int y, int m, int d)
+{
      int yp;
      int mp;
 
@@ -160,8 +160,8 @@ long snu_cal_to_jul_day(int y, int m, int d) {
  *
  * Liou 2002, page 49
  ******************************************************************************/
-double snu_solar_distance_factor2(double jday) {
-
+double snu_solar_distance_factor2(double jday)
+{
      double t;
 
      t = (2. * PI * jday) / 365.;

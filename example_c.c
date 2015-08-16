@@ -11,8 +11,8 @@ fields.
 #include "seviri_native_util.h"
 
 
-int main(int argc, char *argv[]) {
-
+int main(int argc, char *argv[])
+{
      /* Filename of the file to be read. */
      char *filename;
 

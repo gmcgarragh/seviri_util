@@ -32,8 +32,8 @@
  * Ref: PDF_CGMS_LRIT_HRIT_2_6, Section 4.4
  ******************************************************************************/
 int snu_line_column_to_lat_lon(uint line, uint column, float *lat, float *lon,
-          double lon0, const struct nav_scaling_factors *nav) {
-
+          double lon0, const struct nav_scaling_factors *nav)
+{
      double x;
      double y;
 
@@ -102,8 +102,8 @@ int snu_line_column_to_lat_lon(uint line, uint column, float *lat, float *lon,
  * Ref: PDF_CGMS_LRIT_HRIT_2_6, Section 4.4
  ******************************************************************************/
 int snu_lat_lon_to_line_column(float lat, float lon, uint *line, uint *column,
-          double lon0, const struct nav_scaling_factors *nav) {
-
+          double lon0, const struct nav_scaling_factors *nav)
+{
      double x;
      double y;
 
@@ -170,8 +170,8 @@ int snu_lat_lon_to_line_column(float lat, float lon, uint *line, uint *column,
  *
  * Ref: The Astronomical Almanac, 2003, B6
  ******************************************************************************/
-static double calc_gmst(double jtime) {
-
+static double calc_gmst(double jtime)
+{
      double a;
      double jdelta;
      double gmst;
@@ -204,8 +204,8 @@ static double calc_gmst(double jtime) {
  * Ref: The Astronomical Almanac, 2003, C24
  ******************************************************************************/
 static void solar_coords_and_times(double jtime, double *delta,
-          double *gw_mean_sol_time, double *gw_appar_sol_time) {
-
+          double *gw_mean_sol_time, double *gw_appar_sol_time)
+{
      double a;
 
      double jdelta;
@@ -293,8 +293,8 @@ static void solar_coords_and_times(double jtime, double *delta,
  *
  * returns	: local time
  ******************************************************************************/
-static double greenwich_to_local_time(double lon, double gw_time) {
-
+static double greenwich_to_local_time(double lon, double gw_time)
+{
      double loc_time;
 
      loc_time = gw_time + lon / (PI * 2.);
@@ -314,8 +314,8 @@ static double greenwich_to_local_time(double lon, double gw_time) {
  *
  * returns	: GMT/UTC
  ******************************************************************************/
-static double local_to_greenwich_time(double lon, double loc_time) {
-
+static double local_to_greenwich_time(double lon, double loc_time)
+{
      double gw_time;
 
      gw_time = loc_time - lon / (PI * 2.);
@@ -341,8 +341,8 @@ static double local_to_greenwich_time(double lon, double loc_time) {
  * phi0		: Output solar azimuth angle (radians: 0.0 -- 2PI)
  ******************************************************************************/
 static void solar_angles(double delta, double lat, double hour, double eot,
-                         double *mu0, double *theta0, double *phi0) {
-
+                         double *mu0, double *theta0, double *phi0)
+{
      double a;
 
      double h;
@@ -398,8 +398,8 @@ static void solar_angles(double delta, double lat, double hour, double eot,
  * Ref: The Astronomical Almanac, 2003
  ******************************************************************************/
 void snu_solar_params2(double jtime, double lat, double lon, double *mu0,
-                       double *theta0, double *phi0, double *solar_dist_fac) {
-
+                       double *theta0, double *phi0, double *solar_dist_fac)
+{
      int year;
      int month;
      int day;
@@ -470,8 +470,8 @@ void snu_solar_params2(double jtime, double lat, double lon, double *mu0,
  * Ref: GIESKE_A_S_M, Page 6
  ******************************************************************************/
 int snu_vza_and_vaa(double lat, double lon, double height,
-                    double X, double Y, double Z, float *vza, float *vaa) {
-
+                    double X, double Y, double Z, float *vza, float *vaa)
+{
      /* Below are the values given by Gieske et. al. */
 /*
      const double a = 6378.1370;

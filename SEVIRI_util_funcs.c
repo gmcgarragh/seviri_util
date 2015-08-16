@@ -97,8 +97,7 @@ int print_driver(struct driver_data driver)
 
 /*      Print info about which bands will be processed */
      printf("Will process bands and units:\n");
-     for (i=0;i<driver.sev_bands.nbands;i++)
-     {
+     for (i=0;i<driver.sev_bands.nbands;i++) {
           printf("\t\t\t\t%s\t%i\n",bnames[driver.sev_bands.band_ids[i]-1],driver.outtype[i]);
      }
      printf("Output format will be:\t\t%i\n",driver.outfrmt);
@@ -234,8 +233,7 @@ int parse_driver(char *fname,struct driver_data *driver)
 /*     Read the timeslot (HRIT only)*/
      if (getline(&line,&len,fp)==-1) {printf("Failure reading input timeslot line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (strlen(line)<12 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading input timeslot line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
-     if (driver->infrmt==SEVIRI_INFILE_HRIT)
-     {
+     if (driver->infrmt==SEVIRI_INFILE_HRIT) {
           line[strlen(line)-1]='\0';
           driver->timeslot = (char*) malloc(sizeof(char)*13);
           strcpy(driver->timeslot,line);
@@ -244,8 +242,7 @@ int parse_driver(char *fname,struct driver_data *driver)
 /*     Read the satellite number (HRIT only)*/
      if (getline(&line,&len,fp)==-1) {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (strlen(line)<1 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
-     if (driver->infrmt==SEVIRI_INFILE_HRIT)
-     {
+     if (driver->infrmt==SEVIRI_INFILE_HRIT) {
           line[strlen(line)-1]='\0';
           if (atoi(line)==1) driver->satnum     =     SAT_MSG1+1;
           else if (atoi(line)==2) driver->satnum     =     SAT_MSG2+1;
@@ -297,8 +294,7 @@ int parse_driver(char *fname,struct driver_data *driver)
      driver->bounds = SEVIRI_BOUNDS_LINE_COLUMN;
      if (iline==-100) { driver->bounds = SEVIRI_BOUNDS_FULL_DISK; setline(driver);}
      if (iline==-200) { driver->bounds = SEVIRI_BOUNDS_ACTUAL_IMAGE; setline(driver);}
-     if (iline!=-100 && iline!=-200)
-     {
+     if (iline!=-100 && iline!=-200) {
           driver->iline     =     iline;
 /*     Read the final line*/
           if (getline(&line,&len,fp)==-1) {printf("Failure reading input final line line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
@@ -333,8 +329,7 @@ int parse_driver(char *fname,struct driver_data *driver)
      /* ancsave contains: 0-time,     1-lat,     2-lon,     3-sza,     4-saa,     5-vza,     6-vaa */
      driver->compression=0;
      for (i=0;i<7;i++) driver->ancsave[i]=0;
-     while (fgets(line, 10, fp))
-     {
+     while (fgets(line, 10, fp)) {
           line[strlen(line)-1]='\0';
           if (strcmp(line,"time")==0)     driver->ancsave[0]=1;
           if (strcmp(line,"compress")==0) driver->compression=1;

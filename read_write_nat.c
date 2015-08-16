@@ -58,8 +58,8 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
                              enum seviri_bounds bounds,
                              uint line0, uint line1, uint column0, uint column1,
                              double lat0, double lat1, double lon0, double lon1,
-                             struct seviri_auxillary_io_data *aux) {
-
+                             struct seviri_auxillary_io_data *aux)
+{
      uchar *data10;
 
      const uchar shifts[] = {6, 4, 2, 0};
@@ -297,8 +297,8 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
  *
  ******************************************************************************/
 static int seviri_image_write(FILE *fp, const struct seviri_image_data *image,
-                              struct seviri_auxillary_io_data *aux) {
-
+                              struct seviri_auxillary_io_data *aux)
+{
      uchar *data10;
 
      const uchar shifts[] = {6, 4, 2, 0};
@@ -384,8 +384,8 @@ static int seviri_image_write(FILE *fp, const struct seviri_image_data *image,
  *
  * returns	: Non-zero on error
  ******************************************************************************/
-static int seviri_image_free(struct seviri_image_data *d) {
-
+static int seviri_image_free(struct seviri_image_data *d)
+{
      uint i;
 
      for (i = 0; i < d->n_bands; ++i)
@@ -439,8 +439,8 @@ static int seviri_image_free(struct seviri_image_data *d) {
 int seviri_get_dimens_nat(const char *filename, uint *i_line, uint *i_column,
                           uint *n_lines, uint *n_columns, enum seviri_bounds bounds,
                           uint line0, uint line1, uint column0, uint column1,
-                          double lat0, double lat1, double lon0, double lon1) {
-
+                          double lat0, double lat1, double lon0, double lon1)
+{
      FILE *fp;
 
      struct seviri_auxillary_io_data aux;
@@ -529,8 +529,8 @@ int seviri_read_nat(const char *filename, struct seviri_data *d,
                     uint n_bands, const uint *band_ids,
                     enum seviri_bounds bounds,
                     uint line0, uint line1, uint column0, uint column1,
-                    double lat0, double lat1, double lon0, double lon1) {
-
+                    double lat0, double lat1, double lon0, double lon1)
+{
      FILE *fp;
 
      struct seviri_auxillary_io_data aux;
@@ -604,8 +604,8 @@ int seviri_read_nat(const char *filename, struct seviri_data *d,
  *
  * returns	: Non-zero on error
  ******************************************************************************/
-int seviri_write_nat(const char *filename, const struct seviri_data *d) {
-
+int seviri_write_nat(const char *filename, const struct seviri_data *d)
+{
      FILE *fp;
 
      struct seviri_auxillary_io_data aux;

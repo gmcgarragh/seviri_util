@@ -18,8 +18,8 @@
 /*******************************************************************************
  * Compute Julian day from the TIME_CDS_SHORT type.
  ******************************************************************************/
-static double TIME_CDS_SHORT_to_jtime(const struct seviri_TIME_CDS_SHORT_data *d) {
-
+static double TIME_CDS_SHORT_to_jtime(const struct seviri_TIME_CDS_SHORT_data *d)
+{
      double jtime_epoch = (double) snu_cal_to_jul_day(1958, 1, 1) - .5;
 
      return jtime_epoch + d->day + d->msec / 1.e3 / 60. / 60. / 24.;
@@ -42,8 +42,8 @@ static double TIME_CDS_SHORT_to_jtime(const struct seviri_TIME_CDS_SHORT_data *d
  * returns	: Non-zero on error
  ******************************************************************************/
 int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
-                   const enum seviri_units *band_units, int do_not_alloc) {
-
+                   const enum seviri_units *band_units, int do_not_alloc)
+{
      uint i;
      uint ii;
      uint j;
@@ -429,8 +429,8 @@ int seviri_read_and_preproc_nat(const char *filename,
                                 enum seviri_bounds bounds,
                                 uint line0, uint line1, uint column0, uint column1,
                                 double lat0, double lat1, double lon0, double lon1,
-                                int do_not_alloc) {
-
+                                int do_not_alloc)
+{
      struct seviri_data seviri;
 
      if (seviri_read_nat(filename, &seviri, n_bands, band_ids, bounds,
@@ -484,8 +484,8 @@ int seviri_read_and_preproc_hrit(const char *indir, const char *timeslot,
                                  enum seviri_bounds bounds,
                                  uint line0, uint line1, uint column0, uint column1,
                                  double lat0, double lat1, double lon0, double lon1,
-                                 int do_not_alloc) {
-
+                                 int do_not_alloc)
+{
      int i, proc_hrv = 0;
 
      struct seviri_data seviri;
@@ -551,8 +551,8 @@ int seviri_read_and_preproc(const char *filename,
                             enum seviri_bounds bounds,
                             uint line0, uint line1, uint column0, uint column1,
                             double lat0, double lat1, double lon0, double lon1,
-                            int do_not_alloc) {
-
+                            int do_not_alloc)
+{
      char *indir;
      int satnum;
      char timeslot[13];
@@ -594,8 +594,8 @@ int seviri_read_and_preproc(const char *filename,
  *
  * returns	: Non-zero on error
  ******************************************************************************/
-int seviri_preproc_free(struct seviri_preproc_data *d) {
-
+int seviri_preproc_free(struct seviri_preproc_data *d)
+{
      if (d->memory_alloc_d) {
           free(d->time);
           free(d->lat);
