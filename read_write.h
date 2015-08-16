@@ -14,6 +14,7 @@
 extern "C" {
 #endif
 
+
 /*******************************************************************************
  * Struct containing auxiliary variables related to configuring the read/write
  * functions.
@@ -27,6 +28,7 @@ struct seviri_auxillary_io_data {
      uint   *temp_4;
      ulong  *temp_8;
 };
+
 
 /*******************************************************************************
  * Struct containing offsets and dimensions that will passed from the read to
@@ -928,6 +930,53 @@ struct seviri_native_data {
 };
 
 
+
+int seviri_auxillary_alloc(struct seviri_auxillary_io_data *d);
+int seviri_auxillary_free(struct seviri_auxillary_io_data *d);
+
+int fxxxx_swap(void *ptr, size_t size, size_t nmemb, FILE *stream, struct
+               seviri_auxillary_io_data *aux);
+
+int seviri_l15_ph_data_read(FILE *fp,
+                            struct seviri_marf_l15_ph_data_data *d,
+                            struct seviri_auxillary_io_data *aux);
+int seviri_l15_ph_data_id_read(FILE *fp,
+                               struct seviri_marf_l15_ph_data_id_data *d,
+                               struct seviri_auxillary_io_data *aux);
+
+int seviri_TIME_CDS_read(FILE *fp,
+                         struct seviri_TIME_CDS_data *d,
+                         struct seviri_auxillary_io_data *aux);
+int seviri_TIME_CDS_SHORT_read(FILE *fp,
+                               struct seviri_TIME_CDS_SHORT_data *d,
+                               struct seviri_auxillary_io_data *aux);
+int seviri_TIME_CDS_EXPANDED_read(FILE *fp,
+                                  struct seviri_TIME_CDS_EXPANDED_data *d,
+                                  struct seviri_auxillary_io_data *aux);
+
+int seviri_15HEADER_SatelliteStatus_read(
+          FILE *fp,
+          struct seviri_15HEADER_SatelliteStatus_data *d,
+          struct seviri_auxillary_io_data *aux);
+
+int seviri_15HEADER_ImageDescription_read(
+          FILE *fp,
+          struct seviri_15HEADER_ImageDescription_data *d,
+          struct seviri_auxillary_io_data *aux);
+
+int seviri_15HEADER_RadiometricProcessing_read(
+          FILE *fp,
+          struct seviri_15HEADER_RadiometricProcessing_data *d,
+          struct seviri_auxillary_io_data *aux);
+
+int seviri_get_dimension_data(
+          struct seviri_dimension_data *d,
+          const struct seviri_marf_header_data *marf_header,
+          enum seviri_bounds bounds,
+          uint line0, uint line1, uint column0, uint column1,
+          double lat0, double lat1, double lon0, double lon1);
+
+
 int seviri_native_get_dimens(const char *filename, uint *i_line, uint *i_column,
                              uint *n_lines, uint *n_columns, enum seviri_bounds bounds,
                              uint line0, uint line1, uint column0, uint column1,
@@ -939,25 +988,6 @@ int seviri_native_read(const char *filename, struct seviri_native_data *d,
 int seviri_native_write(const char *filename, const struct seviri_native_data *d);
 int seviri_native_free(struct seviri_native_data *d);
 
-
-int seviri_15HEADER_SatelliteStatus_read(FILE *fp,struct seviri_15HEADER_SatelliteStatus_data *d,struct seviri_auxillary_io_data *aux);
-int seviri_15HEADER_ImageDescription_read(FILE *fp,struct seviri_15HEADER_ImageDescription_data *d,struct seviri_auxillary_io_data *aux);
-int seviri_15HEADER_RadiometricProcessing_read(FILE *fp,struct seviri_15HEADER_RadiometricProcessing_data *d,struct seviri_auxillary_io_data *aux);
-
-int seviri_auxillary_alloc(struct seviri_auxillary_io_data *d);
-int seviri_auxillary_free(struct seviri_auxillary_io_data *d);
-
-int seviri_get_dimension_data(struct seviri_dimension_data *d,const struct seviri_marf_header_data *marf_header,enum seviri_bounds bounds,
-			   uint line0, uint line1, uint column0, uint column1,double lat0, double lat1, double lon0, double lon1);
-
-
-int seviri_TIME_CDS_read(FILE *fp,struct seviri_TIME_CDS_data *d,struct seviri_auxillary_io_data *aux);
-int seviri_TIME_CDS_SHORT_read(FILE *fp,struct seviri_TIME_CDS_SHORT_data *d,struct seviri_auxillary_io_data *aux);
-int seviri_TIME_CDS_EXPANDED_read(FILE *fp,struct seviri_TIME_CDS_EXPANDED_data *d,struct seviri_auxillary_io_data *aux);
-int fread_swap(void *ptr, size_t size, size_t nmemb, FILE *stream,struct seviri_auxillary_io_data *aux);
-int fwrite_swap(const void *ptr, size_t size, size_t nmemb, FILE *stream,struct seviri_auxillary_io_data *aux);
-int fxxxx_swap(void *ptr, size_t size, size_t nmemb, FILE *stream, struct seviri_auxillary_io_data *aux);
-int seviri_l15_ph_data_read(FILE *fp,struct seviri_marf_l15_ph_data_data *d,struct seviri_auxillary_io_data *aux);
 
 #ifdef __cplusplus
 }

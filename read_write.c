@@ -43,7 +43,6 @@
 
 
 
-
 /*******************************************************************************
  * Byte swapping macros to convert Endianness.
  ******************************************************************************/
@@ -67,9 +66,35 @@
 
 
 /*******************************************************************************
+ * Allocate and free data required by the low level read and write functions.
+ ******************************************************************************/
+int seviri_auxillary_alloc(struct seviri_auxillary_io_data *d) {
+
+     uint n = 134915;
+     d->temp_4 = malloc(n * sizeof(uint));
+     d->temp_2 = malloc(n * sizeof(ushort));
+     d->temp_8 = malloc(n * sizeof(ulong));
+
+     return 0;
+}
+
+
+
+int seviri_auxillary_free(struct seviri_auxillary_io_data *d) {
+
+     free(d->temp_2);
+     free(d->temp_4);
+     free(d->temp_8);
+
+     return 0;
+}
+
+
+
+/*******************************************************************************
  * Like fread() that also swaps bytes after reading as needed.
  ******************************************************************************/
-int fread_swap(void *ptr, size_t size, size_t nmemb, FILE *stream,
+static int fread_swap(void *ptr, size_t size, size_t nmemb, FILE *stream,
                       struct seviri_auxillary_io_data *aux) {
 
      size_t i;
@@ -123,7 +148,7 @@ int fread_swap(void *ptr, size_t size, size_t nmemb, FILE *stream,
 /*******************************************************************************
  * Like fwrite() that also swaps bytes before writing as needed.
  ******************************************************************************/
-int fwrite_swap(const void *ptr, size_t size, size_t nmemb, FILE *stream,
+static int fwrite_swap(const void *ptr, size_t size, size_t nmemb, FILE *stream,
                        struct seviri_auxillary_io_data *aux) {
 
      size_t i;
@@ -185,7 +210,7 @@ int fwrite_swap(const void *ptr, size_t size, size_t nmemb, FILE *stream,
  * High level function to handle the choice of operation.
  ******************************************************************************/
 int fxxxx_swap(void *ptr, size_t size, size_t nmemb, FILE *stream, struct
-                      seviri_auxillary_io_data *aux) {
+               seviri_auxillary_io_data *aux) {
 
      if (aux->operation == 0)
           return fread_swap(ptr, size, nmemb, stream, aux);
@@ -199,8 +224,8 @@ int fxxxx_swap(void *ptr, size_t size, size_t nmemb, FILE *stream, struct
  *
  ******************************************************************************/
 int seviri_l15_ph_data_read(FILE *fp,
-                                   struct seviri_marf_l15_ph_data_data *d,
-                                   struct seviri_auxillary_io_data *aux) {
+                            struct seviri_marf_l15_ph_data_data *d,
+                            struct seviri_auxillary_io_data *aux) {
 
      if (fxxxx_swap(d->Name,  1, 30, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(d->Value, 1, 50, fp, aux) < 0) E_L_R();
@@ -214,8 +239,8 @@ int seviri_l15_ph_data_read(FILE *fp,
  *
  ******************************************************************************/
 int seviri_l15_ph_data_id_read(FILE *fp,
-                                      struct seviri_marf_l15_ph_data_id_data *d,
-                                      struct seviri_auxillary_io_data *aux) {
+                               struct seviri_marf_l15_ph_data_id_data *d,
+                               struct seviri_auxillary_io_data *aux) {
 
      if (fxxxx_swap(d->Name,    1, 30, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(d->Size,    1, 16, fp, aux) < 0) E_L_R();
@@ -327,8 +352,8 @@ static int seviri_marf_header_read(FILE *fp, struct seviri_marf_header_data *d,
  *
  ******************************************************************************/
 int seviri_TIME_CDS_read(FILE *fp,
-                                struct seviri_TIME_CDS_data *d,
-                                struct seviri_auxillary_io_data *aux) {
+                         struct seviri_TIME_CDS_data *d,
+                         struct seviri_auxillary_io_data *aux) {
 
      if (fxxxx_swap(&d->day,  sizeof(short), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->msec, sizeof(int),   1, fp, aux) < 0) E_L_R();
@@ -340,8 +365,8 @@ int seviri_TIME_CDS_read(FILE *fp,
 
 
 int seviri_TIME_CDS_SHORT_read(FILE *fp,
-                                      struct seviri_TIME_CDS_SHORT_data *d,
-                                      struct seviri_auxillary_io_data *aux) {
+                               struct seviri_TIME_CDS_SHORT_data *d,
+                               struct seviri_auxillary_io_data *aux) {
 
      if (fxxxx_swap(&d->day,  sizeof(short), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->msec, sizeof(int),   1, fp, aux) < 0) E_L_R();
@@ -352,8 +377,8 @@ int seviri_TIME_CDS_SHORT_read(FILE *fp,
 
 
 int seviri_TIME_CDS_EXPANDED_read(FILE *fp,
-                                         struct seviri_TIME_CDS_EXPANDED_data *d,
-                                         struct seviri_auxillary_io_data *aux) {
+                                  struct seviri_TIME_CDS_EXPANDED_data *d,
+                                  struct seviri_auxillary_io_data *aux) {
 
      if (fxxxx_swap(&d->day,  sizeof(short), 1, fp, aux) < 0) E_L_R();
      if (fxxxx_swap(&d->msec, sizeof(int),   1, fp, aux) < 0) E_L_R();
@@ -1577,12 +1602,10 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
 
      uint i;
      uint ii;
+     uint iii;
      uint j;
      uint jj;
      uint k;
-     uint q;
-
-     uint skipper;
 
      uint length;
 
@@ -1604,8 +1627,8 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
 
      struct seviri_dimension_data *dimens;
 
-     int bands_infile[12];
-     for (i=0;i<12;i++)bands_infile[i]=0;
+     int i_bands_infile[12];
+
 
      /*-------------------------------------------------------------------------
       * Check if the requested band IDs are valid.
@@ -1636,15 +1659,33 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
       *-----------------------------------------------------------------------*/
      n_bands_VIR = 0;
      for (i = 0; i < 11; ++i) {
-          if (marf_header->secondary.SelectedBandIDs.Value[i] == 'X'){
+          if (marf_header->secondary.SelectedBandIDs.Value[i] == 'X') {
                n_bands_VIR++;
-            bands_infile[i]=1;}
+          }
      }
 
      n_bands_HRV = 0;
-     if (marf_header->secondary.SelectedBandIDs.Value[11] == 'X'){
+     if (marf_header->secondary.SelectedBandIDs.Value[11] == 'X')
           n_bands_HRV = 1;
-          bands_infile[11]=1;}
+
+
+     /*-------------------------------------------------------------------------
+      *
+      *-----------------------------------------------------------------------*/
+     ii = 0;
+     for (i = 0; i < n_bands; ++i) {
+          if (marf_header->secondary.SelectedBandIDs.Value[band_ids[i] - 1] == 'X') {
+               iii = -1;
+               for (ii = 0; ii < band_ids[i]; ++ii) {
+                    if (marf_header->secondary.SelectedBandIDs.Value[ii] == 'X')
+                         iii++;
+               }
+               i_bands_infile[i] = iii;
+          }
+          else
+              i_bands_infile[i] = -1;
+     }
+
 
      /*-------------------------------------------------------------------------
       * Allocate and fill in the seviri_dimension_data struct.
@@ -1721,10 +1762,11 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
           ii = dimens->i_line_in_output_VIR + i;
 
           for (i_band = 0; i_band < image->n_bands; ++i_band) {
-            if (bands_infile[image->band_ids[i_band]-1]!=1) continue;
-          skipper=0;
-          for (q=0;q<image->band_ids[i_band]-1;q++) if (bands_infile[q]==1) skipper++;
-            file_offset2 = file_offset + (skipper) * n_bytes_VIR_line + dimens->i_column_to_read_VIR / 4 * 5;
+               if (i_bands_infile[i_band] < 0)
+                    continue;
+
+               file_offset2 = file_offset + i_bands_infile[i_band] *
+                    n_bytes_VIR_line + dimens->i_column_to_read_VIR / 4 * 5;
 
                fseek(fp, file_offset2, SEEK_SET);
 
@@ -1895,32 +1937,6 @@ static int seviri_image_free(struct seviri_image_data *d) {
      free(d->data_hrv);
 */
      free(d->dimens);
-
-     return 0;
-}
-
-
-
-/*******************************************************************************
- * Allocate and free data required by the low level read and write functions.
- ******************************************************************************/
-int seviri_auxillary_alloc(struct seviri_auxillary_io_data *d) {
-
-     uint n = 134915;
-     d->temp_4 = malloc(n * sizeof(uint));
-     d->temp_2 = malloc(n * sizeof(ushort));
-     d->temp_8 = malloc(n * sizeof(ulong));
-
-     return 0;
-}
-
-
-
-int seviri_auxillary_free(struct seviri_auxillary_io_data *d) {
-
-     free(d->temp_2);
-     free(d->temp_4);
-     free(d->temp_8);
 
      return 0;
 }
