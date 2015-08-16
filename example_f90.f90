@@ -10,6 +10,7 @@ program example_f90
 
      implicit none
 
+     ! Filename of the file to be read.
      character(1024) :: filename
 
      integer :: i_line
@@ -34,6 +35,12 @@ program example_f90
 
      ! This struct will contain the image data and some metadata.
      type(seviri_preproc_t_f90) :: preproc
+
+     ! Get the filename of the file to be read from the command line.
+     if (command_argument_count() .lt. 1) then
+        print *, "ERROR: Filename missing from command line."
+        stop 1
+     endif
 
      call get_command_argument(1,filename)
 

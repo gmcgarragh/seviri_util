@@ -13,8 +13,8 @@ fields.
 
 int main(int argc, char *argv[]) {
 
-     /* Filename of the .nat file to be read. */
-     char *filename = argv[1];
+     /* Filename of the file to be read. */
+     char *filename;
 
      unsigned int i_line;
      unsigned int i_column;
@@ -39,6 +39,14 @@ int main(int argc, char *argv[]) {
 
      /* This struct will contain the image data and some metadata. */
      struct seviri_preproc_data preproc;
+
+     /* Get the filename of the file to be read from the command line. */
+     if (argc < 2) {
+          fprintf(stderr, "ERROR: Filename missing from command line.\n");
+          exit(1);
+     }
+
+     filename = argv[1];
 
      /* Read and preprocess the data.  Note: the last four arguments are unused
         in this case. Please see the function header for a complete discussion
