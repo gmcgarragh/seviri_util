@@ -36,7 +36,7 @@ int is_hrv(int band)
  *
  * returns:	Character array (len = 6) containing channel name string
  ******************************************************************************/
-char *chan_name(int cnum)
+const char *chan_name(int cnum)
 {
      switch (cnum) {
           case 0:  return "______"; break;
@@ -119,7 +119,7 @@ int assemble_fnames(char ****fnam, const char *indir, const char *timeslot,
 
      for (c=0;c<nbands;c++) {
           int i;
-          char *band;
+          const char *band;
           uint cnum=bids[c];
           arr[c]=malloc(sizeof(char *) * nsegs[c]);
           band=chan_name(cnum);
@@ -156,7 +156,7 @@ int assemble_epiname(char **enam, const char *indir, const char *timeslot, int s
 {
      /* HRIT filename is 61 so use that plus indir len. */
      char *arr = malloc(61+strlen(indir)+1);
-     char *band;
+     const char *band;
      band=chan_name(0);
      sprintf(arr, "%sH-000-MSG%d__-MSG%d________-%s___-EPI______-%s-__",
              indir, sat, sat, band, timeslot);
@@ -184,7 +184,7 @@ int assemble_proname(char **pnam, const char *indir, const char *timeslot, int s
 {
      /* HRIT filename is 61 so use that plus indir len. */
      char *arr = malloc(61+strlen(indir)+1);
-     char *band;
+     const char *band;
      band=chan_name(0);
      sprintf(arr, "%sH-000-MSG%d__-MSG%d________-%s___-PRO______-%s-__",
              indir, sat, sat, band, timeslot);
@@ -211,7 +211,7 @@ int assemble_proname(char **pnam, const char *indir, const char *timeslot, int s
  * returns:     Zero if successful
  ******************************************************************************/
 int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d,
-                     struct seviri_dimension_data *dims)
+                     const struct seviri_dimension_data *dims)
 {
 
      /* Set up the various data that is required*/
