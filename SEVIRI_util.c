@@ -53,7 +53,7 @@
 **   RBT
 **   $HOME/my_data/Processed_SEVIRI_data/
 **   500
-**   1000   
+**   1000
 **   1000
 **   2000
 **   lat
@@ -62,8 +62,8 @@
 **   vaa
 **   compress
 **
-**   This example will read HRIT data from 12:00 UTC on 3rd March 2006 
-**   Will save in the HDF5 file format  
+**   This example will read HRIT data from 12:00 UTC on 3rd March 2006
+**   Will save in the HDF5 file format
 **   Will convert into reflectance or brightness temp (depending on channel)
 **   Will work on a 500x1000 segment of the image
 **   As well as saving channels the viewing angles (vza + vaa) and
@@ -90,14 +90,14 @@ int main(int argc, char *argv[])
      if (driver.infrmt==SEVIRI_INFILE_HRIT) if (run_sev_hrit(driver,&preproc)!=0) {E_L_R(); return -1;}
      if (driver.infrmt==SEVIRI_INFILE_NAT) if (run_sev_native(driver,&preproc)!=0) {E_L_R(); return -1;}
 
-     /* If we're in verbose mode then print info about a sample pixel in the preprocessed data 
+     /* If we're in verbose mode then print info about a sample pixel in the preprocessed data
         By default we'll examine the central pixel in the image */
      if (VERBOSE) if (print_preproc_out(preproc, preproc.n_lines/2-1, preproc.n_columns/2-1)!=0) {E_L_R(); return -1;}
 
      if (driver.outfrmt==SEVIRI_OUTFILE_HDF)if (save_sev_hdf(driver,preproc)!=0) {E_L_R(); return -1;}
      if (driver.outfrmt==SEVIRI_OUTFILE_CDF)if (save_sev_cdf(driver,preproc)!=0) {E_L_R(); return -1;}
      if (driver.outfrmt==SEVIRI_OUTFILE_TIF)if (save_sev_tiff(driver,preproc)!=0) {E_L_R(); return -1;}
-     
+
      if (free_driver(&driver)!=0) {E_L_R(); return -1;}
      /* Free memory allocated by seviri_read_and_preproc(). */
      if (seviri_preproc_free(&preproc)!=0) {E_L_R(); return -1;}

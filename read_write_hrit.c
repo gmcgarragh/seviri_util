@@ -50,7 +50,7 @@ int read_hrit_epilogue(const char *fname, struct seviri_data *d,struct seviri_au
 
      fseek(fp,hdrlen+1,SEEK_SET);
      if (fxxxx_swap(&d->trailer.ImageProductionStats.SatelliteID,     sizeof(short), 1,  fp, aux) < 0) {E_L_R();}
-     
+
      if (fxxxx_swap(&d->trailer.ImageProductionStats.NominalImageScanning,         sizeof(uchar), 1,  fp, aux) < 0) {E_L_R();}
      if (fxxxx_swap(&d->trailer.ImageProductionStats.ReducedScan,                  sizeof(uchar), 1,  fp, aux) < 0) {E_L_R();}
      if (seviri_TIME_CDS_SHORT_read(fp, &d->trailer.ImageProductionStats.ActScanForwardStart,             aux))     {E_L_R();}
@@ -186,7 +186,7 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat, struct se
      if (out!=0) exit(0);
      out=assemble_fnames(&bnames,indir,timeslot, n_bands, band_ids,sat);
      if (out!=0) exit(0);
-     
+
 /*      Set up the aux data struct and check endianness*/
      struct seviri_auxillary_io_data aux;
      seviri_auxillary_alloc(&aux);
@@ -205,7 +205,7 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat, struct se
      sprintf(d->marf_header.secondary.NumberColumnsVISIR.Value,"%i",IMAGE_SIZE_VIR_COLUMNS);
      sprintf(d->marf_header.secondary.NumberLinesHRV.Value,"%i",IMAGE_SIZE_HRV_LINES);
      sprintf(d->marf_header.secondary.NumberColumnsHRV.Value,"%i",IMAGE_SIZE_HRV_COLUMNS);
-     
+
      sprintf(d->marf_header.secondary.SouthLineSelectedRectangle.Value,  "%i",1);
      sprintf(d->marf_header.secondary.NorthLineSelectedRectangle.Value,  "%i",IMAGE_SIZE_VIR_LINES);
      sprintf(d->marf_header.secondary.EastColumnSelectedRectangle.Value, "%i",1);

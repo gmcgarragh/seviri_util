@@ -14,9 +14,9 @@
 
 /*******************************************************************************
  * Check if input band is HRV. If yes, 24 segments for HRIT image. Otherwise 8
- * 
+ *
  * band:     Band number (1 -> 12)
- * 
+ *
  * returns:     Number of segments for the given band
  ******************************************************************************/
 int ishrv(int band)
@@ -28,9 +28,9 @@ int ishrv(int band)
 
 /*******************************************************************************
  * Helper function to build file names based upon the band
- * 
+ *
  * cnum:     Channel number (1 -> 12). Note: 0 and 13 can be used for EPI+PRO
- * 
+ *
  * returns:     Character array (len = 6) containing channel name string
  ******************************************************************************/
 char* chan_name(int cnum)
@@ -39,7 +39,7 @@ char* chan_name(int cnum)
      {
           case 0:          return "______";      break;
           case 1:          return "VIS006";      break;
-          case 2:          return "VIS008";      break;     
+          case 2:          return "VIS008";      break;
           case 3:          return "IR_016";      break;
           case 4:          return "IR_039";      break;
           case 5:          return "WV_062";      break;
@@ -81,7 +81,7 @@ char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *time
  * Builds the filenames for a given channel
  *
  * NOTE: Only supports full disk scanning. RSS and SRSS not supported
- * 
+ *
  * fnam:     Output char array for the filenames. Format:
  *              Character array ([nbands][nsegs][fnames])
  * indir:     Directory that holds the HRIT file segments
@@ -89,7 +89,7 @@ char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *time
  * nbands:     Number of bands to be read (NOT number of bands in file)
  * bids:     Array of band ids (channel numbers)
  * sat:          Satellite number, can be 1, 2, 3 or 4
- * 
+ *
  * returns:     Zero if successful
  ******************************************************************************/
 int assemble_fnames(char ****fnam, const char *indir, const char *timeslot, int nbands, const uint *bids, int sat)
@@ -106,10 +106,10 @@ int assemble_fnames(char ****fnam, const char *indir, const char *timeslot, int 
           int i;
           char *band;
           band=chan_name(cnum);
-          if (cnum>0 && cnum<=12) 
+          if (cnum>0 && cnum<=12)
           {
 /*     Build the actual filenames*/
-               for (i = 0; i < nsegs[c]; ++i)               
+               for (i = 0; i < nsegs[c]; ++i)
                {
 /*     HRIT filename is 61 so use that plus indir len*/
                     arr[c][i] = malloc(61+strlen(indir)+1);
@@ -127,25 +127,25 @@ int assemble_fnames(char ****fnam, const char *indir, const char *timeslot, int 
  * Builds the epilogue filename for a timeslot
  *
  * NOTE: Only supports full disk scanning. RSS and SRSS not supported
- * 
+ *
  * enam:     Output char array for the epilogue filename.
  * indir:     Directory that holds the HRIT file segments
  * timeslot:     Timeslot to be read. Format: YYYYMMDDHHMM
  * sat:          Satellite number, can be 1, 2, 3 or 4
- * 
+ *
  * returns:     Zero if successful
  ******************************************************************************/
 int assemble_epiname(char **enam, const char *indir, const char *timeslot, int sat)
 {
 /*     HRIT filename is 61 so use that plus indir len*/
-     char* arr = malloc(61+strlen(indir)+1);     
+     char* arr = malloc(61+strlen(indir)+1);
      char *band;
      band=chan_name(0);
      sprintf(arr, "%sH-000-MSG%d__-MSG%d________-%s___-EPI______-%s-__", indir, sat, sat, band, timeslot);
-          
+
      *enam=arr;
 /*     Return the completed array of filenames.*/
-     return 0;                         
+     return 0;
 
 }
 
@@ -153,25 +153,25 @@ int assemble_epiname(char **enam, const char *indir, const char *timeslot, int s
  * Builds the prologue filename for a timeslot
  *
  * NOTE: Only supports full disk scanning. RSS and SRSS not supported
- * 
+ *
  * pnam:     Output char array for the epilogue filename.
  * indir:     Directory that holds the HRIT file segments
  * timeslot:     Timeslot to be read. Format: YYYYMMDDHHMM
  * sat:          Satellite number, can be 1, 2, 3 or 4
- * 
+ *
  * returns:     Zero if successful
  ******************************************************************************/
 int assemble_proname(char **pnam, const char *indir, const char *timeslot, int sat)
 {
 /*     HRIT filename is 61 so use that plus indir len*/
-     char* arr = malloc(61+strlen(indir)+1);     
+     char* arr = malloc(61+strlen(indir)+1);
      char *band;
      band=chan_name(0);
      sprintf(arr, "%sH-000-MSG%d__-MSG%d________-%s___-PRO______-%s-__", indir, sat, sat, band, timeslot);
-          
+
      *pnam=arr;
 /*     Return the completed array of filenames.*/
-     return 0;                         
+     return 0;
 
 }
 
@@ -180,13 +180,13 @@ int assemble_proname(char **pnam, const char *indir, const char *timeslot, int s
  *
  * NOTE: Only supports full disk scanning. RSS and SRSS not supported
  * NOTE: Does support HRV reading, but this is untested
- * 
+ *
  * fname:     The name of the file to be read
  * segnum:     The segment number to be read (1->8 / 1->24 for VIR / HRV)
  * cnum:     The channel number (1 -> 11 for VIR, 12 for HRV)
  * d:          Main SEVIRI data structure
  * dims:     Container for the image boundaries.
- * 
+ *
  * returns:     Zero if successful
  ******************************************************************************/
 int read_data_oneseg(char* fname,int segnum,int cnum,struct seviri_data *d,struct seviri_dimension_data *dims)
@@ -221,10 +221,10 @@ int read_data_oneseg(char* fname,int segnum,int cnum,struct seviri_data *d,struc
 /*           Each segment if 464 lines, so skip to correct part of image based on segnum*/
           int offset=segnum*464;
           ushort tmpline[ncols];
-     
+
           data10 = malloc(ncols / 4 * 5 * sizeof(uchar));
 /*           Loop over all lines in segment*/
-          for (x=offset;x<offset+464;x++)     
+          for (x=offset;x<offset+464;x++)
           {
                out_d_line=(x-first_line)*(last_col-first_col+1);
 /*                If we're outside the requested image boundary: move file pointed and skip*/
@@ -273,7 +273,7 @@ int read_data_oneseg(char* fname,int segnum,int cnum,struct seviri_data *d,struc
                }
           }
           free(data10);
-     }     
+     }
      if (cnum<=0 || cnum>12) return -1;
      fclose(fp);
      return 0;

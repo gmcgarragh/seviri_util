@@ -19,12 +19,12 @@
       Wrapper for the native reader. Converts the driver info into something
       that the reader can understand.
       Inputs:
-            driver:      Structure containing the driver info 
+            driver:      Structure containing the driver info
             preproc:     Main structure that will contain the SEVIRI data
       Outputs:
             integer:     Returns 0 if successful, otherwise -1
- 
-*******************************************************************************/  
+
+*******************************************************************************/
 int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc)
 {
      if (seviri_read_and_preproc(driver.infdir,preproc, driver.sev_bands.nbands, driver.sev_bands.band_ids,
@@ -37,12 +37,12 @@ int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc
       Wrapper for the HRIT reader. Converts the driver info into something
       that the reader can understand.
       Inputs:
-            driver:      Structure containing the driver info 
+            driver:      Structure containing the driver info
             preproc:     Main structure that will contain the SEVIRI data
       Outputs:
             integer:     Returns 0 if successful, otherwise -1
- 
-*******************************************************************************/  
+
+*******************************************************************************/
 int run_sev_hrit(struct driver_data driver,struct seviri_preproc_data *preproc)
 {
      if (seviri_read_and_preproc_hrit(driver.infdir,driver.timeslot,driver.satnum, preproc, driver.sev_bands.nbands, driver.sev_bands.band_ids,
@@ -60,8 +60,8 @@ int run_sev_hrit(struct driver_data driver,struct seviri_preproc_data *preproc)
             filler:      The fill value to be placed into each array element
       Outputs:
             integer:     Returns 0 if successful
- 
-*******************************************************************************/  
+
+*******************************************************************************/
 static int init_outline(float* outline,unsigned int sizer,float filler)
 {
      int i=0;
@@ -77,8 +77,8 @@ static int init_outline(float* outline,unsigned int sizer,float filler)
             preproc:     Main structure that will contain the SEVIRI data
       Outputs:
             integer:     Returns 0 if successful, otherwise -1
- 
-*******************************************************************************/  
+
+*******************************************************************************/
 int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc)
 {
      char outstr[2048];
@@ -107,7 +107,7 @@ int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc)
      for (i=0;i<preproc.n_lines;i++)
      {
           if (init_outline(oneline,nbands*preproc.n_columns,preproc.fill_value)!=0) {E_L_R(); return -1;}
-          
+
           k=0;
           for (j=0;j<nbands*preproc.n_columns;j=j+nbands)
           {
@@ -137,8 +137,8 @@ int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc)
             preproc:     Main structure that will contain the SEVIRI data
       Outputs:
             integer:     Returns 0 if successful, otherwise -1
- 
-*******************************************************************************/  
+
+*******************************************************************************/
 int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
 {
 
@@ -157,7 +157,7 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
      static char title_bt[]          = "SEVIRI data in brightness temperature format";
 
 /*     Set up the band names, used for variable names in the CDF file*/
-     char bnames[12][7]; 
+     char bnames[12][7];
      strcpy(bnames[0],"VIS006");     strcpy(bnames[1], "VIS008");     strcpy(bnames[2], "IR_016");
      strcpy(bnames[3], "IR_039");     strcpy(bnames[4], "WV_062");     strcpy(bnames[5], "WV_073");
      strcpy(bnames[6], "IR_087");     strcpy(bnames[7], "IR_097");     strcpy(bnames[8], "IR_108");
@@ -169,14 +169,14 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
      int dimids[2];
      int *varid;
      varid     =     (int*) malloc(sizeof(int)*nbands);
-     
+
 /*     Create the NetCDF file and initialise the data*/
      if(nc_create(driver.outf, NC_CLOBBER|NC_NETCDF4 , &ncid)) {E_L_R(); return -1;};
      if(nc_def_dim(ncid, "x", preproc.n_lines, &x_dimid)) {E_L_R(); return -1;};
      if(nc_def_dim(ncid, "y", preproc.n_columns, &y_dimid)) {E_L_R(); return -1;};
      dimids[0] = x_dimid;
      dimids[1] = y_dimid;
-     
+
 
 /*     Initialise each variable, loop first over all bands included in the preproc data*/
      for (i=0;i<preproc.n_bands;i++)
@@ -198,7 +198,7 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
           i++;
      }
      if(driver.ancsave[1]==1)
-     {     
+     {
           if(nc_def_var(ncid, "Latitude", NC_FLOAT, 2,dimids, &varid[i])) {E_L_R(); return -1;};
           if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R(); return -1;};
           nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value);
@@ -275,8 +275,8 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
             preproc:     Main structure that will contain the SEVIRI data
       Outputs:
             integer:     Returns 0 if successful, otherwise -1
- 
-*******************************************************************************/  
+
+*******************************************************************************/
 int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
 {
 /*
@@ -295,7 +295,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
      static char title_bt[]          = "SEVIRI data in brightness temperature format";
 */
 /*     Set up the band names, used for variable names in the HDF5 file*/
-     char bnames[12][7]; 
+     char bnames[12][7];
      strcpy(bnames[0],"VIS006");     strcpy(bnames[1], "VIS008");     strcpy(bnames[2], "IR_016");
      strcpy(bnames[3], "IR_039");     strcpy(bnames[4], "WV_062");     strcpy(bnames[5], "WV_073");
      strcpy(bnames[6], "IR_087");     strcpy(bnames[7], "IR_097");     strcpy(bnames[8], "IR_108");
@@ -305,22 +305,25 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
      for (i=0;i<7;i++)if (driver.ancsave[i]==1)nbands+=1;
      int *varid;
      varid     =     (int*) malloc(sizeof(int)*nbands);
-     
+     varid = varid;
+
 /*     Create the HDF5 file and initialise the data*/
      hid_t      outfile;
      outfile = H5Fcreate(driver.outf,H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
      herr_t      status;
      hid_t     dataspace,dataset,dcpl;
      hsize_t dims[2]={preproc.n_lines,preproc.n_columns};
-     
+
      hsize_t     chunk[2] = {(dims[0]/100), (dims[1]/100)};
-     
+
+     status = status;
+
 /*     Set up some basic properties common to all the datasets*/
      dcpl = H5Pcreate (H5P_DATASET_CREATE);
      if (driver.compression==1) status = H5Pset_shuffle(dcpl);
      if (driver.compression==1) status = H5Pset_deflate(dcpl, 2);
      status = H5Pset_chunk (dcpl, 2, chunk);
-     H5Pset_fill_value(dcpl, H5T_NATIVE_FLOAT, &preproc.fill_value); 
+     H5Pset_fill_value(dcpl, H5T_NATIVE_FLOAT, &preproc.fill_value);
 
 /*     Set up dataspaces for the SEVIRI band data and write to the file.*/
      for (i=0;i<preproc.n_bands;i++)
@@ -328,7 +331,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,bnames[driver.sev_bands.band_ids[i-1]],H5T_NATIVE_FLOAT,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.data[i][0]);
-          status=H5Sclose(dataspace);     
+          status=H5Sclose(dataspace);
           status=H5Dclose(dataset);
      }
 
@@ -338,16 +341,16 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"Time",H5T_NATIVE_DOUBLE,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_DOUBLE,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.time[0]);
-          status=H5Sclose(dataspace);     
+          status=H5Sclose(dataspace);
           status=H5Dclose(dataset);
           i++;
      }
      if(driver.ancsave[1]==1)
-     {     
+     {
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"Latitude",H5T_NATIVE_FLOAT,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.lat[0]);
-          status=H5Sclose(dataspace);     
+          status=H5Sclose(dataspace);
           status=H5Dclose(dataset);
           i++;
      }
@@ -356,7 +359,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"Longitude",H5T_NATIVE_FLOAT,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.lon[0]);
-          status=H5Sclose(dataspace);     
+          status=H5Sclose(dataspace);
           status=H5Dclose(dataset);
           i++;
      }
@@ -365,7 +368,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"Solar Zenith Angle",H5T_NATIVE_FLOAT,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.sza[0]);
-          status=H5Sclose(dataspace);     
+          status=H5Sclose(dataspace);
           status=H5Dclose(dataset);
           i++;
      }
@@ -374,7 +377,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"Solar Azimuth Angle",H5T_NATIVE_DOUBLE,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.saa[0]);
-          status=H5Sclose(dataspace);     
+          status=H5Sclose(dataspace);
           status=H5Dclose(dataset);
           i++;
      }
@@ -383,7 +386,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"View Zenith Angle",H5T_NATIVE_FLOAT,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.vza[0]);
-          status=H5Sclose(dataspace);     
+          status=H5Sclose(dataspace);
           status=H5Dclose(dataset);
           i++;
      }
@@ -392,7 +395,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"View Azimuth Angle",H5T_NATIVE_FLOAT,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
           status=H5Dwrite(dataset,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,H5P_DEFAULT,&preproc.vaa[0]);
-          status=H5Sclose(dataspace);     
+          status=H5Sclose(dataspace);
           status=H5Dclose(dataset);
           i++;
      }

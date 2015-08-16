@@ -48,6 +48,7 @@ static void parsebands(char *bands, struct bands_st *inbands)
      int i          =     0;
      int act_bands     =     0;
      if (len<11) recval=len;
+     recval = recval;
 
      inbands->band_ids = malloc(sizeof(unsigned int));
      for (i=0;i<len;i++) {
@@ -74,7 +75,7 @@ static void parsebands(char *bands, struct bands_st *inbands)
 int print_driver(struct driver_data driver)
 {
 /*      Sets up the band names. good for telling which band is which, easier than channel number */
-     char bnames[12][7]; 
+     char bnames[12][7];
      strcpy(bnames[0],"VIS006");     strcpy(bnames[1], "VIS008");     strcpy(bnames[2], "IR_016");
      strcpy(bnames[3], "IR_039");     strcpy(bnames[4], "WV_062");     strcpy(bnames[5], "WV_073");
      strcpy(bnames[6], "IR_087");     strcpy(bnames[7], "IR_097");     strcpy(bnames[8], "IR_108");
@@ -191,7 +192,7 @@ int print_preproc_out(struct seviri_preproc_data preproc, unsigned int i_line, u
 *******************************************************************************/
 int free_driver(struct driver_data *driver)
 {
-     free(driver->sev_bands.band_ids);     
+     free(driver->sev_bands.band_ids);
      free(driver->infdir);
      if (driver->infrmt==SEVIRI_INFILE_HRIT)free(driver->timeslot);
      free(driver->outtype);
@@ -275,7 +276,7 @@ int parse_driver(char *fname,struct driver_data *driver)
      line[strlen(line)-1]='\0';
      if (!strcmp(line,"CNT"))     for (i=0;i<driver->sev_bands.nbands;i++) driver->outtype[i] = SEVIRI_UNIT_CNT;
      else if (!strcmp(line,"RAD"))     for (i=0;i<driver->sev_bands.nbands;i++) driver->outtype[i] = SEVIRI_UNIT_RAD;
-     else if (!strcmp(line,"RBT"))     for (i=0;i<driver->sev_bands.nbands;i++) 
+     else if (!strcmp(line,"RBT"))     for (i=0;i<driver->sev_bands.nbands;i++)
                               if (driver->sev_bands.band_ids[i]<=3) driver->outtype[i] = SEVIRI_UNIT_BRF; else driver->outtype[i] = SEVIRI_UNIT_BT;
      else {printf("Failure reading output units type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();return -1;}
 
