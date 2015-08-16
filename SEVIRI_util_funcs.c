@@ -82,7 +82,6 @@ int print_driver(struct driver_data driver)
 
      int i;
      char outstr[40];
-     char buffer[50];
 
 /*      Print basic data about the driver */
      printf("\n******************************* DEBUG INFO *******************************\n");
@@ -213,9 +212,8 @@ int parse_driver(char *fname,struct driver_data *driver)
 
      int i;
      size_t len=0;
-     ssize_t read;
      char *line = NULL;
-     char bob[12];
+
      FILE *fp = fopen(fname,"r");
      if (fp == NULL) {printf("Unable to open the driver file: %s\n",fname);E_L_R();return -1;}
 

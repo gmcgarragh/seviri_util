@@ -76,7 +76,6 @@
 
 int main(int argc, char *argv[])
 {
-     int retval     =     0;
      struct driver_data driver;
 
      /* Parse the input driver file into the driver structure */

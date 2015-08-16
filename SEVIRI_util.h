@@ -71,6 +71,8 @@ struct driver_data
 
 /*   In SEVIRI_util_funcs.c */
 void show_usage();
+int print_driver(struct driver_data driver);
+int free_driver(struct driver_data *driver);
 int parse_driver(char *fname,struct driver_data *driver);
 int print_preproc_out(struct seviri_preproc_data preproc, unsigned int i_line, unsigned int i_column);
 
