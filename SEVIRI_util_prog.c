@@ -163,12 +163,11 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
      strcpy(bnames[6], "IR_087");     strcpy(bnames[7], "IR_097");     strcpy(bnames[8], "IR_108");
      strcpy(bnames[9], "IR_120");     strcpy(bnames[10], "IR_134");
 
-     int nbands=preproc.n_bands,i=0, x=0, y=0;
+     int nbands=preproc.n_bands,i=0;
      for (i=0;i<7;i++)if (driver.ancsave[i]==1)nbands+=1;
      int ncid, x_dimid, y_dimid;
      int dimids[2];
      int *varid;
-     int varid1;
      varid     =     (int*) malloc(sizeof(int)*nbands);
      
 /*     Create the NetCDF file and initialise the data*/
@@ -280,7 +279,7 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
 *******************************************************************************/  
 int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
 {
-
+/*
      static float cnt_range[]     = {0.0, 1024.0};
      static float rad_range[]     = {0.0, 2000.0};
      static float brf_range[]     = {-0.5, 5.0};
@@ -294,7 +293,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
      static char title_rad[]          = "SEVIRI data in radiance format";
      static char title_brf[]          = "SEVIRI data in solar reflectance format";
      static char title_bt[]          = "SEVIRI data in brightness temperature format";
-
+*/
 /*     Set up the band names, used for variable names in the HDF5 file*/
      char bnames[12][7]; 
      strcpy(bnames[0],"VIS006");     strcpy(bnames[1], "VIS008");     strcpy(bnames[2], "IR_016");
@@ -302,12 +301,9 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
      strcpy(bnames[6], "IR_087");     strcpy(bnames[7], "IR_097");     strcpy(bnames[8], "IR_108");
      strcpy(bnames[9], "IR_120");     strcpy(bnames[10], "IR_134");
 
-     int nbands=preproc.n_bands,i=0, x=0, y=0;
+     int nbands=preproc.n_bands,i=0;
      for (i=0;i<7;i++)if (driver.ancsave[i]==1)nbands+=1;
-     int ncid, x_dimid, y_dimid;
-     int dimids[2];
      int *varid;
-     int varid1;
      varid     =     (int*) malloc(sizeof(int)*nbands);
      
 /*     Create the HDF5 file and initialise the data*/
