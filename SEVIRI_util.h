@@ -40,24 +40,22 @@ enum sat_nums          {SAT_MSG1,          SAT_MSG2,          SAT_MSG3,         
 } while (0)
 
 /*  Struct that contains the band information, both number of bands and which to process */
-struct bands_st
-{
+struct bands_st {
      unsigned int nbands;
      unsigned int *band_ids;
 };
 
 /*  Struct that contains the driver info, main info needed by the utility. */
-struct driver_data
-{
+struct driver_data {
      int               infrmt;
-     char               *infdir;
-     char               *timeslot;
+     char              *infdir;
+     char              *timeslot;
      int               satnum;
-     char               read_bands[12];
-     struct     bands_st      sev_bands;
+     char              read_bands[12];
+     struct            bands_st sev_bands;
      int               outfrmt;
-     enum seviri_units     *outtype;
-     char               *outf;
+     enum seviri_units *outtype;
+     char              *outf;
      int               bounds;
      int               iline;
      int               icol;
@@ -74,7 +72,7 @@ void show_usage();
 int print_driver(struct driver_data driver);
 int free_driver(struct driver_data *driver);
 int parse_driver(char *fname,struct driver_data *driver);
-int print_preproc_out(struct seviri_preproc_data preproc, unsigned int i_line, unsigned int i_column);
+int print_preproc_out(struct driver_data, struct seviri_preproc_data preproc, unsigned int i_line, unsigned int i_column);
 
 /*   In SEVIRI_util_prog.c */
 int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc);

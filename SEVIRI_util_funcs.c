@@ -13,6 +13,13 @@
 
 #include "SEVIRI_util.h"
 
+/* Sets up the band names. good for telling which band is which, easier than
+   channel number */
+
+static const char *bnames[] = {"VIS006", "VIS008", "IR_016", "IR_039", "WV_062",
+                               "WV_073", "IR_087", "IR_097", "IR_108", "IR_120",
+                               "IR_134"};
+
 /*    Prints a message that shows how to use the utility.*/
 void show_usage()
 {
@@ -75,11 +82,6 @@ static void parsebands(char *bands, struct bands_st *inbands)
 int print_driver(struct driver_data driver)
 {
 /*      Sets up the band names. good for telling which band is which, easier than channel number */
-     char bnames[12][7];
-     strcpy(bnames[0],"VIS006");     strcpy(bnames[1], "VIS008");     strcpy(bnames[2], "IR_016");
-     strcpy(bnames[3], "IR_039");     strcpy(bnames[4], "WV_062");     strcpy(bnames[5], "WV_073");
-     strcpy(bnames[6], "IR_087");     strcpy(bnames[7], "IR_097");     strcpy(bnames[8], "IR_108");
-     strcpy(bnames[9], "IR_120");     strcpy(bnames[10], "IR_134");
 
      int i;
      char outstr[40];
@@ -146,37 +148,35 @@ static void setline(struct driver_data *driver)
 **    Outputs:
 **          integer:     Zero if successful, otherwise 1
 *******************************************************************************/
-int print_preproc_out(struct seviri_preproc_data preproc, unsigned int i_line, unsigned int i_column)
+int print_preproc_out(struct driver_data driver, struct seviri_preproc_data preproc,
+                      unsigned int i_line, unsigned int i_column)
 {
+     int i;
+
      printf("****************************** PREPROC INFO ******************************\n");
+
      /* Print the values for the central pixel. */
+
      unsigned int i_pixel  = i_line * preproc.n_columns + i_column;
 
-     printf("i_line:                    %d\n", i_line);
-     printf("i_column:               %d\n", i_column);
+     printf("i_line:                %d\n", i_line);
+     printf("i_column:              %d\n", i_column);
      printf("i_pixel:               %d\n", i_pixel);
-     printf("Julian Day Number:          %f\n", preproc.time[i_pixel]);
-     printf("latitude:               %f\n", preproc.lat [i_pixel]);
-     printf("longitude:                %f\n", preproc.lon [i_pixel]);
-     printf("solar zenith angle:          %f\n", preproc.sza [i_pixel]);
-     printf("solar azimuth angle:          %f\n", preproc.saa [i_pixel]);
-     printf("viewing zenith angle:          %f\n", preproc.vza [i_pixel]);
-     printf("viewing azimuth angle:          %f\n", preproc.vaa [i_pixel]);
+     printf("Julian Day Number:     %f\n", preproc.time[i_pixel]);
+     printf("latitude:              %f\n", preproc.lat [i_pixel]);
+     printf("longitude:             %f\n", preproc.lon [i_pixel]);
+     printf("solar zenith angle:    %f\n", preproc.sza [i_pixel]);
+     printf("solar azimuth angle:   %f\n", preproc.saa [i_pixel]);
+     printf("viewing zenith angle:  %f\n", preproc.vza [i_pixel]);
+     printf("viewing azimuth angle: %f\n", preproc.vaa [i_pixel]);
 
      printf("\n");
 
-/*      Print the image values for each band that was processed.*/
-     printf("VIS006:                    %08.4f\n",preproc.data[0][i_pixel]);
-     printf("VIS008:                    %08.4f\n",preproc.data[1][i_pixel]);
-     printf("IR_016:                    %08.4f\n",preproc.data[2][i_pixel]);
-     printf("IR_039:                    %08.4f\n",preproc.data[3][i_pixel]);
-     printf("WV_062:                    %08.4f\n",preproc.data[4][i_pixel]);
-     printf("WV_073:                    %08.4f\n",preproc.data[5][i_pixel]);
-     printf("IR_087:                    %08.4f\n",preproc.data[6][i_pixel]);
-     printf("IR_097:                    %08.4f\n",preproc.data[7][i_pixel]);
-     printf("IR_108:                    %08.4f\n",preproc.data[8][i_pixel]);
-     printf("IR_120:                    %08.4f\n",preproc.data[9][i_pixel]);
-     printf("IR_134:                    %08.4f\n",preproc.data[10][i_pixel]);
+     /* Print the image values for each band that was processed. */
+
+     for (i = 0; i < driver.sev_bands.nbands; ++i)
+          printf("%s:                %08.4f\n",
+                 bnames[driver.sev_bands.band_ids[i]-1], preproc.data[i][i_pixel]);
 
      printf("**************************************************************************\n\n");
 
@@ -192,9 +192,9 @@ int print_preproc_out(struct seviri_preproc_data preproc, unsigned int i_line, u
 *******************************************************************************/
 int free_driver(struct driver_data *driver)
 {
-     free(driver->sev_bands.band_ids);
      free(driver->infdir);
-     if (driver->infrmt==SEVIRI_INFILE_HRIT)free(driver->timeslot);
+     if (driver->infrmt==SEVIRI_INFILE_HRIT) free(driver->timeslot);
+     free(driver->sev_bands.band_ids);
      free(driver->outtype);
      free(driver->outf);
      return 0;
@@ -210,7 +210,6 @@ int free_driver(struct driver_data *driver)
 *******************************************************************************/
 int parse_driver(char *fname,struct driver_data *driver)
 {
-
      int i;
      size_t len=0;
      char *line = NULL;
@@ -229,8 +228,8 @@ int parse_driver(char *fname,struct driver_data *driver)
      if (getline(&line,&len,fp)==-1) {printf("Failure reading input file/dir line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (strlen(line)<4) {printf("Failure reading input file/dir line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
-     driver->infdir     =     (char*) malloc(sizeof(char)*strlen(line));
-     strncpy(driver->infdir,line,strlen(line));
+     driver->infdir = (char*) malloc(sizeof(char)*(strlen(line)+1));
+     strcpy(driver->infdir,line);
 
 /*     Read the timeslot (HRIT only)*/
      if (getline(&line,&len,fp)==-1) {printf("Failure reading input timeslot line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
@@ -238,8 +237,8 @@ int parse_driver(char *fname,struct driver_data *driver)
      if (driver->infrmt==SEVIRI_INFILE_HRIT)
      {
           line[strlen(line)-1]='\0';
-          driver->timeslot     =     (char*) malloc(sizeof(char)*13);
-          strncpy(driver->timeslot,line,12);
+          driver->timeslot = (char*) malloc(sizeof(char)*13);
+          strcpy(driver->timeslot,line);
      }
 
 /*     Read the satellite number (HRIT only)*/
@@ -285,8 +284,8 @@ int parse_driver(char *fname,struct driver_data *driver)
      len = strlen(line);
      if (len<4) {printf("Failure reading utput filename line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (len > 0 && line[len-1] == '\n') line[len-1] = '\0';
-     driver->outf     =     (char*) malloc(sizeof(char)*len);
-     strncpy(driver->outf,line,len);
+     driver->outf = (char*) malloc(sizeof(char)*(len+5));
+     strcpy(driver->outf,line);
      if (driver->outfrmt == SEVIRI_OUTFILE_HDF)strcat(driver->outf,".h5");
      if (driver->outfrmt == SEVIRI_OUTFILE_CDF)strcat(driver->outf,".nc");
      if (driver->outfrmt == SEVIRI_OUTFILE_TIF)strcat(driver->outf,".tiff");
@@ -332,12 +331,13 @@ int parse_driver(char *fname,struct driver_data *driver)
      }
 /*     Read the anciliary data line.*/
      /* ancsave contains: 0-time,     1-lat,     2-lon,     3-sza,     4-saa,     5-vza,     6-vaa */
+     driver->compression=0;
      for (i=0;i<7;i++) driver->ancsave[i]=0;
      while (fgets(line, 10, fp))
      {
           line[strlen(line)-1]='\0';
           if (strcmp(line,"time")==0)     driver->ancsave[0]=1;
-          if (strcmp(line,"compress")==0)     driver->compression=1;
+          if (strcmp(line,"compress")==0) driver->compression=1;
           if (strcmp(line,"lat")==0)     driver->ancsave[1]=1;
           if (strcmp(line,"lon")==0)     driver->ancsave[2]=1;
           if (strcmp(line,"sza")==0)     driver->ancsave[3]=1;

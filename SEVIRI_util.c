@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 
      /* If we're in verbose mode then print info about a sample pixel in the preprocessed data
         By default we'll examine the central pixel in the image */
-     if (VERBOSE) if (print_preproc_out(preproc, preproc.n_lines/2-1, preproc.n_columns/2-1)!=0) {E_L_R();}
+     if (VERBOSE) if (print_preproc_out(driver, preproc, preproc.n_lines/2-1, preproc.n_columns/2-1)!=0) {E_L_R();}
 
      if (driver.outfrmt==SEVIRI_OUTFILE_HDF)if (save_sev_hdf(driver,preproc)!=0) {E_L_R();}
      if (driver.outfrmt==SEVIRI_OUTFILE_CDF)if (save_sev_cdf(driver,preproc)!=0) {E_L_R();}

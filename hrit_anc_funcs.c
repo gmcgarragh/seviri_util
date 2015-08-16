@@ -75,11 +75,11 @@ char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *time
           return NULL;
      }
      startfnam=ptr-filename;
-     indir=(char *)malloc(sizeof(char)*startfnam+1);
-     strncpy(indir,filename,startfnam);
+     indir=(char *)malloc(sizeof(char)*(startfnam+1));
+     strcpy(indir,filename);
      indir[startfnam] = '\0';
      gopos=startfnam+46;
-     strncpy(timeslot,filename+gopos,12);
+     strcpy(timeslot,filename+gopos);
      timeslot[12]='\0';
      *sat_id=atoi(&filename[startfnam+9]);
 
