@@ -262,6 +262,9 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      d->image.n_lines    = dimens->n_lines_requested_VIR;
      d->image.n_columns  = dimens->n_columns_requested_VIR;
 
+     d->image.packet_header = NULL;
+     d->image.LineSideInfo  = NULL;
+
      out = alloc_imagearr(n_bands, band_ids,d);
 
      /* Loop over each band and each segment. Note: VIR only, no HRV */

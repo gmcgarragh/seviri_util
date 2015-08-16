@@ -765,12 +765,12 @@ static int seviri_15TRAILER_ImageProductionStats_L15ImageValidity_read(
           struct seviri_15TRAILER_ImageProductionStats_L15ImageValidity_data *d,
           struct seviri_auxillary_io_data *aux) {
 
-     if (fxxxx_swap(&d->NominalImage,                 sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->NonNominalBecauseIncomplete,  sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->NonNominalRadiometricQuality, sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->NonNominalGeometricQuality,   sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->NonNominalTimeliness,         sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->IncompleteL15,                sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->NominalImage,                 sizeof(uchar), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->NonNominalBecauseIncomplete,  sizeof(uchar), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->NonNominalRadiometricQuality, sizeof(uchar), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->NonNominalGeometricQuality,   sizeof(uchar), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->NonNominalTimeliness,         sizeof(uchar), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->IncompleteL15,                sizeof(uchar), 1, fp, aux) < 0) E_L_R();
 
      return 0;
 }
@@ -784,48 +784,48 @@ static int seviri_15TRAILER_ImageProductionStats_read(
 
      uint i;
 
-     if (fxxxx_swap(&d->SatelliteID,                  sizeof(short), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->SatelliteID,                 sizeof(short), 1,  fp, aux) < 0) E_L_R();
 
-     if (fxxxx_swap(&d->NominalImageScanning,         sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->ReducedScan,                  sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (seviri_TIME_CDS_SHORT_read(fp, &d->ActScanForwardStart,             aux))     E_L_R();
-     if (seviri_TIME_CDS_SHORT_read(fp, &d->ActScanForwardEnd,               aux))     E_L_R();
+     if (fxxxx_swap(&d->NominalImageScanning,        sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->ReducedScan,                 sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (seviri_TIME_CDS_SHORT_read(fp, &d->ActScanForwardStart,            aux))     E_L_R();
+     if (seviri_TIME_CDS_SHORT_read(fp, &d->ActScanForwardEnd,              aux))     E_L_R();
 
-     if (fxxxx_swap(&d->NominalBehaviour,             sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->RadScanIrregularity,          sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->RadStoppage,                  sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->RepeatCycleNotCompleted,      sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->GainChangeTookPlace,          sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->DecontaminationTookPlace,     sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->NoBBCalibrationAchieved,      sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->IncorrectTemperature,         sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->InvalidBBData,                sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->InvalidAuxOrHKTMData,         sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->RefocusingMechanismActuated,  sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->MirrorBackToReferencePos,     sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->NominalBehaviour,            sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->RadScanIrregularity,         sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->RadStoppage,                 sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->RepeatCycleNotCompleted,     sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->GainChangeTookPlace,         sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->DecontaminationTookPlace,    sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->NoBBCalibrationAchieved,     sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->IncorrectTemperature,        sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->InvalidBBData,               sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->InvalidAuxOrHKTMData,        sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->RefocusingMechanismActuated, sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->MirrorBackToReferencePos,    sizeof(uchar), 1,  fp, aux) < 0) E_L_R();
 
-     if (fxxxx_swap(&d->PlannedNumberOfL10Lines,      sizeof(uchar), 12, fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->NumberOfMissingL10Lines,      sizeof(uchar), 12, fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->NumberOfCorruptedL10Lines,    sizeof(uchar), 12, fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->NumberOfReplacedL10Lines,     sizeof(uchar), 12, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->PlannedNumberOfL10Lines,     sizeof(uchar), 12, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->NumberOfMissingL10Lines,     sizeof(uchar), 12, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->NumberOfCorruptedL10Lines,   sizeof(uchar), 12, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->NumberOfReplacedL10Lines,    sizeof(uchar), 12, fp, aux) < 0) E_L_R();
 
      for (i = 0; i < 12; ++i)
           if (seviri_15TRAILER_ImageProductionStats_L15ImageValidity_read
-              (fp, &d->L15ImageValidity[i], aux))                                      E_L_R();
+              (fp, &d->L15ImageValidity[i], aux))                                     E_L_R();
 
-     if (fxxxx_swap(&d->SouthernLineActual,           sizeof(int),   1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->NorthernLineActual,           sizeof(int),   1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->EasternColumnActual,          sizeof(int),   1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->WesternColumnActual,          sizeof(int),   1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->SouthernLineActual,          sizeof(int),   1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->NorthernLineActual,          sizeof(int),   1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->EasternColumnActual,         sizeof(int),   1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->WesternColumnActual,         sizeof(int),   1,  fp, aux) < 0) E_L_R();
 
-     if (fxxxx_swap(&d->LowerSouthLineActual,         sizeof(int),   1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->LowerNorthLineActual,         sizeof(int),   1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->LowerEastColumnActual,        sizeof(int),   1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->LowerWestColumnActual,        sizeof(int),   1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->UpperSouthLineActual,         sizeof(int),   1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->UpperNorthLineActual,         sizeof(int),   1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->UpperEastColumnActual,        sizeof(int),   1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->UpperWestColumnActual,        sizeof(int),   1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->LowerSouthLineActual,        sizeof(int),   1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->LowerNorthLineActual,        sizeof(int),   1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->LowerEastColumnActual,       sizeof(int),   1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->LowerWestColumnActual,       sizeof(int),   1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->UpperSouthLineActual,        sizeof(int),   1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->UpperNorthLineActual,        sizeof(int),   1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->UpperEastColumnActual,       sizeof(int),   1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->UpperWestColumnActual,       sizeof(int),   1,  fp, aux) < 0) E_L_R();
 
      return 0;
 }
@@ -1208,26 +1208,26 @@ int seviri_packet_header_read(
 
      aux->swap_bytes = 0;
 
-     if (fxxxx_swap(&d->HeaderVersionNo,    sizeof(uchar),  1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->PacketType,         sizeof(uchar),  1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->SubHeaderType,      sizeof(uchar),  1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->SourceFacilityId,   sizeof(uchar),  1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->SourceEnvId,        sizeof(uchar),  1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->SourceInstanceId,   sizeof(uchar),  1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->SourceSUId,         sizeof(int),    1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->SourceCPUId,        sizeof(uchar),  4,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->DestFacilityId,     sizeof(uchar),  1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->DestEnvId,          sizeof(uchar),  1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->SequenceCount,      sizeof(ushort), 1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->PacketLength,       sizeof(int),    1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->HeaderVersionNo,    sizeof(uchar),  1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->PacketType,         sizeof(uchar),  1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->SubHeaderType,      sizeof(uchar),  1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->SourceFacilityId,   sizeof(uchar),  1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->SourceEnvId,        sizeof(uchar),  1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->SourceInstanceId,   sizeof(uchar),  1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->SourceSUId,         sizeof(int),    1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->SourceCPUId,        sizeof(uchar),  4, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->DestFacilityId,     sizeof(uchar),  1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->DestEnvId,          sizeof(uchar),  1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->SequenceCount,      sizeof(ushort), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->PacketLength,       sizeof(int),    1, fp, aux) < 0) E_L_R();
 
-     if (fxxxx_swap(&d->SubHeaderVersionNo, sizeof(uchar),  1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->ChecksumFlag,       sizeof(uchar),  1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->Acknowledgement,    sizeof(uchar),  4,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->ServiceType,        sizeof(uchar),  1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->ServiceSubtype,     sizeof(uchar),  1,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->PacketTime,         sizeof(uchar),  6,  fp, aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->SpacecraftId,       sizeof(short),  1,  fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->SubHeaderVersionNo, sizeof(uchar),  1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->ChecksumFlag,       sizeof(uchar),  1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->Acknowledgement,    sizeof(uchar),  4, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->ServiceType,        sizeof(uchar),  1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->ServiceSubtype,     sizeof(uchar),  1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->PacketTime,         sizeof(uchar),  6, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->SpacecraftId,       sizeof(short),  1, fp, aux) < 0) E_L_R();
 
      aux->swap_bytes = 1;
 
@@ -1244,15 +1244,15 @@ int seviri_LineSideInfo_read(
           struct seviri_LineSideInfo_data *d,
           struct seviri_auxillary_io_data *aux) {
 
-     if (fxxxx_swap(&d->_15LINEVersion,         sizeof(char),  1,  fp,  aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->SatelliteId,            sizeof(short), 1,  fp,  aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->_15LINEVersion,         sizeof(char),  1, fp,   aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->SatelliteId,            sizeof(short), 1, fp,   aux) < 0) E_L_R();
      if (seviri_TIME_CDS_EXPANDED_read(fp, &d->TrueRepeatCycleStart,    aux))     E_L_R();
-     if (fxxxx_swap(&d->LineNumberInGrid,       sizeof(int),   1,  fp,  aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->ChannelId,              sizeof(char),  1,  fp,  aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->LineNumberInGrid,       sizeof(int),   1, fp,   aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->ChannelId,              sizeof(char),  1, fp,   aux) < 0) E_L_R();
      if (seviri_TIME_CDS_SHORT_read(fp, &d->L10LineMeanAcquisitionTime, aux))     E_L_R();
-     if (fxxxx_swap(&d->LineValidity,           sizeof(char),  1,  fp,  aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->LineRadiometricQuality, sizeof(char),  1,  fp,  aux) < 0) E_L_R();
-     if (fxxxx_swap(&d->LineGeometricQuality,   sizeof(char),  1,  fp,  aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->LineValidity,           sizeof(char),  1, fp,   aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->LineRadiometricQuality, sizeof(char),  1, fp,   aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->LineGeometricQuality,   sizeof(char),  1, fp,   aux) < 0) E_L_R();
 
      return 0;
 }
@@ -1533,13 +1533,17 @@ static int seviri_image_free(struct seviri_image_data *d) {
 
      uint i;
 
-     for (i = 0; i < d->n_bands; ++i)
-          free(d->packet_header[i]);
-     free(d->packet_header);
+     if (d->packet_header) {
+          for (i = 0; i < d->n_bands; ++i)
+               free(d->packet_header[i]);
+          free(d->packet_header);
+     }
 
-     for (i = 0; i < d->n_bands; ++i)
-          free(d->LineSideInfo[i]);
-     free(d->LineSideInfo);
+     if (d->LineSideInfo) {
+          for (i = 0; i < d->n_bands; ++i)
+               free(d->LineSideInfo[i]);
+          free(d->LineSideInfo);
+     }
 
      for (i = 0; i < d->n_bands; ++i)
           free(d->data_vir[i]);
