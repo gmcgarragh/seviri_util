@@ -21,12 +21,18 @@ include make.inc
 
 all: libseviri_native_util.a \
      example_c \
-     $(OPTIONAL_PROGRAMS)
+     $(OPTIONAL_TARGETS)
 
 libseviri_native_util.a: $(OBJECTS)
 	ar -rs libseviri_native_util.a $(OBJECTS)
 
-seviri_native_util.o: seviri_native_util.f90
+seviri_native_util_f90.o: seviri_native_util_f90.f90
+
+seviri_native_util.so: seviri_native_util_py.o libseviri_native_util.a
+	$(CC) $(CCFLAGS) -shared -o seviri_native_util.so seviri_native_util_py.o libseviri_native_util.a
+
+seviri_native_util_dlm.so: seviri_native_util_dlm.o libseviri_native_util.a
+	$(CC) $(CCFLAGS) -shared -o seviri_native_util_dlm.so seviri_native_util_dlm.o libseviri_native_util.a
 
 SEVIRI_util: SEVIRI_util.o SEVIRI_util_funcs.o SEVIRI_util_prog.o libseviri_native_util.a
 	$(CC) $(CCFLAGS) -o SEVIRI_util SEVIRI_util_funcs.o SEVIRI_util_prog.o SEVIRI_util.o \
@@ -43,7 +49,7 @@ README: readme_source.txt
 	sed -i 's/[ \t]*$$//' README
 
 clean:
-	rm -f *.a *.o *.mod example_c example_f90 $(OPTIONAL_PROGRAMS)
+	rm -f *.a *.o *.mod example_c example_f90 $(OPTIONAL_TARGETS)
 
 .c.o:
 	$(CC) $(CCFLAGS) $(INCDIRS) -c -o $*.o $<
