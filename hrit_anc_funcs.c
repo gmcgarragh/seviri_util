@@ -96,7 +96,7 @@ int assemble_fnames(char ****fnam, const char *indir, const char *timeslot, int 
 {
      int c,totsegs=0, nsegs[nbands];
      for (c=0;c<nbands;c++){ if (bids[c]==12) nsegs[c]=24; else nsegs[c]=8; totsegs+=nsegs[c];}
-     char*** arr = malloc(sizeof(char *) * nbands);
+     char*** arr = malloc(sizeof(char **) * nbands);
 
 
      for (c=0;c<nbands;c++)

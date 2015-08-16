@@ -122,7 +122,7 @@ int read_hrit_prologue(const char *fname, struct seviri_data *d,struct seviri_au
  ******************************************************************************/
 int alloc_imagearr(uint nbands, const uint *band_ids,struct seviri_data *d)
 {
-     int i,proc_hrv,virb;
+     int i,proc_hrv=0,virb;
      long length_vir,length_hrv;
      virb=nbands;
      for (i = 0; i < nbands; ++i) {d->image.band_ids[i]=band_ids[i];if (band_ids[i]==12) {virb-=1; proc_hrv=1;}}
@@ -240,7 +240,12 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat, struct se
      seviri_auxillary_free(&aux);
      free(proname);
      free(epiname);
-     for (i=0;i<n_bands;i++) for (j=0;j<8;j++)     free(bnames[i][j]);
+     for (i=0;i<n_bands;i++) {
+          for (j=0;j<8;j++)
+               free(bnames[i][j]);
+          free(bnames[i]);
+     }
+     free(bnames);
 
      return 0;
 }

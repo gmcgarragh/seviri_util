@@ -503,11 +503,12 @@ int seviri_read_and_preproc_hrit(const char *indir, const char *timeslot,
 
      /* We cannot use seviri_free as not all data was read from the HRIT file
         (missing headers).  So manually free image data instead. */
-     for (i = 0; i < seviri.image.n_bands; ++i)
+     for (i = 0; i < seviri.image.n_bands; ++i) {
           if (seviri.image.band_ids[i] < 12)
                free(seviri.image.data_vir[i]);
-     if (seviri.image.band_ids[i] == 12)
-          proc_hrv = 1;
+          else
+               proc_hrv = 1;
+     }
 
      free(seviri.image.data_vir);
 
