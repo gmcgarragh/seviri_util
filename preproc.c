@@ -251,7 +251,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                if (d2->lat[i_image] != FILL_VALUE_F && d2->lon[i_image] != FILL_VALUE_F) {
                     d2->time[i_image] = jtime2;
 
-                    snu_solar_params2(jtime, d2->lat[i_image] * D2R,
+                    snu_solar_params2(jtime2, d2->lat[i_image] * D2R,
                                       d2->lon[i_image] * D2R, &mu0, &theta0,
                                       &phi0, NULL);
                     d2->sza[i_image] = theta0 * R2D;
