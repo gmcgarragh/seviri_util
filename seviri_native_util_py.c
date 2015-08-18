@@ -20,8 +20,7 @@
 struct seviri_preproc_data_py {
      PyObject_HEAD
      char *filename;
-     uint i_line;
-     uint i_column;
+     uint n_bands;
      uint n_lines;
      uint n_columns;
      double fill_value;
@@ -205,13 +204,6 @@ static int seviri_preproc_init(struct seviri_preproc_data_py *self,
           }
      }
 
-     if (seviri_get_dimens_nat(self->filename, &self->i_line, &self->i_column,
-          &self->n_lines, &self->n_columns, bounds, line0, line1, column0, column1,
-          lat0, lat1, lon0, lon1)) {
-          PyErr_SetString(SEVIRI_PREPROC_Error, "ERROR: seviri_get_dimens_nat()");
-          goto error;
-     }
-
      if (seviri_read_and_preproc(self->filename, &self->d, n_bands, band_ids_array,
           band_units_array, bounds, line0, line1, column0, column1, lat0, lat1,
           lon0, lon1, 0)) {
@@ -219,6 +211,9 @@ static int seviri_preproc_init(struct seviri_preproc_data_py *self,
           goto error;
      }
 
+     self->n_bands    = self->d.n_bands;
+     self->n_lines    = self->d.n_lines;
+     self->n_columns  = self->d.n_columns;
      self->fill_value = self->d.fill_value;
 
      npy_intp dims[3];
@@ -277,10 +272,8 @@ static PyMethodDef seviri_preproc_methods[] = {
 
 
 static PyMemberDef seviri_preproc_members[] = {
-     {"i_line",    T_UINT, offsetof(struct seviri_preproc_data_py, i_line),
-      0, "i_line"},
-     {"i_column",  T_UINT, offsetof(struct seviri_preproc_data_py, i_column),
-      0, "i_column"},
+     {"n_bands",   T_UINT, offsetof(struct seviri_preproc_data_py, n_bands),
+      0, "n_bands"},
      {"n_lines",   T_UINT, offsetof(struct seviri_preproc_data_py, n_lines),
       0, "n_lines"},
      {"n_columns", T_UINT, offsetof(struct seviri_preproc_data_py, n_columns),
