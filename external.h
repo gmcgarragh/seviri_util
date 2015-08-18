@@ -37,6 +37,7 @@ enum seviri_bounds {
 enum seviri_units {
      SEVIRI_UNIT_CNT,
      SEVIRI_UNIT_RAD,
+     SEVIRI_UNIT_REF,
      SEVIRI_UNIT_BRF,
      SEVIRI_UNIT_BT,
 

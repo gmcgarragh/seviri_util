@@ -36,8 +36,9 @@ module seviri_native_util
 
      integer, parameter, public :: SEVIRI_UNIT_CNT            = 0
      integer, parameter, public :: SEVIRI_UNIT_RAD            = 1
-     integer, parameter, public :: SEVIRI_UNIT_BRF            = 2
-     integer, parameter, public :: SEVIRI_UNIT_BT             = 3
+     integer, parameter, public :: SEVIRI_UNIT_REF            = 2
+     integer, parameter, public :: SEVIRI_UNIT_BRF            = 3
+     integer, parameter, public :: SEVIRI_UNIT_BT             = 4
 
 
    type, bind(c) :: seviri_preproc_t

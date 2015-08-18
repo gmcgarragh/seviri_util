@@ -330,7 +330,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
 
      a = PI * dd * dd;
      for (i = 0; i < d->image.n_bands; ++i) {
-          if (band_units[i] == SEVIRI_UNIT_BRF) {
+          if (band_units[i] == SEVIRI_UNIT_REF || band_units[i] == SEVIRI_UNIT_BRF) {
                slope  = d->header.RadiometricProcessing.
                     Level1_5ImageCalibration[d->image.band_ids[i] - 1].Cal_Slope;
                offset = d->header.RadiometricProcessing.
@@ -347,8 +347,10 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                              d2->sza[i_image] >= 0. && d2->sza[i_image] < 90.) {
                               R = d->image.data_vir[i][i_image] * slope + offset;
 
-                              d2->data[i][i_image] =
-                                   b * R / cos(d2->sza[i_image] * D2R);
+                              d2->data[i][i_image] = b * R;
+
+                              if (band_units[i] == SEVIRI_UNIT_BRF)
+                                   d2->data[i][i_image] /= cos(d2->sza[i_image] * D2R);
                          }
                     }
                }
