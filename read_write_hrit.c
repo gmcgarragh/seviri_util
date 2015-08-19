@@ -24,7 +24,7 @@
  *
  * returns:	Zero if successful, nonzero if error
  ******************************************************************************/
-int read_hrit_epilogue(const char *fname, struct seviri_data *d,
+static int read_hrit_epilogue(const char *fname, struct seviri_data *d,
                        struct seviri_auxillary_io_data *aux)
 {
      FILE *fp;
@@ -76,7 +76,7 @@ int read_hrit_epilogue(const char *fname, struct seviri_data *d,
  *
  * returns:	Zero if successful, nonzero if error
  ******************************************************************************/
-int read_hrit_prologue(const char *fname, struct seviri_data *d,
+static int read_hrit_prologue(const char *fname, struct seviri_data *d,
                        struct seviri_auxillary_io_data *aux)
 {
      FILE *fp;
@@ -129,7 +129,7 @@ int read_hrit_prologue(const char *fname, struct seviri_data *d,
  *
  * returns:	Zero if successful, nonzero if error
  ******************************************************************************/
-int alloc_imagearr(uint nbands, const uint *band_ids, struct seviri_data *d)
+static int alloc_imagearr(uint nbands, const uint *band_ids, struct seviri_data *d)
 {
      int i,proc_hrv = 0,virb;
      long length_vir,length_hrv;
@@ -159,6 +159,71 @@ int alloc_imagearr(uint nbands, const uint *band_ids, struct seviri_data *d)
           snu_init_array_us(d->image.data_vir[i], length_vir, d->image.fill_value);
      }
      if (proc_hrv==1) d->image.data_hrv = malloc(length_hrv * sizeof(float));
+
+     return 0;
+}
+
+
+
+/*******************************************************************************
+ * Convenience function that returns the number of lines and columns in the
+ * image to be read with the given choice of offset and dimension parameters.
+ *
+ * indir:	Directory containing the HRIT data
+ * timeslot:	Timeslot to be read. Format: YYYYMMDDHHMM
+ * sat:		Satellite number - can be 1, 2, 3 or 4
+ * i_line	Output line offset to the beginning of the actual image
+ *              within the full disk
+ * i_column	Output column offset to the beginning of the actual image
+ *              within the full disk
+ * n_lines	Output number of lines of the actual image
+ * n_columns	Output number of columns of the actual image
+ * bounds:	Boundaries of the data to be read
+ * line0:	First line to read
+ * line1:	Last line to read
+ * column0:	First column to read
+ * column1:	Last column to read
+ * lat0:	Initial latitude
+ * lat1:	Final latitude
+ * lon0:	Initial longitude
+ * lon1:	Final longitude
+ *
+ * returns	Non-zero on error
+ ******************************************************************************/
+int seviri_get_dimens_hrit(const char *indir, const char *timeslot, int sat,
+     uint *i_line, uint *i_column, uint *n_lines, uint *n_columns,
+     enum seviri_bounds bounds, uint line0, uint line1, uint column0,
+     uint column1, double lat0, double lat1, double lon0, double lon1)
+{
+     struct seviri_dimension_data dimens;
+
+     struct seviri_marf_header_data marf_header;
+
+     /* Put image info in the correct place. This is done for consistency with
+        the .nat reader. HRIT files contain different data, so need to move
+        things around. */
+     sprintf(marf_header.secondary.NumberLinesVISIR.Value,   "%i", IMAGE_SIZE_VIR_LINES);
+     sprintf(marf_header.secondary.NumberColumnsVISIR.Value, "%i", IMAGE_SIZE_VIR_COLUMNS);
+     sprintf(marf_header.secondary.NumberLinesHRV.Value,     "%i", IMAGE_SIZE_HRV_LINES);
+     sprintf(marf_header.secondary.NumberColumnsHRV.Value,   "%i", IMAGE_SIZE_HRV_COLUMNS);
+
+     sprintf(marf_header.secondary.SouthLineSelectedRectangle.Value,  "%i",1);
+     sprintf(marf_header.secondary.NorthLineSelectedRectangle.Value,  "%i",IMAGE_SIZE_VIR_LINES);
+     sprintf(marf_header.secondary.EastColumnSelectedRectangle.Value, "%i",1);
+     sprintf(marf_header.secondary.WestColumnSelectedRectangle.Value, "%i",IMAGE_SIZE_VIR_COLUMNS);
+
+
+     /* Allocate and fill in the seviri_dimension_data struct. */
+     if (seviri_get_dimension_data(&dimens, &marf_header, bounds, line0, line1,
+                                   column0, column1, lat0, lat1, lon0, lon1)) {
+          fprintf(stderr, "ERROR: seviri_get_dimension_data()\n");
+          return -1;
+     }
+
+     *i_line    = dimens.i_line_requested_VIR;
+     *i_column  = dimens.i_column_requested_VIR;
+     *n_lines   = dimens.n_lines_requested_VIR;
+     *n_columns = dimens.n_columns_requested_VIR;
 
      return 0;
 }
@@ -231,10 +296,10 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      /* Put image info in the correct place. This is done for consistency with
         the .nat reader. HRIT files contain different data, so need to move
         things around. */
-     sprintf(d->marf_header.secondary.NumberLinesVISIR.Value,"%i",   IMAGE_SIZE_VIR_LINES);
-     sprintf(d->marf_header.secondary.NumberColumnsVISIR.Value,"%i", IMAGE_SIZE_VIR_COLUMNS);
-     sprintf(d->marf_header.secondary.NumberLinesHRV.Value,"%i",     IMAGE_SIZE_HRV_LINES);
-     sprintf(d->marf_header.secondary.NumberColumnsHRV.Value,"%i",   IMAGE_SIZE_HRV_COLUMNS);
+     sprintf(d->marf_header.secondary.NumberLinesVISIR.Value,   "%i", IMAGE_SIZE_VIR_LINES);
+     sprintf(d->marf_header.secondary.NumberColumnsVISIR.Value, "%i", IMAGE_SIZE_VIR_COLUMNS);
+     sprintf(d->marf_header.secondary.NumberLinesHRV.Value,     "%i", IMAGE_SIZE_HRV_LINES);
+     sprintf(d->marf_header.secondary.NumberColumnsHRV.Value,   "%i", IMAGE_SIZE_HRV_COLUMNS);
 
      sprintf(d->marf_header.secondary.SouthLineSelectedRectangle.Value,  "%i",1);
      sprintf(d->marf_header.secondary.NorthLineSelectedRectangle.Value,  "%i",IMAGE_SIZE_VIR_LINES);
@@ -256,11 +321,11 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      /* Put image info in the correct place. This is done for consistency with
         the .nat reader. HRIT files contain different data, so need to move
         things around. */
-     d->image.i_line     = dimens->i_line_requested_VIR;
-     d->image.i_column   = dimens->i_column_requested_VIR;
+     d->image.i_line    = dimens->i_line_requested_VIR;
+     d->image.i_column  = dimens->i_column_requested_VIR;
 
-     d->image.n_lines    = dimens->n_lines_requested_VIR;
-     d->image.n_columns  = dimens->n_columns_requested_VIR;
+     d->image.n_lines   = dimens->n_lines_requested_VIR;
+     d->image.n_columns = dimens->n_columns_requested_VIR;
 
      d->image.packet_header = NULL;
      d->image.LineSideInfo  = NULL;

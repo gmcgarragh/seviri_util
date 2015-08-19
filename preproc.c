@@ -573,9 +573,9 @@ int seviri_read_and_preproc(const char *filename,
                return -1;
           }
 
-          if (seviri_read_and_preproc_hrit(indir,timeslot,satnum, preproc,
-               n_bands, band_ids, band_units, bounds, line0, line1,
-               column0, column1, lat0, lat1, lon0, lon1, do_not_alloc)) {
+          if (seviri_read_and_preproc_hrit(indir, timeslot, satnum, preproc,
+               n_bands, band_ids, band_units, bounds, line0, line1, column0,
+               column1, lat0, lat1, lon0, lon1, do_not_alloc)) {
                fprintf(stderr, "ERROR: seviri_read_and_preproc_hrit()\n");
                return -1;
           }
@@ -612,6 +612,69 @@ int seviri_preproc_free(struct seviri_preproc_data *d)
 
      if (d->memory_alloc_d)
           free(d->data2);
+
+     return 0;
+}
+
+
+
+/*******************************************************************************
+ * Convenience function that returns the number of lines and columns in the
+ * image to be read with the given choice of offset and dimension parameters.
+ *
+ * filename	: Native SEVIRI level 1.5 filename
+ * i_line	: Output line offset to the beginning of the actual image
+ *                within the full disk
+ * i_column	: Output column offset to the beginning of the actual image
+ *                within the full disk
+ * n_lines	: Output number of lines of the actual image
+ * n_columns	: Output number of columns of the actual image
+ * bounds	: Described in the seviri_read_nat() header.
+ * line0	: 	''
+ * line1	: 	''
+ * column0	: 	''
+ * column1	: 	''
+ * lat0		: 	''
+ * lat1		: 	''
+ * lon0		: 	''
+ * lon1		: 	''
+ * aux		: Seviri_auxillary_io_data struct containing information related
+ *                to the read operation
+ *
+ * returns	: Non-zero on error
+ ******************************************************************************/
+int seviri_get_dimens(const char *filename, uint *i_line, uint *i_column,
+                      uint *n_lines, uint *n_columns, enum seviri_bounds bounds,
+                      uint line0, uint line1, uint column0, uint column1,
+                      double lat0, double lat1, double lon0, double lon1)
+{
+     char *indir;
+     int satnum;
+     char timeslot[13];
+
+     if (strstr(filename, ".nat") != NULL) {
+          if (seviri_get_dimens_nat(filename, i_line, i_column, n_lines,
+               n_columns, bounds, line0, line1, column0, column1, lat0, lat1,
+               lon0, lon1)) {
+               fprintf(stderr, "ERROR: seviri_get_dimens_nat()\n");
+               return -1;
+          }
+     }
+     else {
+          if ((indir = extract_path_sat_id_timeslot(filename, &satnum, timeslot)) == NULL) {
+               fprintf(stderr, "ERROR: extract_path_sat_id_timeslot()\n");
+               return -1;
+          }
+
+          if (seviri_get_dimens_hrit(indir, timeslot, satnum, i_line, i_column,
+               n_lines, n_columns, bounds, line0, line1, column0, column1, lat0,
+               lat1, lon0, lon1)) {
+               fprintf(stderr, "ERROR: seviri_get_dimens_hrit()\n");
+               return -1;
+          }
+
+          free(indir);
+     }
 
      return 0;
 }

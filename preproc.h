@@ -66,6 +66,10 @@ int seviri_read_and_preproc(const char *filename,
                             uint line0, uint line1, uint column0, uint column1,
                             double lat0, double lat1, double lon0, double lon1,
                             int do_not_alloc);
+int seviri_get_dimens(const char *filename, uint *i_line, uint *i_column,
+                      uint *n_lines, uint *n_columns, enum seviri_bounds bounds,
+                      uint line0, uint line1, uint column0, uint column1,
+                      double lat0, double lat1, double lon0, double lon1);
 
 
 #ifdef __cplusplus
