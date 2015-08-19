@@ -253,13 +253,15 @@ integer function seviri_get_dimens_nat_f90(filename, i_line, i_column, &
 end function seviri_get_dimens_nat_f90
 
 
-integer function seviri_get_dimens_hrit_f90(filename, i_line, i_column, &
-   n_lines, n_columns, bounds, line0, line1, column0, column1, lat0, lat1, &
-   lon0, lon1) result(status)
+integer function seviri_get_dimens_hrit_f90(filename, timeslot, satnum, &
+   i_line, i_column, n_lines, n_columns, bounds, line0, line1, column0, &
+   column1, lat0, lat1, lon0, lon1) result(status)
 
    implicit none
 
    character(*),   intent(in)        :: filename
+   character(*),   intent(in)        :: timeslot
+   integer,        intent(in)        :: satnum
    integer,        intent(out)       :: i_line, i_column
    integer,        intent(out)       :: n_lines, n_columns
    integer,        intent(in), value :: bounds
@@ -267,9 +269,10 @@ integer function seviri_get_dimens_hrit_f90(filename, i_line, i_column, &
                                         column0, column1
    real(kind = 8), intent(in), value :: lat0, lat1, lon0, lon1
 
-   status = seviri_get_dimens_nat(trim(filename)//C_NULL_CHAR, &
-         i_line, i_column, n_lines, n_columns, bounds, line0, line1, &
-         column0, column1, lat0, lat1, lon0, lon1)
+   status = seviri_get_dimens_hrit(trim(filename)//C_NULL_CHAR, &
+         trim(timeslot)//C_NULL_CHAR, satnum, i_line, i_column, n_lines, &
+         n_columns, bounds, line0, line1, column0, column1, lat0, lat1, &
+         lon0, lon1)
 
 end function seviri_get_dimens_hrit_f90
 
@@ -288,7 +291,7 @@ integer function seviri_get_dimens_f90(filename, i_line, i_column, &
                                         column0, column1
    real(kind = 8), intent(in), value :: lat0, lat1, lon0, lon1
 
-   status = seviri_get_dimens_nat(trim(filename)//C_NULL_CHAR, &
+   status = seviri_get_dimens(trim(filename)//C_NULL_CHAR, &
          i_line, i_column, n_lines, n_columns, bounds, line0, line1, &
          column0, column1, lat0, lat1, lon0, lon1)
 
