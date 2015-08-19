@@ -948,7 +948,7 @@ struct seviri_image_data {
      ushort **data_vir;	/* array of visible and infrared image arrays of length n_bands */
      ushort  *data_hrv;
 
-     void *dimens;
+     struct seviri_dimension_data dimens;
 };
 
 

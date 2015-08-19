@@ -1551,8 +1551,6 @@ static int seviri_image_free(struct seviri_image_data *d)
           free(d->data_hrv[i]);
      free(d->data_hrv);
 */
-     free(d->dimens);
-
      return 0;
 }
 

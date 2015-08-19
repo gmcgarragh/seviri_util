@@ -25,7 +25,7 @@
  * returns:	Zero if successful, nonzero if error
  ******************************************************************************/
 static int read_hrit_epilogue(const char *fname, struct seviri_data *d,
-                       struct seviri_auxillary_io_data *aux)
+                              struct seviri_auxillary_io_data *aux)
 {
      FILE *fp;
      int out;
@@ -77,7 +77,7 @@ static int read_hrit_epilogue(const char *fname, struct seviri_data *d,
  * returns:	Zero if successful, nonzero if error
  ******************************************************************************/
 static int read_hrit_prologue(const char *fname, struct seviri_data *d,
-                       struct seviri_auxillary_io_data *aux)
+                              struct seviri_auxillary_io_data *aux)
 {
      FILE *fp;
      int out;
@@ -263,6 +263,7 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      char ***bnames;
 
      struct seviri_auxillary_io_data aux;
+
      struct seviri_dimension_data *dimens;
 
      /* Get the names of the prologue, epilogue and data files. */
@@ -308,9 +309,7 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
 
 
      /* Allocate and fill in the seviri_dimension_data struct. */
-
-     d->image.dimens = malloc(sizeof(struct seviri_dimension_data));
-     dimens = (struct seviri_dimension_data *) d->image.dimens;
+     dimens = (struct seviri_dimension_data *) &d->image.dimens;
 
      if (seviri_get_dimension_data(dimens, &d->marf_header, bounds, line0, line1,
                                    column0, column1, lat0, lat1, lon0, lon1)) {
@@ -335,7 +334,7 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      /* Loop over each band and each segment. Note: VIR only, no HRV */
      for (i = 0; i < n_bands; i++) {
           for (j = 0; j < 8; j++)
-               read_data_oneseg(bnames[i][j], j, i+1, d, dimens);
+               read_data_oneseg(bnames[i][j], j, i+1, d);
      }
 
      /* Tidy up */

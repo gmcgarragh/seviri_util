@@ -158,9 +158,7 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
      /*-------------------------------------------------------------------------
       * Allocate and fill in the seviri_dimension_data struct.
       *-----------------------------------------------------------------------*/
-     image->dimens = malloc(sizeof(struct seviri_dimension_data));
-
-     dimens = (struct seviri_dimension_data *) image->dimens;
+     dimens = (struct seviri_dimension_data *) &image->dimens;
 
      if (seviri_get_dimension_data(dimens, marf_header, bounds, line0, line1,
                                    column0, column1, lat0, lat1, lon0, lon1)) {
@@ -321,7 +319,7 @@ static int seviri_image_write(FILE *fp, const struct seviri_image_data *image,
      /*-------------------------------------------------------------------------
       * For convenience.
       *-----------------------------------------------------------------------*/
-     dimens = (struct seviri_dimension_data *) image->dimens;
+     dimens = (struct seviri_dimension_data *) &image->dimens;
 
 
      /*-------------------------------------------------------------------------
@@ -404,8 +402,6 @@ static int seviri_image_free(struct seviri_image_data *d)
           free(d->data_hrv[i]);
      free(d->data_hrv);
 */
-     free(d->dimens);
-
      return 0;
 }
 

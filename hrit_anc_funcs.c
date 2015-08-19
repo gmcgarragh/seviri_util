@@ -210,8 +210,7 @@ int assemble_proname(char **pnam, const char *indir, const char *timeslot, int s
  *
  * returns:     Zero if successful
  ******************************************************************************/
-int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d,
-                     const struct seviri_dimension_data *dims)
+int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d)
 {
 
      /* Set up the various data that is required*/
@@ -224,11 +223,11 @@ int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d,
 
      /* Required to align with NAT format reader.  4 must be subtracted form the
         column as we read 4 pixels simultaneously*/
-     int first_line=dims->i_line_requested_VIR;
-     int first_col=dims->i_column_requested_VIR;
+     int first_line = d->image.dimens.i_line_requested_VIR;
+     int first_col  = d->image.dimens.i_column_requested_VIR;
 
-     int last_line= first_line+dims->n_lines_requested_VIR-1;
-     int last_col= first_col+dims->n_columns_requested_VIR-1;
+     int last_line  = first_line + d->image.dimens.n_lines_requested_VIR-1;
+     int last_col   = first_col  + d->image.dimens.n_columns_requested_VIR-1;
 
      long int out_d_col,out_d_line;
 
@@ -239,7 +238,7 @@ int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d,
      fseek(fp,6198,SEEK_SET);
 
      if (cnum>0 && cnum<12) {
-          int ncols = dims->n_columns_selected_VIR;
+          int ncols = d->image.dimens.n_columns_selected_VIR;
 
           /* Each segment if 464 lines, so skip to correct part of image based
              on segnum. */

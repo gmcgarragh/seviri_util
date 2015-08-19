@@ -517,8 +517,6 @@ int seviri_read_and_preproc_hrit(const char *indir, const char *timeslot,
      if (proc_hrv == 1)
           free(seviri.image.data_hrv);
 
-     free(seviri.image.dimens);
-
      return 0;
 }
 
