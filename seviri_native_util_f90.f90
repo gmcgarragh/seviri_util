@@ -23,6 +23,8 @@ module seviri_native_util
 
    public :: seviri_preproc_t_f90, &
              seviri_get_dimens_nat_f90, &
+             seviri_get_dimens_hrit_f90, &
+             seviri_get_dimens_f90, &
              seviri_read_and_preproc_nat_f90, &
              seviri_read_and_preproc_hrit_f90, &
              seviri_read_and_preproc_f90, &
@@ -95,6 +97,48 @@ module seviri_native_util
                                                  column0, column1
          real(c_double),    intent(in), value :: lat0, lat1, lon0, lon1
       end function seviri_get_dimens_nat
+   end interface
+
+   interface
+      integer(c_int) function seviri_get_dimens_hrit(filename, timeslot, &
+         satnum, i_line, i_column, n_lines, n_columns, bounds, line0, line1, &
+         column0, column1, lat0, lat1, lon0, lon1) &
+         bind(C, name = 'seviri_get_dimens_hrit')
+
+         use iso_c_binding
+
+         implicit none
+
+         character(c_char), intent(in)        :: filename(*)
+         character(c_char), intent(in)        :: timeslot(*)
+         integer(c_int),    intent(in)        :: satnum
+         integer(c_int),    intent(out)       :: i_line, i_column
+         integer(c_int),    intent(out)       :: n_lines, n_columns
+         integer(c_int),    intent(in), value :: bounds
+         integer(c_int),    intent(in), value :: line0, line1, &
+                                                 column0, column1
+         real(c_double),    intent(in), value :: lat0, lat1, lon0, lon1
+      end function seviri_get_dimens_hrit
+   end interface
+
+   interface
+      integer(c_int) function seviri_get_dimens(filename, &
+         i_line, i_column, n_lines, n_columns, bounds, line0, line1, &
+         column0, column1, lat0, lat1, lon0, lon1) &
+         bind(C, name = 'seviri_get_dimens')
+
+         use iso_c_binding
+
+         implicit none
+
+         character(c_char), intent(in)        :: filename(*)
+         integer(c_int),    intent(out)       :: i_line, i_column
+         integer(c_int),    intent(out)       :: n_lines, n_columns
+         integer(c_int),    intent(in), value :: bounds
+         integer(c_int),    intent(in), value :: line0, line1, &
+                                                 column0, column1
+         real(c_double),    intent(in), value :: lat0, lat1, lon0, lon1
+      end function seviri_get_dimens
    end interface
 
    interface
@@ -207,6 +251,48 @@ integer function seviri_get_dimens_nat_f90(filename, i_line, i_column, &
          column0, column1, lat0, lat1, lon0, lon1)
 
 end function seviri_get_dimens_nat_f90
+
+
+integer function seviri_get_dimens_hrit_f90(filename, i_line, i_column, &
+   n_lines, n_columns, bounds, line0, line1, column0, column1, lat0, lat1, &
+   lon0, lon1) result(status)
+
+   implicit none
+
+   character(*),   intent(in)        :: filename
+   integer,        intent(out)       :: i_line, i_column
+   integer,        intent(out)       :: n_lines, n_columns
+   integer,        intent(in), value :: bounds
+   integer,        intent(in), value :: line0, line1, &
+                                        column0, column1
+   real(kind = 8), intent(in), value :: lat0, lat1, lon0, lon1
+
+   status = seviri_get_dimens_nat(trim(filename)//C_NULL_CHAR, &
+         i_line, i_column, n_lines, n_columns, bounds, line0, line1, &
+         column0, column1, lat0, lat1, lon0, lon1)
+
+end function seviri_get_dimens_hrit_f90
+
+
+integer function seviri_get_dimens_f90(filename, i_line, i_column, &
+   n_lines, n_columns, bounds, line0, line1, column0, column1, lat0, lat1, &
+   lon0, lon1) result(status)
+
+   implicit none
+
+   character(*),   intent(in)        :: filename
+   integer,        intent(out)       :: i_line, i_column
+   integer,        intent(out)       :: n_lines, n_columns
+   integer,        intent(in), value :: bounds
+   integer,        intent(in), value :: line0, line1, &
+                                        column0, column1
+   real(kind = 8), intent(in), value :: lat0, lat1, lon0, lon1
+
+   status = seviri_get_dimens_nat(trim(filename)//C_NULL_CHAR, &
+         i_line, i_column, n_lines, n_columns, bounds, line0, line1, &
+         column0, column1, lat0, lat1, lon0, lon1)
+
+end function seviri_get_dimens_f90
 
 
 integer function seviri_read_and_preproc_nat_f90(filename, preproc_f90, n_bands, &
