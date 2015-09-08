@@ -1285,6 +1285,9 @@ int seviri_get_dimension_data(
           uint line0, uint line1, uint column0, uint column1,
           double lat0, double lat1, double lon0, double lon1)
 {
+     uint column0_2;
+     uint column1_2;
+
      /*-------------------------------------------------------------------------
       * Get some fields from the U-MARF header file.
       *-----------------------------------------------------------------------*/
@@ -1363,15 +1366,7 @@ int seviri_get_dimension_data(
           d->i_column_in_output_VIR  = 0;
      }
      else if (bounds == SEVIRI_BOUNDS_LINE_COLUMN || bounds == SEVIRI_BOUNDS_LAT_LON) {
-          if (bounds == SEVIRI_BOUNDS_LINE_COLUMN) {
-               if ((column0 - d->i0_column_selected_VIR) % 4 ||
-                   (column1 - d->i0_column_selected_VIR) % 4 != 3) {
-                    fprintf(stderr, "ERROR: column bounds must be on boundaries "
-                                    "of a multiple of 4\n");
-                    return -1;
-               }
-          }
-          else {
+          if (bounds == SEVIRI_BOUNDS_LAT_LON) {
                if (snu_lat_lon_to_line_column(lat0, lon1, &line0, &column0, 0.,
                                               &nav_scaling_factors_vir)) {
                     fprintf(stderr, "ERROR: snu_lat_lon_to_line_column()\n");
@@ -1381,10 +1376,6 @@ int seviri_get_dimension_data(
                line0--;
                column0--;
 
-               if ((column0 - d->i0_column_selected_VIR) % 4)
-                    column0 = d->i0_column_selected_VIR +
-                              (column0 - d->i0_column_selected_VIR) / 4 * 4;
-
                if (snu_lat_lon_to_line_column(lat1, lon0, &line1, &column1, 0.,
                                               &nav_scaling_factors_vir)) {
                     fprintf(stderr, "ERROR: snu_lat_lon_to_line_column()\n");
@@ -1393,17 +1384,13 @@ int seviri_get_dimension_data(
 
                line1--;
                column1--;
-
-               if ((column1 - d->i0_column_selected_VIR) % 4 != 3)
-                    column1 = d->i0_column_selected_VIR +
-                              (column1 - d->i0_column_selected_VIR) / 4 * 4 - 1;
           }
 
           if (VERBOSE) {
-               printf("line0               = %u\n", line0);
-               printf("line1               = %u\n", line1);
-               printf("column0             = %u\n", column0);
-               printf("column1             = %u\n", column1);
+               printf("line0                    = %u\n", line0);
+               printf("line1                    = %u\n", line1);
+               printf("column0                  = %u\n", column0);
+               printf("column1                  = %u\n", column1);
                printf("\n");
           }
 
@@ -1443,6 +1430,26 @@ int seviri_get_dimension_data(
           /*--------------------------------------------------------------------
            *
            *------------------------------------------------------------------*/
+          column0_2 = column0;
+          if ((column0 - d->i0_column_selected_VIR) % 4)
+               column0_2 = d->i0_column_selected_VIR +
+                           (column0 - d->i0_column_selected_VIR) / 4 * 4;
+
+          column1_2 = column1;
+          if ((column1 - d->i0_column_selected_VIR) % 4 != 3)
+               column1_2 = d->i0_column_selected_VIR +
+                           (column1 - d->i0_column_selected_VIR) / 4 * 4 + 4 - 1;
+
+          if (VERBOSE) {
+               printf("column0_2                = %u\n", column0_2);
+               printf("column1_2                = %u\n", column1_2);
+               printf("\n");
+          }
+
+
+          /*--------------------------------------------------------------------
+           *
+           *------------------------------------------------------------------*/
           d->i_line_requested_VIR    = line0;
           d->i_column_requested_VIR  = column0;
 
@@ -1452,19 +1459,19 @@ int seviri_get_dimension_data(
           d->i_line_to_read_VIR      = 0;
           d->i_column_to_read_VIR    = 0;
 
-          if (d->i_line_requested_VIR   > d->i0_line_selected_VIR)
+          if (d->i_line_requested_VIR > d->i0_line_selected_VIR)
                d->i_line_to_read_VIR   = d->i_line_requested_VIR -
                                          d->i0_line_selected_VIR;
-          if (d->i_column_requested_VIR > d->i0_column_selected_VIR)
-               d->i_column_to_read_VIR = d->i_column_requested_VIR -
+          if (column0_2               > d->i0_column_selected_VIR)
+               d->i_column_to_read_VIR = column0_2 -
                                          d->i0_column_selected_VIR;
 
           d->n_lines_to_read_VIR     =
-               MIN(d->n_lines_selected_VIR - d->i_line_to_read_VIR,
+               MIN(d->n_lines_selected_VIR   - d->i_line_to_read_VIR,
                    d->n_lines_requested_VIR);
           d->n_columns_to_read_VIR   =
                MIN(d->n_columns_selected_VIR - d->i_column_to_read_VIR,
-                   d->n_columns_requested_VIR);
+                   column1_2 - column0_2 + 1);
 
           d->i_line_in_output_VIR    = 0;
           d->i_column_in_output_VIR  = 0;

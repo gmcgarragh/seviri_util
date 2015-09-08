@@ -73,6 +73,7 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
      uint iii;
      uint j;
      uint jj;
+     uint jjj;
      uint k;
 
      uint length;
@@ -88,6 +89,15 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
      uint n_bytes_HRV_line;
 
      uint n_bytes_line_group;
+
+     uint j_offset;
+     uint i_column0;
+     uint i_column1;
+
+     uint i_alignment0;
+     uint i_alignment1;
+     uint n_loop0;
+     uint n_loop1;
 
      long file_start;
      long file_offset;
@@ -224,6 +234,40 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
 
      file_offset = file_start + dimens->i_line_to_read_VIR * n_bytes_line_group;
 
+
+     /* Considerable effort is gone into dealing with starting columns and
+        ending columns that are not aligned on 4 pixel/5 byte boundaries.
+        Below are quantities used for this effort. */
+
+     /* Quantities for approach 1 which simply checks every pixel to see if they
+        are in the requested image area.  Simple but has an if statement within
+        the inner loop. */
+     j_offset  = dimens->i0_column_selected_VIR + dimens->i_column_to_read_VIR;
+     i_column0 = dimens->i_column_requested_VIR;
+     i_column1 = dimens->i_column_requested_VIR + dimens->n_columns_requested_VIR - 1;
+
+     /* Quantities for approach 2 which only loops over the pixels required.
+        more complicated but more efficient. */
+     if (dimens->i_column_requested_VIR > dimens->i0_column_selected_VIR)
+          i_alignment0 = (dimens->i_column_requested_VIR -
+                                 dimens->i0_column_selected_VIR) % 4;
+     else
+          i_alignment0 = 0;
+
+     if (dimens->i_column_requested_VIR + dimens->n_columns_requested_VIR - 1 <
+         dimens->i1_column_selected_VIR)
+          i_alignment1 = (dimens->i_column_requested_VIR +
+                                 dimens->n_columns_requested_VIR - 1 -
+                                 dimens->i0_column_selected_VIR) % 4;
+     else
+          i_alignment1 = (dimens->n_columns_selected_VIR - 1) % 4;
+
+     n_loop0 = dimens->n_columns_to_read_VIR -
+                    k - (i_alignment1 == 3 ? 0 : 4);
+
+     n_loop1 = i_alignment1 < 3 ? i_alignment1 + 1 : 0;
+
+
      for (i = 0; i < dimens->n_lines_to_read_VIR; ++i) {
           ii = dimens->i_line_in_output_VIR + i;
 
@@ -250,24 +294,55 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
                          dimens->n_columns_to_read_VIR / 4 * 5) E_L_R();
 
                i_image = ii * dimens->n_columns_requested_VIR + dimens->i_column_in_output_VIR;
-
-               for (j = 0, jj = 0; j < dimens->n_columns_to_read_VIR; ) {
+if (0) {
+               for (j = 0, jj = 0, jjj = 0; j < dimens->n_columns_to_read_VIR; ) {
                     for (k = 0; k < 4; ++k) {
-                         temp = *((ushort *) (data10 + jj));
+                         if (j_offset + j >= i_column0 && j_offset + j <= i_column1) {
+                              temp = *((ushort *) (data10 + jj));
 
-                         SWAP_2(temp, temp);
+                              SWAP_2(temp, temp);
 
-                         image->data_vir[i_band][i_image + j] = (temp & masks[k]) >> shifts[k];
-
+                              image->data_vir[i_band][i_image + jjj] = (temp & masks[k]) >> shifts[k];
+                              jjj++;
+                         }
                          j++, jj++;
                     }
 
                     jj++;
                }
+}
+else {
+               jj = k = i_alignment0;
+
+               for (j = 0, jjj = 0; j < n_loop0; ) {
+                    for ( ; k < 4; ++k) {
+                         temp = *((ushort *) (data10 + jj));
+
+                         SWAP_2(temp, temp);
+
+                         image->data_vir[i_band][i_image + jjj] = (temp & masks[k]) >> shifts[k];
+
+                         j++, jj++; jjj++;
+                    }
+
+                    jj++; k = 0;
+               }
+
+               for (k = 0; k < n_loop1; ++k) {
+                    temp = *((ushort *) (data10 + jj));
+
+                    SWAP_2(temp, temp);
+
+                    image->data_vir[i_band][i_image + jjj] = (temp & masks[k]) >> shifts[k];
+
+                    jj++; jjj++;
+               }
+}
           }
 
           file_offset += n_bytes_line_group;
      }
+
 
      file_offset = file_start + dimens->n_lines_selected_VIR * n_bytes_line_group;
 
