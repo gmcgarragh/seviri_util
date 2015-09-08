@@ -1,4 +1,4 @@
-/******************************************************************************%
+/*******************************************************************************
 **
 **    Copyright (C) 2015 Simon Proud <simon.proud@physics.ox.ac.uk>
 **
@@ -15,7 +15,7 @@
 #include <netcdf.h>
 #include <hdf5.h>
 
-/******************************************************************************%
+/*******************************************************************************
       Wrapper for the native reader. Converts the driver info into something
       that the reader can understand.
       Inputs:
@@ -33,7 +33,7 @@ int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc
      return 0;
 }
 
-/******************************************************************************%
+/*******************************************************************************
       Wrapper for the HRIT reader. Converts the driver info into something
       that the reader can understand.
       Inputs:
@@ -51,7 +51,7 @@ int run_sev_hrit(struct driver_data driver,struct seviri_preproc_data *preproc)
      return 0;
 }
 
-/******************************************************************************%
+/*******************************************************************************
       Initialises the array that will contain output data for the TIFF writer
       All elements of the output array will contain the fill value.
       Inputs:
@@ -69,7 +69,7 @@ static int init_outline(float* outline,unsigned int sizer,float filler)
      return 0;
 }
 
-/******************************************************************************%
+/*******************************************************************************
       Writes the processed SEVIRI data (and any ancilliary data) into a TIFF
       file. All data is saved as floating point type.
       Inputs:
@@ -127,7 +127,7 @@ int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc)
      return 0;
 }
 
-/******************************************************************************%
+/*******************************************************************************
       Writes the processed SEVIRI data (and any ancilliary data) into a NetCDF
       file. All data is saved as floating point type, aside from "Time" (double)
       Inputs:
@@ -249,7 +249,7 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
      return 0;
 }
 
-/******************************************************************************%
+/*******************************************************************************
       Writes the processed SEVIRI data (and any ancilliary data) into an HDF5
       file. All data is saved as floating point type, aside from "Time" (double)
       Inputs:

@@ -1,4 +1,4 @@
-/******************************************************************************%
+/*******************************************************************************
 **
 **    Copyright (C) 2015 Simon Proud <simon.proud@physics.ox.ac.uk>
 **
@@ -70,7 +70,7 @@ static void parsebands(char *bands, struct bands_st *inbands)
 }
 
 
-/******************************************************************************%
+/*******************************************************************************
 **    Utility function to assist with debugging.
 **    This prints all the driver information to the terminal
 **    Useful for checking that the driver file was parsed correctly
@@ -137,7 +137,7 @@ static void setline(struct driver_data *driver)
      driver->fcol=0;
 }
 
-/******************************************************************************%
+/*******************************************************************************
 **    Prints information on the preprocessing for one pixel.
 **    Useful to see if the data read was successful
 **    Inputs:
@@ -184,7 +184,7 @@ int print_preproc_out(struct driver_data driver, struct seviri_preproc_data prep
      return 0;
 }
 
-/******************************************************************************%
+/*******************************************************************************
 **    Frees the memory used by the driver script
 **    Inputs:
 **         driver:      The driver struct
@@ -201,7 +201,7 @@ int free_driver(struct driver_data *driver)
      return 0;
 }
 
-/******************************************************************************%
+/*******************************************************************************
 **    Parser for the driver file.
 **    Inputs:
 **         fname:     Driver filename
