@@ -1,5 +1,3 @@
 * Add support for High Resolution Visible (HRV) images.
 
 * Add support for the BSQ Level 1.5 format distributed by U-MARF.
-
-* Add support for the HRIT format from the MSG dissemination service (EUMETCast and direct).
