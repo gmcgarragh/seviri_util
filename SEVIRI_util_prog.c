@@ -1,14 +1,14 @@
 /*******************************************************************************
-**
-**    Copyright (C) 2015 Simon Proud <simon.proud@physics.ox.ac.uk>
-**
-**    This source code is licensed under the GNU General Public License (GPL),
-**    Version 3.  See the file COPYING for more details.
-**
-**    This file contains the main interface to the SEVIRI reading functions.
-**    It also contains the functions used to save data in the various formats.
-**
-*******************************************************************************/
+ *
+ *    Copyright (C) 2015 Simon Proud <simon.proud@physics.ox.ac.uk>
+ *
+ *    This source code is licensed under the GNU General Public License (GPL),
+ *    Version 3.  See the file COPYING for more details.
+ *
+ *    This file contains the main interface to the SEVIRI reading functions.
+ *    It also contains the functions used to save data in the various formats.
+ *
+ ******************************************************************************/
 
 #include "SEVIRI_util.h"
 #include <tiffio.h>
@@ -88,7 +88,8 @@ int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc)
      for (i=0;i<7;i++)if (driver.ancsave[i]==1)nbands+=1;
 
      TIFF *tif=TIFFOpen(driver.outf, "w");
-/*     Set up the tags for the TIFF file, ensures correct size and number of bands.*/
+     /* Set up the tags for the TIFF file, ensures correct size and number of
+        bands. */
      TIFFSetField(tif, TIFFTAG_IMAGEWIDTH, preproc.n_columns);
      TIFFSetField(tif, TIFFTAG_IMAGELENGTH, preproc.n_lines);
      TIFFSetField(tif, TIFFTAG_SAMPLESPERPIXEL, nbands);
@@ -102,7 +103,7 @@ int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc)
      else if (driver.infrmt==SEVIRI_INFILE_NAT) sprintf(outstr,"Image created with the SEVIRI reader utility. This file was produced from %s.",driver.infdir);
      else  sprintf(outstr,"Image created with the SEVIRI reader utility.");
      TIFFSetField(tif, TIFFTAG_IMAGEDESCRIPTION, outstr);
-/*     Begin saving the actual image data */
+     /* Begin saving the actual image data */
      float oneline[nbands*preproc.n_columns];
      for (i=0;i<preproc.n_lines;i++) {
           if (init_outline(oneline,nbands*preproc.n_columns,preproc.fill_value)!=0) {E_L_R();}
@@ -161,7 +162,7 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
      int *varid;
      varid     =     (int*) malloc(sizeof(int)*nbands);
 
-/*     Create the NetCDF file and initialise the data*/
+     /* Create the NetCDF file and initialise the data*/
      if(nc_create(driver.outf, NC_CLOBBER|NC_NETCDF4 , &ncid)) {E_L_R();};
      if(nc_def_dim(ncid, "x", preproc.n_lines, &x_dimid)) {E_L_R();};
      if(nc_def_dim(ncid, "y", preproc.n_columns, &y_dimid)) {E_L_R();};
@@ -169,7 +170,7 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
      dimids[1] = y_dimid;
 
 
-/*     Initialise each variable, loop first over all bands included in the preproc data*/
+     /* Initialise each variable, loop first over all bands included in the preproc data*/
      for (i=0;i<preproc.n_bands;i++) {
           if(nc_def_var(ncid, bnames[driver.sev_bands.band_ids[i-1]], NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
           if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
@@ -180,7 +181,7 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
           if (driver.outtype[i] == SEVIRI_UNIT_BT){if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, bt_range)) {E_L_R();};if(nc_put_att_text (ncid, NC_GLOBAL, "title",strlen(title_bt), title_bt)) {E_L_R();};}
      }
 
-/*     Now initialise the ancilliary data*/
+     /* Now initialise the ancilliary data*/
      if(driver.ancsave[0]==1) {
           if(nc_def_var(ncid, "Time", NC_DOUBLE, 2,dimids, &varid[i])) {E_L_R();};
           if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
@@ -231,7 +232,7 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
 
      if(nc_enddef(ncid)) {E_L_R();};
 
-/*     This will actually put the data into the file*/
+     /* This will actually put the data into the file*/
      for (i=0;i<preproc.n_bands;i++)
           if(nc_put_var_float(ncid, varid[i], &preproc.data[i][0])) {E_L_R();};
 
@@ -243,7 +244,7 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
      if(driver.ancsave[5]==1){if(nc_put_var_float(ncid, varid[i], &preproc.vza[0])) {E_L_R();};i++;}
      if(driver.ancsave[6]==1){if(nc_put_var_float(ncid, varid[i], &preproc.vaa[0])) {E_L_R();};i++;}
 
-/*     Now we are done, so close the file*/
+     /* Now we are done, so close the file*/
      if(nc_close(ncid)) {E_L_R();};
 
      return 0;
@@ -282,7 +283,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
      varid     =     (int*) malloc(sizeof(int)*nbands);
      varid = varid;
 
-/*     Create the HDF5 file and initialise the data*/
+     /* Create the HDF5 file and initialise the data*/
      hid_t      outfile;
      outfile = H5Fcreate(driver.outf,H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
      herr_t      status;
@@ -293,14 +294,14 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
 
      status = status;
 
-/*     Set up some basic properties common to all the datasets*/
+     /* Set up some basic properties common to all the datasets*/
      dcpl = H5Pcreate (H5P_DATASET_CREATE);
      if (driver.compression==1) status = H5Pset_shuffle(dcpl);
      if (driver.compression==1) status = H5Pset_deflate(dcpl, 2);
      status = H5Pset_chunk (dcpl, 2, chunk);
      H5Pset_fill_value(dcpl, H5T_NATIVE_FLOAT, &preproc.fill_value);
 
-/*     Set up dataspaces for the SEVIRI band data and write to the file.*/
+     /* Set up dataspaces for the SEVIRI band data and write to the file.*/
      for (i=0;i<preproc.n_bands;i++) {
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,bnames[driver.sev_bands.band_ids[i-1]],H5T_NATIVE_FLOAT,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
@@ -309,7 +310,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           status=H5Dclose(dataset);
      }
 
-/*     Set up dataspaces for the ancilliary data and write to the file.*/
+     /* Set up dataspaces for the ancilliary data and write to the file.*/
      if(driver.ancsave[0]==1) {
           dataspace=H5Screate_simple(2,dims,dims);
           dataset=H5Dcreate2(outfile,"Time",H5T_NATIVE_DOUBLE,dataspace,H5P_DEFAULT,dcpl,H5P_DEFAULT);
@@ -367,7 +368,7 @@ int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
           i++;
      }
 
-/*     Now we are done, so close the file*/
+     /* Now we are done, so close the file*/
      status=H5Fclose(outfile);
      return 0;
 }

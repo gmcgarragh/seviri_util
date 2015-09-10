@@ -1,11 +1,11 @@
 /*******************************************************************************
-**
-**    Copyright (C) 2014-2015 Greg McGarragh <mcgarragh@atm.ox.ac.uk>
-**
-**    This source code is licensed under the GNU General Public License (GPL),
-**    Version 3.  See the file COPYING for more details.
-**
-*******************************************************************************/
+ *
+ *    Copyright (C) 2014-2015 Greg McGarragh <mcgarragh@atm.ox.ac.uk>
+ *
+ *    This source code is licensed under the GNU General Public License (GPL),
+ *    Version 3.  See the file COPYING for more details.
+ *
+ ******************************************************************************/
 
 /* ANSI */
 #include <stdio.h>

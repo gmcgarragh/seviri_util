@@ -1,11 +1,11 @@
 /*******************************************************************************
-**
-**    Copyright (C) 2015 Simon Proud (simon.proud@physics.ox.ac.uk)
-**
-**    This source code is licensed under the GNU General Public License (GPL),
-**    Version 3.  See the file COPYING for more details.
-**
-*******************************************************************************/
+ *
+ *    Copyright (C) 2015 Simon Proud (simon.proud@physics.ox.ac.uk)
+ *
+ *    This source code is licensed under the GNU General Public License (GPL),
+ *    Version 3.  See the file COPYING for more details.
+ *
+ ******************************************************************************/
 
 #include "external.h"
 #include "hrit_anc_funcs.h"

@@ -1,11 +1,11 @@
 /*******************************************************************************
-**
-**    Copyright (C) 2014-2015 Greg McGarragh <mcgarragh@atm.ox.ac.uk>
-**
-**    This source code is licensed under the GNU General Public License (GPL),
-**    Version 3.  See the file COPYING for more details.
-**
-*******************************************************************************/
+ *
+ *    Copyright (C) 2014-2015 Greg McGarragh <mcgarragh@atm.ox.ac.uk>
+ *
+ *    This source code is licensed under the GNU General Public License (GPL),
+ *    Version 3.  See the file COPYING for more details.
+ *
+ ******************************************************************************/
 
 #include "external.h"
 #include "hrit_anc_funcs.h"
@@ -322,7 +322,8 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
 
 
      /*-------------------------------------------------------------------------
-      * Compute reflectance for the bands requested.
+      * Compute reflectance or bidirectional reflectance factor (BRF) for the
+      * bands requested.
       *
       * Ref: PDF_MSG_SEVIRI_RAD2REFL, Page 8
       *-----------------------------------------------------------------------*/

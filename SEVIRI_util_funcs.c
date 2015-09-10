@@ -20,7 +20,7 @@ const char *bnames[] = {"VIS006", "VIS008", "IR_016", "IR_039", "WV_062",
                         "WV_073", "IR_087", "IR_097", "IR_108", "IR_120",
                         "IR_134"};
 
-/*    Prints a message that shows how to use the utility.*/
+/* Prints a message that shows how to use the utility. */
 void show_usage()
 {
 
@@ -46,8 +46,8 @@ void show_usage()
      printf("Will now exit!\n");
 }
 
-/*    Parses the input band character string (in format 010101010110) and*/
-/*    converts it into a list of bands to process.*/
+/* Parses the input band character string (in format 010101010110) and converts
+   it into a list of bands to process. */
 static void parsebands(char *bands, struct bands_st *inbands)
 {
      int len          =     strlen(bands);
@@ -71,22 +71,23 @@ static void parsebands(char *bands, struct bands_st *inbands)
 
 
 /*******************************************************************************
-**    Utility function to assist with debugging.
-**    This prints all the driver information to the terminal
-**    Useful for checking that the driver file was parsed correctly
-**    Inputs:
-**          driver:     The driver structure
-**    Outputs:
-**          integer:     Zero if successful, otherwise 1
-*******************************************************************************/
+ *    Utility function to assist with debugging.
+ *    This prints all the driver information to the terminal
+ *    Useful for checking that the driver file was parsed correctly
+ *    Inputs:
+ *          driver:     The driver structure
+ *    Outputs:
+ *          integer:     Zero if successful, otherwise 1
+ ******************************************************************************/
 int print_driver(struct driver_data driver)
 {
-/*      Sets up the band names. good for telling which band is which, easier than channel number */
+     /* Sets up the band names. Good for telling which band is which, easier
+        than channel number. */
 
      int i;
      char outstr[40];
 
-/*      Print basic data about the driver */
+     /* Print basic data about the driver */
      printf("\n******************************* DEBUG INFO *******************************\n");
      printf("Input data type:\t\t%i\n",driver.infrmt);
      printf("Input directory or file:\t%s\n",driver.infdir);
@@ -95,7 +96,7 @@ int print_driver(struct driver_data driver)
      printf("Number of bands to process:\t%i\n",driver.sev_bands.nbands);
      strcpy(outstr,"\0");
 
-/*      Print info about which bands will be processed */
+     /* Print info about which bands will be processed */
      printf("Will process bands and units:\n");
      for (i=0;i<driver.sev_bands.nbands;i++) {
           printf("\t\t\t\t%s\t%i\n",bnames[driver.sev_bands.band_ids[i]-1],driver.outtype[i]);
@@ -107,7 +108,7 @@ int print_driver(struct driver_data driver)
      printf("Will process between columns:\t%i\t%i\n",driver.icol,driver.fcol);
      strcpy(outstr,"\0");
 
-/*      Print info about which ancilliary data is to be saved */
+     /* Print info about which ancilliary data is to be saved */
      if (driver.ancsave[0]==1)strcat(outstr,"time ");
      if (driver.ancsave[1]==1)strcat(outstr,"lat ");
      if (driver.ancsave[2]==1)strcat(outstr,"lon ");
@@ -138,15 +139,15 @@ static void setline(struct driver_data *driver)
 }
 
 /*******************************************************************************
-**    Prints information on the preprocessing for one pixel.
-**    Useful to see if the data read was successful
-**    Inputs:
-**          preproc:     The main data structure
-**          i_line:     Which line of data do we examine?
-**          i_column:     Which column within the line do we examine?
-**    Outputs:
-**          integer:     Zero if successful, otherwise 1
-*******************************************************************************/
+ *    Prints information on the preprocessing for one pixel.
+ *    Useful to see if the data read was successful
+ *    Inputs:
+ *          preproc:     The main data structure
+ *          i_line:     Which line of data do we examine?
+ *          i_column:     Which column within the line do we examine?
+ *    Outputs:
+ *          integer:     Zero if successful, otherwise 1
+ ******************************************************************************/
 int print_preproc_out(struct driver_data driver, struct seviri_preproc_data preproc,
                       unsigned int i_line, unsigned int i_column)
 {
@@ -185,12 +186,12 @@ int print_preproc_out(struct driver_data driver, struct seviri_preproc_data prep
 }
 
 /*******************************************************************************
-**    Frees the memory used by the driver script
-**    Inputs:
-**         driver:      The driver struct
-**    Outputs:
-**         integer:     Zero if success, otherwise -1
-*******************************************************************************/
+ *    Frees the memory used by the driver script
+ *    Inputs:
+ *         driver:      The driver struct
+ *    Outputs:
+ *         integer:     Zero if success, otherwise -1
+ ******************************************************************************/
 int free_driver(struct driver_data *driver)
 {
      free(driver->infdir);
@@ -202,13 +203,13 @@ int free_driver(struct driver_data *driver)
 }
 
 /*******************************************************************************
-**    Parser for the driver file.
-**    Inputs:
-**         fname:     Driver filename
-**         driver:      Structure that will contain the parsed data
-**    Outputs:
-**         integer:     Zero if success, otherwise -1
-*******************************************************************************/
+ *    Parser for the driver file.
+ *    Inputs:
+ *         fname:     Driver filename
+ *         driver:      Structure that will contain the parsed data
+ *    Outputs:
+ *         integer:     Zero if success, otherwise -1
+ ******************************************************************************/
 int parse_driver(char *fname,struct driver_data *driver)
 {
      int i;
@@ -219,21 +220,21 @@ int parse_driver(char *fname,struct driver_data *driver)
      FILE *fp = fopen(fname,"r");
      if (fp == NULL) {printf("Unable to open the driver file: %s\n",fname);E_L_R();}
 
-/*     Read the type of input file from line 1 of the driver->*/
+     /* Read the type of input file from line 1 of the driver */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading HRIT line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
      if (!strcmp(line,"HRIT"))     driver->infrmt = SEVIRI_INFILE_HRIT;
      else if (!strcmp(line,"NAT"))     driver->infrmt = SEVIRI_INFILE_NAT;
      else {printf("Incorrect input type in driver file. Must be HRIT or NAT.\n");free(line);fclose(fp);E_L_R();}
 
-/*     Read the filename / input file directory.*/
+     /* Read the filename / input file directory. */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading input file/dir line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (strlen(line)<4) {printf("Failure reading input file/dir line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
      driver->infdir = (char*) malloc(sizeof(char)*(strlen(line)+1));
      strcpy(driver->infdir,line);
 
-/*     Read the timeslot (HRIT only)*/
+     /* Read the timeslot (HRIT only) */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading input timeslot line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (strlen(line)<12 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading input timeslot line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (driver->infrmt==SEVIRI_INFILE_HRIT) {
@@ -242,7 +243,7 @@ int parse_driver(char *fname,struct driver_data *driver)
           strcpy(driver->timeslot,line);
      }
 
-/*     Read the satellite number (HRIT only)*/
+     /* Read the satellite number (HRIT only) */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (strlen(line)<1 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (driver->infrmt==SEVIRI_INFILE_HRIT) {
@@ -254,7 +255,7 @@ int parse_driver(char *fname,struct driver_data *driver)
           else {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      }
 
-/*     Read the bands to process*/
+     /* Read the bands to process */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading bands to process line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
      parsebands(line,&driver->sev_bands);
@@ -262,7 +263,7 @@ int parse_driver(char *fname,struct driver_data *driver)
      if (driver->outtype == NULL) {printf("Failure reading bands to process line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (driver->sev_bands.nbands<=0 || driver->sev_bands.nbands>11) {printf("Failure reading bands to process line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
 
-/*     Read the output file type*/
+     /* Read the output file type */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading output file type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
      if (!strcmp(line,"HDF"))     driver->outfrmt = SEVIRI_OUTFILE_HDF;
@@ -270,7 +271,7 @@ int parse_driver(char *fname,struct driver_data *driver)
      else if (!strcmp(line,"TIF"))     driver->outfrmt = SEVIRI_OUTFILE_TIF;
      else {printf("Failure reading output file type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
 
-/*     Read the output units type*/
+     /* Read the output units type */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading output units type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
      if (!strcmp(line,"CNT"))     for (i=0;i<driver->sev_bands.nbands;i++) driver->outtype[i] = SEVIRI_UNIT_CNT;
@@ -279,7 +280,7 @@ int parse_driver(char *fname,struct driver_data *driver)
                               if (driver->sev_bands.band_ids[i]<=3) driver->outtype[i] = SEVIRI_UNIT_BRF; else driver->outtype[i] = SEVIRI_UNIT_BT;
      else {printf("Failure reading output units type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
 
-/*     Read the output filename.*/
+     /* Read the output filename. */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading output filename line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      len = strlen(line);
      if (len<4) {printf("Failure reading utput filename line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
@@ -290,7 +291,7 @@ int parse_driver(char *fname,struct driver_data *driver)
      if (driver->outfrmt == SEVIRI_OUTFILE_CDF)strcat(driver->outf,".nc");
      if (driver->outfrmt == SEVIRI_OUTFILE_TIF)strcat(driver->outf,".tiff");
 
-/*     Read the initial line*/
+     /* Read the initial line */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading input initial line line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
      iline     =     atoi(line);
@@ -299,20 +300,21 @@ int parse_driver(char *fname,struct driver_data *driver)
      if (iline==-200) { driver->bounds = SEVIRI_BOUNDS_ACTUAL_IMAGE; setline(driver);}
      if (iline!=-100 && iline!=-200) {
           driver->iline     =     iline;
-/*     Read the final line*/
+          /* Read the final line */
           if (getline(&line,&len,fp)==-1) {printf("Failure reading input final line line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
           line[strlen(line)-1]='\0';
           driver->fline     =     atoi(line);
-/*     Read the initial column*/
+          /* Read the initial column */
           if (getline(&line,&len,fp)==-1) {printf("Failure reading input initial column line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
           line[strlen(line)-1]='\0';
           driver->icol     =     atoi(line);
-/*     Read the final column*/
+          /* Read the final column */
           if (getline(&line,&len,fp)==-1) {printf("Failure reading input final column line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
           line[strlen(line)-1]='\0';
           driver->fcol     =     atoi(line);
 
-/*      Check image boundaries to make sure the start and end line / col are sensible.*/
+          /* Check image boundaries to make sure the start and end line / col
+             are sensible. */
           if (driver->iline<0) driver->iline=0;
           if (driver->icol<0) driver->icol=0;
           if (driver->fline>3711) driver->fline=3711;
@@ -328,8 +330,8 @@ int parse_driver(char *fname,struct driver_data *driver)
           if (driver->fline>3711) driver->fline=3711;
           if (driver->fcol>3711) driver->fcol=3711;
      }
-/*     Read the anciliary data line.*/
-     /* ancsave contains: 0-time,     1-lat,     2-lon,     3-sza,     4-saa,     5-vza,     6-vaa */
+     /* Read the anciliary data line.*/
+     /* ancsave contains: 0-time, 1-lat, 2-lon, 3-sza, 4-saa, 5-vza, 6-vaa */
      driver->compression=0;
      for (i=0;i<7;i++) driver->ancsave[i]=0;
      while (fgets(line, 10, fp)) {
