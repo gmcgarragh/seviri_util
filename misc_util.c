@@ -127,7 +127,7 @@ long snu_cal_to_jul_day(int y, int m, int d)
      long jul;
 
      if (y == 0) {
-          fprintf(stderr, "ERROR: there is no year zero\n");
+          fprintf(stderr, "ERROR: There is no year zero\n");
           return -1;
      }
 

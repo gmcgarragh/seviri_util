@@ -124,14 +124,14 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      for (i = 0; i < d->image.n_bands; ++i) {
           if (((d->image.band_ids[i] >= 1 && d->image.band_ids[i] <= 3) ||
                 d->image.band_ids[i] == 12) && band_units[i] == SEVIRI_UNIT_BT) {
-               fprintf(stderr, "ERROR: band ID %d, does not support BT units\n",
+               fprintf(stderr, "ERROR: Band ID %d, does not support BT units\n",
                        d->image.band_ids[i]);
                return -1;
           }
 
           if (( d->image.band_ids[i] >= 4 && d->image.band_ids[i] <= 11)
                                           && band_units[i] == SEVIRI_UNIT_BRF) {
-               fprintf(stderr, "ERROR: band ID %d, does not support BRF units\n",
+               fprintf(stderr, "ERROR: Band ID %d, does not support BRF units\n",
                        d->image.band_ids[i]);
                return -1;
           }
@@ -213,7 +213,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      }
 
      if (i == 100) {
-          fprintf(stderr, "ERROR: image time is out of range of supplied orbit "
+          fprintf(stderr, "ERROR: Image time is out of range of supplied orbit "
                   "polynomials\n");
           return -1;
      }

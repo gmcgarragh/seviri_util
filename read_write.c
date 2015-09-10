@@ -1399,28 +1399,28 @@ int seviri_get_dimension_data(
            * Check that the requested pixel coordinates are valid.
            *------------------------------------------------------------------*/
           if (line0 < d->i0_line_selected_VIR) {
-               fprintf(stderr, "ERROR: requested start line (line0 = %u) is "
+               fprintf(stderr, "ERROR: Requested start line (line0 = %u) is "
                                "less than that of the actual image: %u\n", line0,
                                d->i0_line_selected_VIR);
                return -1;
           }
 
           if (line1 > d->i0_line_selected_VIR + d->n_lines_selected_VIR - 1) {
-               fprintf(stderr, "ERROR: requested end   line (line1 = %u) is "
+               fprintf(stderr, "ERROR: Requested end   line (line1 = %u) is "
                                "greater than that of the actual image: %u\n", line1,
                                d->i1_line_selected_VIR);
                return -1;
           }
 
           if (column0 < d->i0_column_selected_VIR) {
-               fprintf(stderr, "ERROR: requested start column (column0 = %u) is "
+               fprintf(stderr, "ERROR: Requested start column (column0 = %u) is "
                                "less than that of the actual image: %u\n", column0,
                                d->i0_column_selected_VIR);
                return -1;
           }
 
           if (column1 > d->i0_column_selected_VIR + d->n_columns_selected_VIR - 1) {
-               fprintf(stderr, "ERROR: requested end   column (column1 = %u) is "
+               fprintf(stderr, "ERROR: Requested end   column (column1 = %u) is "
                                "greater than that of the actual image: %u\n", column1,
                                d->i1_column_selected_VIR);
                return -1;
@@ -1477,7 +1477,7 @@ int seviri_get_dimension_data(
           d->i_column_in_output_VIR  = 0;
      }
      else {
-          fprintf(stderr, "ERROR: invalid seviri_bounds type: %d\n", bounds);
+          fprintf(stderr, "ERROR: Invalid seviri_bounds type: %d\n", bounds);
           return -1;
      }
 
