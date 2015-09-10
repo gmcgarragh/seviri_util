@@ -289,10 +289,17 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      aux.operation  = 0;
      aux.swap_bytes = snu_is_little_endian();
 
-     /* Read the prologue file */
-     read_hrit_prologue(proname,d,&aux);
      /* Read the epilogue file */
-     read_hrit_epilogue(epiname,d,&aux);
+     if (read_hrit_epilogue(epiname,d,&aux)) {
+          fprintf(stderr, "ERROR: read_hrit_epilogue()\n");
+          return -1;
+     }
+
+     /* Read the prologue file */
+     if (read_hrit_prologue(proname,d,&aux)) {
+          fprintf(stderr, "ERROR: read_hrit_epilogue()\n");
+          return -1;
+     }
 
      /* Put image info in the correct place. This is done for consistency with
         the .nat reader. HRIT files contain different data, so need to move
@@ -334,7 +341,10 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      /* Loop over each band and each segment. Note: VIR only, no HRV */
      for (i = 0; i < n_bands; i++) {
           for (j = 0; j < 8; j++)
-               read_data_oneseg(bnames[i][j], j, i+1, d);
+               if (read_data_oneseg(bnames[i][j], j, i+1, d)) {
+                    fprintf(stderr, "ERROR: read_data_oneseg()\n");
+                    return -1;
+               }
      }
 
      /* Tidy up */

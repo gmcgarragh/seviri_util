@@ -220,7 +220,6 @@ int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d)
      const ushort masks[] = {0xFFC0, 0x3FF0, 0x0FFC, 0x03FF};
      int x,out,j,jj,k;
 
-
      /* Required to align with NAT format reader.  4 must be subtracted form the
         column as we read 4 pixels simultaneously*/
      int first_line = d->image.dimens.i_line_requested_VIR;
@@ -232,7 +231,12 @@ int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d)
      long int out_d_col,out_d_line;
 
      FILE *fp;
-     fp=fopen(fname,"rb");
+
+     if ((fp = fopen(fname, "rb")) == NULL) {
+          fprintf(stderr, "ERROR: Problem opening file for reading: %s ... %s\n",
+                  fname, strerror(errno));
+          return -1;
+     }
 
      /* Skip header section, don't bother to read */
      fseek(fp,6198,SEEK_SET);
