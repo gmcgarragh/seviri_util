@@ -26,14 +26,14 @@
     /* FOR IDL < 5.3 */
     /* Define the procedures */
     static IDL_SYSFUN_DEF seviri_native_util_procedures[] = {
-        {(IDL_FUN_RET) seviri_preproc, "SEVIRI_PREPROC", 2, 5,
+        {(IDL_FUN_RET) seviri_preproc_dlm, "SEVIRI_PREPROC_DLM", 4, 6,
          IDL_SYSFUN_DEF_F_KEYWORDS},
     };
 #else
     /* FOR IDL >= 5.3 */
     /* Define the procedures */
     static IDL_SYSFUN_DEF2 seviri_native_util_procedures[] = {
-        {(IDL_FUN_RET) seviri_preproc, "SEVIRI_PREPROC", 2, 5,
+        {(IDL_FUN_RET) seviri_preproc_dlm, "SEVIRI_PREPROC_DLM", 4, 6,
          IDL_SYSFUN_DEF_F_KEYWORDS, 0},
     };
 #endif
@@ -309,11 +309,9 @@ void IDL_CDECL seviri_preproc_dlm(int argc, IDL_VPTR argv[], char *argk)
 
 
      /*-------------------------------------------------------------------------
-      *
+      * Cleanup any temporaries due to the keyword and deallocate the remain
+      * temporary arrays.
       *-----------------------------------------------------------------------*/
-
-     /* Cleanup any temporaries due to the keyword and deallocate the remain
-        temporary arrays.*/
      IDL_KWCleanup(IDL_KW_CLEAN);
 
 

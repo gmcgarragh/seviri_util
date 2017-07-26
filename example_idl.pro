@@ -3,7 +3,7 @@
 
 ; Create a seviri_preproc structure with 4 bands: 0.635 and 1.64 reflectance and
 ; 8.70 and 10.80 brightness temperature a sub-image defined by pixel coordinates.
-seviri_preproc, $
+seviri_preproc_dlm, $
      '/home/gregm/data/seviri/MSG1-SEVI-MSG15-0201-NA-20060303121241.nat', $
      [1, 3, 7, 9], $
      ['BRF', 'BRF', 'BT', 'BT'], $
