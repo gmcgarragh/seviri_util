@@ -76,7 +76,7 @@ int snu_line_column_to_lat_lon(uint line, uint column, float *lat, float *lon,
      s_xy = sqrt(s_1 * s_1 + s_2 * s_2);
 
      *lat = atan(1.006803 * s_3 / s_xy);
-     *lon = atan(s_2 / s_1) + lon0;
+     *lon = atan(s_2 / s_1) + lon0*D2R;
 
      *lat *= R2D;
      *lon *= R2D;
@@ -129,7 +129,7 @@ int snu_lat_lon_to_line_column(float lat, float lon, uint *line, uint *column,
           return -1;
      }
 
-     if (lon < -90. || lon > 90.) {
+     if (lon < -180. || lon > 180.) {
           fprintf(stderr, "ERROR: Longitude out of valid range: %e\n", lon);
           return -1;
      }
