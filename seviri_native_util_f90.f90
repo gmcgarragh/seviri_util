@@ -168,7 +168,7 @@ module seviri_native_util
     interface
         integer(c_int) function seviri_read_and_preproc_hrit(filename, timeslot, &
 	    satnum, preproc, n_bands, band_ids, band_units, bounds, line0, line1, &
-            column0, column1, lat0, lat1, lon0, lon1, &
+            column0, column1, lat0, lat1, lon0, lon1, rss, &
             do_not_alloc) bind(C, name = 'seviri_read_and_preproc_hrit')
 
             use iso_c_binding
@@ -188,6 +188,7 @@ module seviri_native_util
             integer(c_int),         intent(in), value :: line0, line1, &
                                                          column0, column1
             real(c_double),         intent(in), value :: lat0, lat1, lon0, lon1
+            integer(c_int),         intent(in), value :: rss
             integer(c_int),         intent(in), value :: do_not_alloc
         end function seviri_read_and_preproc_hrit
     end interface
@@ -387,7 +388,7 @@ end function seviri_read_and_preproc_nat_f90
 
 integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
     preproc_f90, n_bands, band_ids, band_units, bounds, line0, line1, column0, &
-    column1, lat0, lat1, lon0, lon1, do_not_alloc_f90) result(status)
+    column1, lat0, lat1, lon0, lon1, rss_f90, do_not_alloc_f90) result(status)
 
     implicit none
 
@@ -402,9 +403,11 @@ integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
     integer,                    intent(in), value :: line0, line1, &
                                                      column0, column1
     real(8),                    intent(in), value :: lat0, lat1, lon0, lon1
+    logical,                    intent(in), value :: rss_f90
     logical,                    intent(in), value :: do_not_alloc_f90
 
     integer                :: do_not_alloc
+    integer                :: rss
     type(seviri_preproc_t) :: preproc
     integer                :: shape1(2)
     integer                :: shape2(3)
@@ -412,6 +415,10 @@ integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
     do_not_alloc = 0
     if (do_not_alloc_f90) &
         do_not_alloc = 1
+
+    rss = 0
+    if (rss_f90) &
+        rss = 1
 
     if (do_not_alloc_f90) then
         preproc%time  = c_loc(preproc_f90%time(1, 1))
@@ -427,7 +434,7 @@ integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
     status = seviri_read_and_preproc_hrit(trim(filename)//C_NULL_CHAR, &
         trim(timeslot)//C_NULL_CHAR, satnum, preproc, n_bands, band_ids, &
         band_units, bounds, line0, line1, column0, column1, lat0, lat1, &
-        lon0, lon1, do_not_alloc)
+        lon0, lon1, rss, do_not_alloc)
     if (status .ne. 0) then
         write(6, *) 'ERROR: seviri_read_and_preproc_hrit()'
         return
