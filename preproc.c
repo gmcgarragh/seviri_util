@@ -42,7 +42,7 @@ static double TIME_CDS_SHORT_to_jtime(const struct seviri_TIME_CDS_SHORT_data *d
  * returns	: Non-zero on error
  ******************************************************************************/
 int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
-                   const enum seviri_units *band_units, int do_not_alloc)
+                   const enum seviri_units *band_units, int rss, int do_not_alloc)
 {
      uint i;
      uint ii;
@@ -98,6 +98,10 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      double nu3;
 
      double L;
+
+     int nav_off=0;
+
+     if (rss) nav_off=464*5;
 
 
      /*-------------------------------------------------------------------------
@@ -228,7 +232,6 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      Z = d->header.SatelliteStatus.OrbitPolynomial[i].Z[0] +
          d->header.SatelliteStatus.OrbitPolynomial[i].Z[1] * t;
 
-
      /*-------------------------------------------------------------------------
       * Compute latitude and longitude and solar and sensor zenith and azimuth
       * angles.
@@ -244,7 +247,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
           for (j = 0; j < d->image.n_columns; ++j) {
                i_image = i * d->image.n_columns + j;
 
-               snu_line_column_to_lat_lon(ii + 1, d->image.i_column + j + 1,
+               snu_line_column_to_lat_lon(ii + 1 + nav_off, d->image.i_column + j + 1,
                                           &d2->lat[i_image], &d2->lon[i_image],
                                           lon0, &nav_scaling_factors_vir);
 
@@ -435,6 +438,7 @@ int seviri_read_and_preproc_nat(const char *filename,
                                 int do_not_alloc)
 {
      struct seviri_data seviri;
+     int rss=0;
 
      if (seviri_read_nat(filename, &seviri, n_bands, band_ids, bounds,
                      line0, line1, column0, column1, lat0, lat1, lon0, lon1)) {
@@ -442,7 +446,7 @@ int seviri_read_and_preproc_nat(const char *filename,
           return -1;
      }
 
-     if (seviri_preproc(&seviri, preproc, band_units, do_not_alloc)) {
+     if (seviri_preproc(&seviri, preproc, band_units, rss,do_not_alloc)) {
           fprintf(stderr, "ERROR: seviri_preproc()\n");
           return -1;
      }
@@ -487,19 +491,19 @@ int seviri_read_and_preproc_hrit(const char *indir, const char *timeslot,
                                  enum seviri_bounds bounds,
                                  uint line0, uint line1, uint column0, uint column1,
                                  double lat0, double lat1, double lon0, double lon1,
-                                 int do_not_alloc)
+                                 int rss, int do_not_alloc)
 {
      int i, proc_hrv = 0;
 
      struct seviri_data seviri;
 
      if (seviri_read_hrit(indir, timeslot, satnum, &seviri, n_bands, band_ids,
-          bounds, line0, line1, column0, column1, lat0, lat1, lon0, lon1)) {
+          bounds, line0, line1, column0, column1, lat0, lat1, lon0, lon1, rss)) {
           fprintf(stderr, "ERROR: seviri_read()\n");
           return -1;
      }
 
-     if (seviri_preproc(&seviri, preproc, band_units, do_not_alloc)) {
+     if (seviri_preproc(&seviri, preproc, band_units, rss, do_not_alloc)) {
          fprintf(stderr, "ERROR: seviri_preproc()\n");
           return -1;
      }
@@ -556,6 +560,7 @@ int seviri_read_and_preproc(const char *filename,
 {
      char *indir;
      int satnum;
+     int rss;
      char timeslot[13];
 
      if (strstr(filename, ".nat") != NULL) {
@@ -567,14 +572,14 @@ int seviri_read_and_preproc(const char *filename,
           }
      }
      else {
-          if ((indir = extract_path_sat_id_timeslot(filename, &satnum, timeslot)) == NULL) {
+          if ((indir = extract_path_sat_id_timeslot(filename, &satnum, timeslot,&rss)) == NULL) {
                fprintf(stderr, "ERROR: extract_path_sat_id_timeslot()\n");
                return -1;
           }
 
           if (seviri_read_and_preproc_hrit(indir, timeslot, satnum, preproc,
                n_bands, band_ids, band_units, bounds, line0, line1, column0,
-               column1, lat0, lat1, lon0, lon1, do_not_alloc)) {
+               column1, lat0, lat1, lon0, lon1, rss, do_not_alloc)) {
                fprintf(stderr, "ERROR: seviri_read_and_preproc_hrit()\n");
                return -1;
           }
@@ -650,6 +655,7 @@ int seviri_get_dimens(const char *filename, uint *i_line, uint *i_column,
      char *indir;
      int satnum;
      char timeslot[13];
+     int rss;
 
      if (strstr(filename, ".nat") != NULL) {
           if (seviri_get_dimens_nat(filename, i_line, i_column, n_lines,
@@ -660,7 +666,7 @@ int seviri_get_dimens(const char *filename, uint *i_line, uint *i_column,
           }
      }
      else {
-          if ((indir = extract_path_sat_id_timeslot(filename, &satnum, timeslot)) == NULL) {
+          if ((indir = extract_path_sat_id_timeslot(filename, &satnum, timeslot,&rss)) == NULL) {
                fprintf(stderr, "ERROR: extract_path_sat_id_timeslot()\n");
                return -1;
           }

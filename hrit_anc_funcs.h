@@ -20,12 +20,12 @@ extern "C" {
 
 int is_hrv(int band);
 const char *chan_name(int cnum);
-char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *timeslot);
+char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *timeslot, int *rss);
 int assemble_fnames(char ****fnam, const char *indir, const char *timeslot,
-                    int nbands, const uint *bids, int sat);
-int assemble_epiname(char **enam, const char *indir, const char *timeslot, int sat);
-int assemble_proname(char **pnam, const char *indir, const char *timeslot, int sat);
-int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d);
+                    int nbands, const uint *bids, int sat, int rss);
+int assemble_epiname(char **enam, const char *indir, const char *timeslot, int sat, int rss);
+int assemble_proname(char **pnam, const char *indir, const char *timeslot, int sat, int rss);
+int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d, int rss);
 
 
 #ifdef __cplusplus
