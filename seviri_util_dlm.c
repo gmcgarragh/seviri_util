@@ -15,7 +15,7 @@
 #include <string.h>
 
 /* IDL */
-#include "export.h"
+#include <export.h>
 
 /* Local */
 #include "seviri_util.h"
