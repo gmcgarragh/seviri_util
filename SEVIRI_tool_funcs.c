@@ -11,7 +11,7 @@
 **
 *******************************************************************************/
 
-#include "SEVIRI_util.h"
+#include "SEVIRI_tool.h"
 
 /* Sets up the band names. good for telling which band is which, easier than
    channel number */
@@ -24,7 +24,7 @@ const char *bnames[] = {"VIS006", "VIS008", "IR_016", "IR_039", "WV_062",
 void show_usage()
 {
 
-     printf("To run this program please use:\n\t./SEVIRI_util <filename>\n");
+     printf("To run this program please use:\n\t./SEVIRI_tool <filename>\n");
      printf("Where <filename> points to a driver file containing the following lines:\n");
      printf("\tLine 1,  Input data format: HRIT or NAT\n");
      printf("\tLine 2,  Input directory (if HRIT) or input file (if NAT)\n");

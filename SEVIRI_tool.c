@@ -11,7 +11,7 @@
  *   a specific output format, one of HDF5, NetCDF or TIFF.
  *   A text file is used as a driver to describe the read/write.
  *   The name of the driver file should be given as the argument when
- *   running this program. e.g: ./SEVIRI_util driver_file_name
+ *   running this program. e.g: ./SEVIRI_tool driver_file_name
  *
  *   Text file format:
  *   Line 1,  Input data format: HRIT or NAT
@@ -72,7 +72,7 @@
  *
  ******************************************************************************/
 
-#include "SEVIRI_util.h"
+#include "SEVIRI_tool.h"
 
 int main(int argc, char *argv[])
 {

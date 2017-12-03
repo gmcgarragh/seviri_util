@@ -1,8 +1,8 @@
-SEVIRI_util.o: SEVIRI_util.c SEVIRI_util.h seviri_util.h external.h \
+SEVIRI_tool.o: SEVIRI_tool.c SEVIRI_tool.h seviri_util.h external.h \
  preproc.h read_write.h read_write_hrit.h read_write_nat.h
-SEVIRI_util_funcs.o: SEVIRI_util_funcs.c SEVIRI_util.h seviri_util.h \
+SEVIRI_tool_funcs.o: SEVIRI_tool_funcs.c SEVIRI_tool.h seviri_util.h \
  external.h preproc.h read_write.h read_write_hrit.h read_write_nat.h
-SEVIRI_util_prog.o: SEVIRI_util_prog.c SEVIRI_util.h seviri_util.h \
+SEVIRI_tool_prog.o: SEVIRI_tool_prog.c SEVIRI_tool.h seviri_util.h \
  external.h preproc.h read_write.h read_write_hrit.h read_write_nat.h
 example_c.o: example_c.c seviri_util.h external.h preproc.h read_write.h \
  read_write_hrit.h read_write_nat.h

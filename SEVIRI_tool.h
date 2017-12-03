@@ -18,9 +18,9 @@
 #define VERBOSE 1
 
 /* Define some useful types that are using during processing. */
-enum seviri_intypes     {SEVIRI_INFILE_HRIT,     SEVIRI_INFILE_NAT,     N_SEVIRI_INTYPES};
-enum seviri_outtypes     {SEVIRI_OUTFILE_HDF,     SEVIRI_OUTFILE_CDF,     SEVIRI_OUTFILE_TIF,     N_SEVIRI_OUTTYPES};
-enum sat_nums          {SAT_MSG1,          SAT_MSG2,          SAT_MSG3,          SAT_MSG4,     N_SEVIRI_SATNUMS};
+enum seviri_intypes  {SEVIRI_INFILE_HRIT, SEVIRI_INFILE_NAT, N_SEVIRI_INTYPES};
+enum seviri_outtypes {SEVIRI_OUTFILE_HDF, SEVIRI_OUTFILE_CDF, SEVIRI_OUTFILE_TIF, N_SEVIRI_OUTTYPES};
+enum sat_nums        {SAT_MSG1, SAT_MSG2, SAT_MSG3, SAT_MSG4, N_SEVIRI_SATNUMS};
 
 
 extern const char *bnames[];
@@ -70,14 +70,14 @@ struct driver_data {
 };
 
 
-/*   In SEVIRI_util_funcs.c */
+/*   In SEVIRI_tool_funcs.c */
 void show_usage();
 int print_driver(struct driver_data driver);
 int free_driver(struct driver_data *driver);
 int parse_driver(char *fname,struct driver_data *driver);
 int print_preproc_out(struct driver_data, struct seviri_preproc_data preproc, unsigned int i_line, unsigned int i_column);
 
-/*   In SEVIRI_util_prog.c */
+/*   In SEVIRI_tool_prog.c */
 int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc);
 int run_sev_hrit(struct driver_data driver,struct seviri_preproc_data *preproc);
 

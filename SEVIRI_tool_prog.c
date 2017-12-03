@@ -10,7 +10,7 @@
  *
  ******************************************************************************/
 
-#include "SEVIRI_util.h"
+#include "SEVIRI_tool.h"
 #include <tiffio.h>
 #include <netcdf.h>
 #include <hdf5.h>

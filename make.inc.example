@@ -23,9 +23,9 @@ LINKS = -lm
 # OPTIONAL_TARGETS += seviri_util.so
 
 # Uncomment to compile optional utilities that may have external dependencies
-# OPTIONAL_TARGETS += SEVIRI_util
+# OPTIONAL_TARGETS += SEVIRI_tool
 
-# Include and lib directories for non standard locations required by SEVIRI_util
+# Include and lib directories for non standard locations required by SEVIRI_tool
 # INCDIRS          += -I$(HOME)/opt/hdf5/include -I$(HOME)/opt/netcdf/include
 # LIBDIRS          += -L$(HOME)/opt/hdf5/lib     -L$(HOME)/opt/netcdf/lib
 # LINKS            += -lhdf5 -lnetcdf -ltiff -lm
