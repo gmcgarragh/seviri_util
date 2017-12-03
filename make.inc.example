@@ -10,17 +10,17 @@ F90FLAGS = -O2
 LINKS = -lm
 
 # Uncomment to compile the Fortran interface and examples
-# OBJECTS          += seviri_native_util_f90.o
+# OBJECTS          += seviri_util_f90.o
 # OPTIONAL_TARGETS += example_f90
 
 # Uncomment to compile the IDL DLM interface and examples
 # CCFLAGS          += -fPIC
 # INCDIRS          += -I${HOME}/opt/exelis/idl/external
-# OPTIONAL_TARGETS += seviri_native_util_dlm.so
+# OPTIONAL_TARGETS += seviri_util_dlm.so
 
 # Uncomment to compile the Python interface and examples
 # CCFLAGS          += -fPIC
-# OPTIONAL_TARGETS += seviri_native_util.so
+# OPTIONAL_TARGETS += seviri_util.so
 
 # Uncomment to compile optional utilities that may have external dependencies
 # OPTIONAL_TARGETS += SEVIRI_util

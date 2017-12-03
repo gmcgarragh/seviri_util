@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "seviri_native_util.h"
+#include "seviri_util.h"
 
 
 /* Change the variable below (0 or 1) to control if the extra information is printed */

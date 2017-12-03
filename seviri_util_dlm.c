@@ -18,21 +18,21 @@
 #include "export.h"
 
 /* Local */
-#include "seviri_native_util.h"
-#include "seviri_native_util_dlm.h"
+#include "seviri_util.h"
+#include "seviri_util_dlm.h"
 
 
 #ifdef __IDLPRE53__
     /* FOR IDL < 5.3 */
     /* Define the procedures */
-    static IDL_SYSFUN_DEF seviri_native_util_procedures[] = {
+    static IDL_SYSFUN_DEF seviri_util_procedures[] = {
         {(IDL_FUN_RET) seviri_preproc_dlm, "SEVIRI_PREPROC_DLM", 4, 6,
          IDL_SYSFUN_DEF_F_KEYWORDS},
     };
 #else
     /* FOR IDL >= 5.3 */
     /* Define the procedures */
-    static IDL_SYSFUN_DEF2 seviri_native_util_procedures[] = {
+    static IDL_SYSFUN_DEF2 seviri_util_procedures[] = {
         {(IDL_FUN_RET) seviri_preproc_dlm, "SEVIRI_PREPROC_DLM", 4, 6,
          IDL_SYSFUN_DEF_F_KEYWORDS, 0},
     };
@@ -52,29 +52,29 @@ int IDL_Load(void)
 #ifdef __IDLPRE53__
      /* FOR IDL < 5.3 */
      /* Add procedures */
-     if (! IDL_AddSystemRoutine(seviri_native_util_procedures, FALSE,
-                                ARRLEN(seviri_native_util_procedures))) {
+     if (! IDL_AddSystemRoutine(seviri_util_procedures, FALSE,
+                                ARRLEN(seviri_util_procedures))) {
           return IDL_FALSE;
      }
 
 #else
      /* FOR IDL >= 5.3 */
      /* Add procedures */
-     if (! IDL_SysRtnAdd       (seviri_native_util_procedures, FALSE,
-                                ARRLEN(seviri_native_util_procedures))) {
+     if (! IDL_SysRtnAdd       (seviri_util_procedures, FALSE,
+                                ARRLEN(seviri_util_procedures))) {
           return IDL_FALSE;
      }
 
 #endif
 
      /* Register the error handler */
-     IDL_ExitRegister(seviri_native_util_exit_handler);
+     IDL_ExitRegister(seviri_util_exit_handler);
      return(IDL_TRUE);
 }
 
 
 /* Called when IDL is shutdown */
-void seviri_native_util_exit_handler(void)
+void seviri_util_exit_handler(void)
 {
 /* Nothing special to do in this case */
 }

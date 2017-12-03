@@ -1,5 +1,5 @@
-; Example program calling seviri_native_util to read a native SEVIRI level 1.5
-; image file and preprocess it to obtain several fields.
+; Example program calling seviri_util to read a native SEVIRI level 1.5 image
+; file and preprocess it to obtain several fields.
 
 ; Create a seviri_preproc structure with 4 bands: 0.635 and 1.64 reflectance and
 ; 8.70 and 10.80 brightness temperature a sub-image defined by pixel coordinates.

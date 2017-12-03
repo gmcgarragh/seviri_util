@@ -1,19 +1,19 @@
 #! /usr/bin/env python
 
-# Example program calling seviri_native_util to read a native SEVIRI level 1.5
-# image file and preprocess it to obtain several fields.
+# Example program calling seviri_util to read a native SEVIRI level 1.5 image
+# file and preprocess it to obtain several fields.
 
 
 # Used to to get the filename from argv.
 import sys
 
-# Include the seviri_native_util module.
-import seviri_native_util
+# Include the seviri_util module.
+import seviri_util
 
 # Create a seviri_preproc object with 4 bands: 0.635 and 1.64 reflectance and
 # 8.70 and 10.80 brightness temperature a sub-image defined by pixel coordinates.
 try:
-	util = seviri_native_util.seviri_preproc(sys.argv[1], [1, 3, 7, 9],
+	util = seviri_util.seviri_preproc(sys.argv[1], [1, 3, 7, 9],
                     ['BRF', 'BRF', 'BT', 'BT'], 'line_column', pixel_coords =
                     (1899, 2199, 1700, 2299))
 except seviri_preproc.error:

@@ -1,14 +1,13 @@
 /*
-Example program calling seviri_native_util to read a SEVIRI level 1.5 file in
-either the HRIT or native format image file and preprocess it to obtain several
-fields.
+Example program calling seviri_util to read a SEVIRI level 1.5 file in either
+the HRIT or native format image file and preprocess it to obtain several fields.
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Include the seviri_native_util interface header file. */
-#include "seviri_native_util.h"
+/* Include the seviri_util interface header file. */
+#include "seviri_util.h"
 
 
 int main(int argc, char *argv[])

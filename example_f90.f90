@@ -1,12 +1,12 @@
 
-! Example program calling seviri_native_util to read a native SEVIRI level 1.5
-! image file and preprocess it to obtain several fields.
+! Example program calling seviri_util to read a native SEVIRI level 1.5 image
+! file and preprocess it to obtain several fields.
 
 
 program example_f90
 
-     ! Use the seviri_native_util interface module.
-     use seviri_native_util
+     ! Use the seviri_util interface module.
+     use seviri_util
 
      implicit none
 

@@ -9,11 +9,11 @@
 
 
 !*******************************************************************************
-! Module containing the Fortran interface to seviri_native_util.  Please see the
+! Module containing the Fortran interface to seviri_util.  Please see the
 ! comments in the C code for descriptions of the various routines including
 ! their arguments and return values.
 !*******************************************************************************
-module seviri_native_util
+module seviri_util
 
     use iso_c_binding
 
@@ -555,4 +555,4 @@ integer function seviri_preproc_free_f90(preproc_f90) result(status)
 
 end function seviri_preproc_free_f90
 
-end module seviri_native_util
+end module seviri_util

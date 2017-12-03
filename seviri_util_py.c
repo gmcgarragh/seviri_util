@@ -14,7 +14,7 @@
 
 #include <float.h>
 
-#include "seviri_native_util.h"
+#include "seviri_util.h"
 
 
 struct seviri_preproc_data_py {
@@ -91,7 +91,7 @@ static PyObject *seviri_preproc_new(PyTypeObject *type,
      self = (struct seviri_preproc_data_py *) type->tp_alloc(type, 0);
      if (self == NULL) {
           PyErr_SetString(SEVIRI_PREPROC_Error, "ERROR: error allocating memory "
-                          "for seviri_native_util object");
+                          "for seviri_util object");
           return NULL;
      }
 
@@ -256,7 +256,7 @@ static void seviri_preproc_dealloc(struct seviri_preproc_data_py *self) {
 
      r = seviri_preproc_free(&self->d);
      if (r) {
-          PyErr_SetString(SEVIRI_PREPROC_Error, "ERROR: seviri_native_free()");
+          PyErr_SetString(SEVIRI_PREPROC_Error, "ERROR: seviri_free()");
           return;
      }
 
@@ -300,10 +300,10 @@ static PyMemberDef seviri_preproc_members[] = {
 };
 
 
-static PyTypeObject seviri_native_type = {
+static PyTypeObject seviri_type = {
      PyObject_HEAD_INIT(NULL)
      0,
-     "seviri_native_util.seviri_preproc",
+     "seviri_util.seviri_preproc",
      sizeof(struct seviri_preproc_data_py),
      0,
      (destructor) seviri_preproc_dealloc,
@@ -353,21 +353,21 @@ static PyMethodDef module_methods[] = {
 #endif
 
 
-PyMODINIT_FUNC initseviri_native_util(void) {
+PyMODINIT_FUNC initseviri_util(void) {
      PyObject *module;
 
-     if (PyType_Ready(&seviri_native_type) < 0)
+     if (PyType_Ready(&seviri_type) < 0)
           return;
 
-     module = Py_InitModule3("seviri_native_util", module_methods,
-                             "Module for accessing seviri_native_util");
+     module = Py_InitModule3("seviri_util", module_methods,
+                             "Module for accessing seviri_util");
      if (module == NULL)
           return;
 
      import_array();
 
-     Py_INCREF(&seviri_native_type);
-     PyModule_AddObject(module, "seviri_preproc", (PyObject *) &seviri_native_type);
+     Py_INCREF(&seviri_type);
+     PyModule_AddObject(module, "seviri_preproc", (PyObject *) &seviri_type);
      SEVIRI_PREPROC_Error = PyErr_NewException("seviri_preproc.error", NULL, NULL);
      Py_INCREF(SEVIRI_PREPROC_Error);
      PyModule_AddObject(module, "error", SEVIRI_PREPROC_Error);
