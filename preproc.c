@@ -64,6 +64,8 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
 
      double a;
      double b;
+     double c;
+     double e;
 
      double jtime;
      double jtime2;
@@ -93,7 +95,6 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      double R;
 
      double nu;
-     double nu3;
 
      double L;
 
@@ -374,10 +375,11 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
 */
                nu = bt_nu_c[i_sat][d->image.band_ids[i] - 1];
 
-               nu3 = nu * nu * nu;
-
                a = bt_A[i_sat][d->image.band_ids[i] - 1];
                b = bt_B[i_sat][d->image.band_ids[i] - 1];
+
+               c = c2 * nu;
+               e = nu * nu * nu * c1;
 
                for (j = 0; j < d->image.n_lines; ++j) {
                     for (k = 0; k < d->image.n_columns; ++k) {
@@ -388,7 +390,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                               L = d->image.data_vir[i][i_image] * slope + offset;
 
                               d2->data[i][i_image] =
-                                   (c2 * nu / log(1. + nu3 * c1 / L) - b) / a;
+                                   (c / log(1. + e / L) - b) / a;
                          }
                     }
                }
