@@ -13,12 +13,11 @@ import seviri_util
 # Create a seviri_preproc object with 4 bands: 0.635 and 1.64 reflectance and
 # 8.70 and 10.80 brightness temperature a sub-image defined by pixel coordinates.
 try:
-	util = seviri_util.seviri_preproc(sys.argv[1], [1, 3, 7, 9],
-                    ['BRF', 'BRF', 'BT', 'BT'], 'line_column', pixel_coords =
-                    (1899, 2199, 1700, 2299))
+    util = seviri_util.seviri_preproc(sys.argv[1], [1, 3, 7, 9], ['BRF', 'BRF',
+        'BT', 'BT'], 'line_column', pixel_coords = (1899, 2199, 1700, 2299))
 except seviri_preproc.error:
-	print 'ERROR: seviri_preproc.init()'
-	exit()
+    print 'ERROR: seviri_preproc.init()'
+    exit()
 
 # Print the values for the central pixel.
 i_line   = util.n_lines / 2
