@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *    Copyright (C) 2015-2018 Simon Proud (simon.proud@physics.ox.ac.uk)
+ *    Copyright (C) 2015-2017 Simon Proud (simon.proud@physics.ox.ac.uk)
  *
  *    This source code is licensed under the GNU General Public License (GPL),
  *    Version 3.  See the file COPYING for more details.
@@ -249,13 +249,15 @@ int seviri_get_dimens_hrit(const char *indir, const char *timeslot, int sat,
  * lat1:	Final latitude
  * lon0:	Initial longitude
  * lon1:	Final longitude
+ * rss:	Flag to set rss processing (1=yes, 0=no)
+ * iodc:	Flag to set IODC processing (1=yes, 0=no)
  *
  * returns:	Zero if successful, nonzero if error
  ******************************************************************************/
 int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      struct seviri_data *d, uint n_bands, const uint *band_ids,
-     enum seviri_bounds bounds, uint line0, uint line1, uint column0,
-     uint column1, double lat0, double lat1, double lon0, double lon1, int rss)
+     enum seviri_bounds bounds, uint line0, uint line1, uint column0,uint column1,
+     double lat0, double lat1, double lon0, double lon1, int rss, int iodc)
 {
      long int out,i,j;
      char *proname;
@@ -268,17 +270,17 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
 
      /* Get the names of the prologue, epilogue and data files. */
      /* NOTE: Only supports full disk scanning. RSS unavailable! */
-     out = assemble_proname(&proname, indir, timeslot, sat, rss);
+     out = assemble_proname(&proname, indir, timeslot, sat, rss, iodc);
      if (out != 0) {
           fprintf(stderr, "ERROR: assemble_proname()\n");
           return -1;
      }
-     out = assemble_epiname(&epiname,indir,timeslot, sat, rss);
+     out = assemble_epiname(&epiname,indir,timeslot, sat, rss, iodc);
      if (out != 0) {
           fprintf(stderr, "ERROR: assemble_epiname()\n");
           return -1;
      }
-     out = assemble_fnames(&bnames,indir,timeslot, n_bands, band_ids,sat, rss);
+     out = assemble_fnames(&bnames,indir,timeslot, n_bands, band_ids,sat, rss, iodc);
      if (out != 0) {
           fprintf(stderr, "ERROR: assemble_fnames()\n");
           return -1;

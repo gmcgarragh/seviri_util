@@ -1,6 +1,6 @@
 /******************************************************************************%
  *
- *    Copyright (C) 2014-2018 Greg McGarragh <mcgarragh@atm.ox.ac.uk>
+ *    Copyright (C) 2014-2017 Greg McGarragh <mcgarragh@atm.ox.ac.uk>
  *
  *    This source code is licensed under the GNU General Public License (GPL),
  *    Version 3.  See the file COPYING for more details.
@@ -56,7 +56,7 @@ int seviri_read_and_preproc_hrit(const char *indir,const char *timeslot,const in
                                 enum seviri_bounds bounds,
                                 uint line0, uint line1, uint column0, uint column1,
                                 double lat0, double lat1, double lon0, double lon1,
-                                int rss, int do_not_alloc);
+                                int rss, int iodc, int do_not_alloc);
 int seviri_preproc_free(struct seviri_preproc_data *d);
 int seviri_read_and_preproc(const char *filename,
                             struct seviri_preproc_data *preproc,

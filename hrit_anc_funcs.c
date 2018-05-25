@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *    Copyright (C) 2015-2018 Simon Proud (simon.proud@physics.ox.ac.uk)
+ *    Copyright (C) 2015-2017 Simon Proud (simon.proud@physics.ox.ac.uk)
  *
  *    This source code is licensed under the GNU General Public License (GPL),
  *    Version 3.  See the file COPYING for more details.
@@ -62,7 +62,7 @@ const char *chan_name(int cnum)
 /*******************************************************************************
  *
  ******************************************************************************/
-char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *timeslot, int *rss)
+char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *timeslot, int *rss, int *iodc)
 {
      int startfnam;
      int gopos;
@@ -93,6 +93,16 @@ char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *time
           *rss=0;
      }
 
+     ptr=strstr(filename,"IODC");
+     if (ptr!=NULL)
+     {
+          *iodc=1;
+     }
+     else
+     {
+          *iodc=0;
+     }
+
      return indir;
 }
 
@@ -114,7 +124,7 @@ char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *time
  * returns:	Zero if successful
  ******************************************************************************/
 int assemble_fnames(char ****fnam, const char *indir, const char *timeslot,
-                    int nbands, const uint *bids, int sat, int rss)
+                    int nbands, const uint *bids, int sat, int rss, int iodc)
 {
      int c,totsegs=0, nsegs[nbands];
 
@@ -144,6 +154,11 @@ int assemble_fnames(char ****fnam, const char *indir, const char *timeslot,
                     		sprintf(arr[c][i], "%sH-000-MSG%d__-MSG%d_RSS____-%s___-%.6d___-%s-__",
                     	        indir, sat, sat, band, i+1, timeslot);
                     }
+                    else if (iodc==1)
+                    {
+                    		sprintf(arr[c][i], "%sH-000-MSG%d__-MSG%d_IODC___-%s___-%.6d___-%s-__",
+                    	        indir, sat, sat, band, i+1, timeslot);
+                    }
                     else
                     {
                     		sprintf(arr[c][i], "%sH-000-MSG%d__-MSG%d________-%s___-%.6d___-%s-__",
@@ -171,7 +186,7 @@ int assemble_fnames(char ****fnam, const char *indir, const char *timeslot,
  *
  * returns:     Zero if successful
  ******************************************************************************/
-int assemble_epiname(char **enam, const char *indir, const char *timeslot, int sat, int rss)
+int assemble_epiname(char **enam, const char *indir, const char *timeslot, int sat, int rss, int iodc)
 {
      /* HRIT filename is 61 so use that plus indir len. */
      char *arr = malloc(61+strlen(indir)+1);
@@ -179,14 +194,19 @@ int assemble_epiname(char **enam, const char *indir, const char *timeslot, int s
      band=chan_name(0);
      if (rss==1)
      {
-     sprintf(arr, "%sH-000-MSG%d__-MSG%d_RSS____-%s___-EPI______-%s-__",
+        sprintf(arr, "%sH-000-MSG%d__-MSG%d_RSS____-%s___-EPI______-%s-__",
              indir, sat, sat,  band, timeslot);
      }
-	else
-	{
-     sprintf(arr, "%sH-000-MSG%d__-MSG%d________-%s___-EPI______-%s-__",
+     else if (iodc==1)
+     {
+        sprintf(arr, "%sH-000-MSG%d__-MSG%d_IODC___-%s___-EPI______-%s-__",
+             indir, sat, sat, band, timeslot);
+     }
+	  else
+	  {
+        sprintf(arr, "%sH-000-MSG%d__-MSG%d________-%s___-EPI______-%s-__",
              indir, sat, sat,  band, timeslot);
-	}
+	  }
      *enam=arr;
 
      return 0;
@@ -206,7 +226,7 @@ int assemble_epiname(char **enam, const char *indir, const char *timeslot, int s
  *
  * returns:     Zero if successful
  ******************************************************************************/
-int assemble_proname(char **pnam, const char *indir, const char *timeslot, int sat, int rss)
+int assemble_proname(char **pnam, const char *indir, const char *timeslot, int sat, int rss, int iodc)
 {
      /* HRIT filename is 61 so use that plus indir len. */
      char *arr = malloc(61+strlen(indir)+1);
@@ -214,15 +234,19 @@ int assemble_proname(char **pnam, const char *indir, const char *timeslot, int s
      band=chan_name(0);
      if (rss==1)
      {
-     sprintf(arr, "%sH-000-MSG%d__-MSG%d_RSS____-%s___-PRO______-%s-__",
+        sprintf(arr, "%sH-000-MSG%d__-MSG%d_RSS____-%s___-PRO______-%s-__",
+             indir, sat, sat,  band, timeslot);
+     }
+     else if (iodc==1)
+     {
+        sprintf(arr, "%sH-000-MSG%d__-MSG%d_IODC___-%s___-PRO______-%s-__",
              indir, sat, sat, band, timeslot);
      }
-	else
-	{
-     sprintf(arr, "%sH-000-MSG%d__-MSG%d________-%s___-PRO______-%s-__",
-             indir, sat, sat, band, timeslot);
-	}
-
+	  else
+	  {
+        sprintf(arr, "%sH-000-MSG%d__-MSG%d________-%s___-PRO______-%s-__",
+             indir, sat, sat,  band, timeslot);
+	  }
      *pnam=arr;
 
      return 0;
