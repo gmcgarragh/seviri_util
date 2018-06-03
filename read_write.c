@@ -668,6 +668,29 @@ static int seviri_15HEADER_RadiometricProcessing_Level1_5ImageCalibration_read(
      return 0;
 }
 
+/*------------------------------------------------------------------------------
+ *
+ *----------------------------------------------------------------------------*/
+static int seviri_15HEADER_RadiometricProcessing_MPEFCalFeedback_read(
+          FILE *fp,
+          struct seviri_15HEADER_RadiometricProcessing_MPEFCalFeedback_data *d,
+          struct seviri_auxillary_io_data *aux)
+{
+     if (fxxxx_swap(&d->ImageQualityFlag,  sizeof(uchar), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->ReferenceDataFlag, sizeof(uchar), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->AbsCalMethod,  sizeof(uchar), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->Pad1, sizeof(uchar), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->AbsCalWeightVic, sizeof(float), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->AbsCalWeightXsat, sizeof(float), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->AbsCalCoeff, sizeof(float), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->AbsCalError, sizeof(float), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->GSICSCalCoeff, sizeof(float), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->GSICSCalError, sizeof(float), 1, fp, aux) < 0) E_L_R();
+     if (fxxxx_swap(&d->GSICSOffsetCount, sizeof(float), 1, fp, aux) < 0) E_L_R();
+
+     return 0;
+}
+
 
 
 int seviri_15HEADER_RadiometricProcessing_read(
@@ -688,8 +711,11 @@ int seviri_15HEADER_RadiometricProcessing_read(
           if (seviri_15HEADER_RadiometricProcessing_Level1_5ImageCalibration_read
                    (fp, &d->Level1_5ImageCalibration[i], aux)) E_L_R();
 
-     if (fxxxx_swap(d->dummy,                     sizeof(uchar), 20551, fp, aux) < 20551) E_L_R();
-
+     if (fxxxx_swap(d->dummy1,                     sizeof(uchar), 967, fp, aux) < 967) E_L_R();
+     for (i = 0; i < 12; ++i)
+          if (seviri_15HEADER_RadiometricProcessing_MPEFCalFeedback_read
+                   (fp, &d->MPEFCalFeedback_data[i], aux)) E_L_R();
+     if (fxxxx_swap(d->dummy2,                     sizeof(uchar), 19200, fp, aux) < 19200) E_L_R();
      return 0;
 }
 

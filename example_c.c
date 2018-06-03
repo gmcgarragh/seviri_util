@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
      if (seviri_read_and_preproc(filename, &preproc, n_bands, band_ids,
                                  band_units, SEVIRI_BOUNDS_LINE_COLUMN,
                                  line0, line1, column0, column1,
-                                 0., 0., 0., 0., 0)) {
+                                 0., 0., 0., 0., 0, 0)) {
           fprintf(stderr, "ERROR: seviri_read_and_preproc_main()\n");
           exit(1);
      }

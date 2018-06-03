@@ -67,6 +67,7 @@ struct driver_data {
      /* ancsave contains: time,lat,lon,sza,saa,vza,vaa */
      int               ancsave[7];
      int               compression;
+     int               do_calib;
 };
 
 
@@ -84,6 +85,4 @@ int run_sev_hrit(struct driver_data driver,struct seviri_preproc_data *preproc);
 int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc);
 int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc);
 int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc);
-
-
 

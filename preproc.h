@@ -41,14 +41,14 @@ struct seviri_preproc_data {
 
 
 int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
-                   const enum seviri_units *band_units, int rss, int do_not_alloc);
+                   const enum seviri_units *band_units, int rss, int do_gsics, int do_not_alloc);
 int seviri_read_and_preproc_nat(const char *filename,
                                 struct seviri_preproc_data *preproc,
                                 uint n_bands, const uint *band_ids,
                                 const enum seviri_units *band_units,
                                 enum seviri_bounds bounds, uint line0, uint line1,
                                 uint column0, uint column1, double lat0, double lat1,
-                                double lon0, double lon1, int do_not_alloc);
+                                double lon0, double lon1, int do_gsics, int do_not_alloc);
 int seviri_read_and_preproc_hrit(const char *indir,const char *timeslot,const int satnum,
                                 struct seviri_preproc_data *preproc,
                                 uint n_bands, const uint *band_ids,
@@ -56,7 +56,7 @@ int seviri_read_and_preproc_hrit(const char *indir,const char *timeslot,const in
                                 enum seviri_bounds bounds,
                                 uint line0, uint line1, uint column0, uint column1,
                                 double lat0, double lat1, double lon0, double lon1,
-                                int rss, int iodc, int do_not_alloc);
+                                int rss, int iodc, int do_gsics, int do_not_alloc);
 int seviri_preproc_free(struct seviri_preproc_data *d);
 int seviri_read_and_preproc(const char *filename,
                             struct seviri_preproc_data *preproc,
@@ -65,7 +65,7 @@ int seviri_read_and_preproc(const char *filename,
                             enum seviri_bounds bounds,
                             uint line0, uint line1, uint column0, uint column1,
                             double lat0, double lat1, double lon0, double lon1,
-                            int do_not_alloc);
+                            int do_gsics, int do_not_alloc);
 int seviri_get_dimens(const char *filename, uint *i_line, uint *i_column,
                       uint *n_lines, uint *n_columns, enum seviri_bounds bounds,
                       uint line0, uint line1, uint column0, uint column1,

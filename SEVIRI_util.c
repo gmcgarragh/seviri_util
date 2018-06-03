@@ -40,6 +40,7 @@
  *            List one of these per line to save the appropriate variable
  *            Adding a line with 'compress' to the driver will compress
  *            the output data, saves disk space at expense of read/write time
+ *            calib will apply GSICS calibration coefficients.
  *
  *
  *******************************************************************************
@@ -61,6 +62,7 @@
  *   vza
  *   vaa
  *   compress
+ *   calib
  *
  *   This example will read HRIT data from 12:00 UTC on 3rd March 2006
  *   Will save in the HDF5 file format
@@ -72,7 +74,7 @@
  *
  ******************************************************************************/
 
-#include "SEVIRI_tool.h"
+#include "SEVIRI_util.h"
 
 int main(int argc, char *argv[])
 {

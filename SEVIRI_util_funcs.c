@@ -11,7 +11,7 @@
 **
 *******************************************************************************/
 
-#include "SEVIRI_tool.h"
+#include "SEVIRI_util.h"
 
 /* Sets up the band names. good for telling which band is which, easier than
    channel number */
@@ -124,6 +124,8 @@ int print_driver(struct driver_data driver)
      if (driver.compression!=1 && driver.outfrmt==SEVIRI_OUTFILE_CDF)printf("The output file will not be compressed\n");
      if (driver.compression==1 && driver.outfrmt==SEVIRI_OUTFILE_HDF)printf("The output file will be compressed with shuffle and deflate level 2\n");
      if (driver.compression!=1 && driver.outfrmt==SEVIRI_OUTFILE_HDF)printf("The output file will not be compressed\n");
+     if (driver.do_calib==1)printf("The GSICS calibration coefficients will be applied.\n");
+     if (driver.do_calib!=1)printf("The GSICS calibration coefficients will NOT be applied.\n");
 
      printf("**************************************************************************\n\n");
      return 0;
@@ -336,14 +338,18 @@ int parse_driver(char *fname,struct driver_data *driver)
      for (i=0;i<7;i++) driver->ancsave[i]=0;
      while (fgets(line, 10, fp)) {
           line[strlen(line)-1]='\0';
-          if (strcmp(line,"time")==0)     driver->ancsave[0]=1;
-          if (strcmp(line,"compress")==0) driver->compression=1;
+          if (strcmp(line,"time")==0)    driver->ancsave[0]=1;
+          if (strcmp(line,"compress")==0)driver->compression=1;
           if (strcmp(line,"lat")==0)     driver->ancsave[1]=1;
           if (strcmp(line,"lon")==0)     driver->ancsave[2]=1;
           if (strcmp(line,"sza")==0)     driver->ancsave[3]=1;
           if (strcmp(line,"saa")==0)     driver->ancsave[4]=1;
           if (strcmp(line,"vza")==0)     driver->ancsave[5]=1;
           if (strcmp(line,"vaa")==0)     driver->ancsave[6]=1;
+          if (strcmp(line,"calib")==0)
+             driver->do_calib=1;
+          else
+             driver->do_calib=0;
      }
      fclose(fp);
 

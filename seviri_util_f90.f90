@@ -144,7 +144,7 @@ module seviri_util
     interface
         integer(c_int) function seviri_read_and_preproc_nat(filename, preproc, &
             n_bands, band_ids, band_units, bounds, line0, line1, column0, column1, &
-            lat0, lat1, lon0, lon1, do_not_alloc) bind(C, name = 'seviri_read_and_preproc_nat')
+            lat0, lat1, lon0, lon1, do_calib, do_not_alloc) bind(C, name = 'seviri_read_and_preproc_nat')
 
             use iso_c_binding
 
@@ -161,6 +161,7 @@ module seviri_util
             integer(c_int),         intent(in), value :: line0, line1, &
                                                         column0, column1
             real(c_double),         intent(in), value :: lat0, lat1, lon0, lon1
+            integer(c_int),         intent(in), value :: do_calib
             integer(c_int),         intent(in), value :: do_not_alloc
         end function seviri_read_and_preproc_nat
     end interface
@@ -169,7 +170,7 @@ module seviri_util
         integer(c_int) function seviri_read_and_preproc_hrit(filename, timeslot, &
 	    satnum, preproc, n_bands, band_ids, band_units, bounds, line0, line1, &
             column0, column1, lat0, lat1, lon0, lon1, rss, &
-            do_not_alloc) bind(C, name = 'seviri_read_and_preproc_hrit')
+            do_calib, do_not_alloc) bind(C, name = 'seviri_read_and_preproc_hrit')
 
             use iso_c_binding
 
@@ -189,6 +190,7 @@ module seviri_util
                                                          column0, column1
             real(c_double),         intent(in), value :: lat0, lat1, lon0, lon1
             integer(c_int),         intent(in), value :: rss
+            integer(c_int),         intent(in), value :: do_calib
             integer(c_int),         intent(in), value :: do_not_alloc
         end function seviri_read_and_preproc_hrit
     end interface
@@ -196,7 +198,7 @@ module seviri_util
     interface
         integer(c_int) function seviri_read_and_preproc(filename, preproc, &
             n_bands, band_ids, band_units, bounds, line0, line1, column0, column1, &
-            lat0, lat1, lon0, lon1, do_not_alloc) bind(C, name = 'seviri_read_and_preproc')
+            lat0, lat1, lon0, lon1, do_calib, do_not_alloc) bind(C, name = 'seviri_read_and_preproc')
 
             use iso_c_binding
 
@@ -213,6 +215,7 @@ module seviri_util
             integer(c_int),         intent(in), value :: line0, line1, &
                                                          column0, column1
             real(c_double),         intent(in), value :: lat0, lat1, lon0, lon1
+            integer(c_int),         intent(in), value :: do_calib
             integer(c_int),         intent(in), value :: do_not_alloc
         end function seviri_read_and_preproc
     end interface
@@ -313,7 +316,7 @@ end function seviri_get_dimens_f90
 
 integer function seviri_read_and_preproc_nat_f90(filename, preproc_f90, n_bands, &
    band_ids, band_units, bounds, line0, line1, column0, column1, lat0, lat1, &
-    lon0, lon1, do_not_alloc_f90) result(status)
+    lon0, lon1, do_calib_f90, do_not_alloc_f90) result(status)
 
     implicit none
 
@@ -326,9 +329,11 @@ integer function seviri_read_and_preproc_nat_f90(filename, preproc_f90, n_bands,
     integer,                    intent(in), value :: line0, line1, &
                                                      column0, column1
     real(8),                    intent(in), value :: lat0, lat1, lon0, lon1
+    logical,                    intent(in), value :: do_calib_f90
     logical,                    intent(in), value :: do_not_alloc_f90
 
     integer                :: do_not_alloc
+    integer                :: do_calib
     type(seviri_preproc_t) :: preproc
     integer                :: shape1(2)
     integer                :: shape2(3)
@@ -336,6 +341,10 @@ integer function seviri_read_and_preproc_nat_f90(filename, preproc_f90, n_bands,
     do_not_alloc = 0
     if (do_not_alloc_f90) &
         do_not_alloc = 1
+
+    do_calib = 0
+    if (do_calib_f90) &
+        do_calib = 1
 
     if (do_not_alloc_f90) then
         preproc%time  = c_loc(preproc_f90%time(1, 1))
@@ -350,7 +359,7 @@ integer function seviri_read_and_preproc_nat_f90(filename, preproc_f90, n_bands,
 
     status = seviri_read_and_preproc_nat(trim(filename)//C_NULL_CHAR, preproc, &
         n_bands, band_ids, band_units, bounds, line0, line1, column0, column1, &
-        lat0, lat1, lon0, lon1, do_not_alloc)
+        lat0, lat1, lon0, lon1, do_calib, do_not_alloc)
     if (status .ne. 0) then
         write(6, *) 'ERROR: seviri_read_and_preproc_nat()'
         return
@@ -388,7 +397,7 @@ end function seviri_read_and_preproc_nat_f90
 
 integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
     preproc_f90, n_bands, band_ids, band_units, bounds, line0, line1, column0, &
-    column1, lat0, lat1, lon0, lon1, rss_f90, do_not_alloc_f90) result(status)
+    column1, lat0, lat1, lon0, lon1, rss_f90, do_calib_f90, do_not_alloc_f90) result(status)
 
     implicit none
 
@@ -404,10 +413,12 @@ integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
                                                      column0, column1
     real(8),                    intent(in), value :: lat0, lat1, lon0, lon1
     logical,                    intent(in), value :: rss_f90
+    logical,                    intent(in), value :: do_calib_f90
     logical,                    intent(in), value :: do_not_alloc_f90
 
     integer                :: do_not_alloc
     integer                :: rss
+    integer                :: do_calib
     type(seviri_preproc_t) :: preproc
     integer                :: shape1(2)
     integer                :: shape2(3)
@@ -419,6 +430,10 @@ integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
     rss = 0
     if (rss_f90) &
         rss = 1
+
+    do_calib = 0
+    if (do_calib_f90) &
+        do_calib = 1
 
     if (do_not_alloc_f90) then
         preproc%time  = c_loc(preproc_f90%time(1, 1))
@@ -434,7 +449,7 @@ integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
     status = seviri_read_and_preproc_hrit(trim(filename)//C_NULL_CHAR, &
         trim(timeslot)//C_NULL_CHAR, satnum, preproc, n_bands, band_ids, &
         band_units, bounds, line0, line1, column0, column1, lat0, lat1, &
-        lon0, lon1, rss, do_not_alloc)
+        lon0, lon1, rss, do_calib, do_not_alloc)
     if (status .ne. 0) then
         write(6, *) 'ERROR: seviri_read_and_preproc_hrit()'
         return
@@ -472,7 +487,7 @@ end function seviri_read_and_preproc_hrit_f90
 
 integer function seviri_read_and_preproc_f90(filename, preproc_f90, n_bands, &
     band_ids, band_units, bounds, line0, line1, column0, column1, lat0, lat1, &
-    lon0, lon1, do_not_alloc_f90) result(status)
+    lon0, lon1, do_calib_f90, do_not_alloc_f90) result(status)
 
     implicit none
 
@@ -485,9 +500,11 @@ integer function seviri_read_and_preproc_f90(filename, preproc_f90, n_bands, &
     integer,                    intent(in), value :: line0, line1, &
                                                      column0, column1
     real(8),                    intent(in), value :: lat0, lat1, lon0, lon1
+    logical,                    intent(in), value :: do_calib_f90
     logical,                    intent(in), value :: do_not_alloc_f90
 
     integer                :: do_not_alloc
+    integer                :: do_calib
     type(seviri_preproc_t) :: preproc
     integer                :: shape1(2)
     integer                :: shape2(3)
@@ -495,6 +512,10 @@ integer function seviri_read_and_preproc_f90(filename, preproc_f90, n_bands, &
     do_not_alloc = 0
     if (do_not_alloc_f90) &
         do_not_alloc = 1
+
+    do_calib = 0
+    if (do_calib_f90) &
+        do_calib = 1
 
     if (do_not_alloc_f90) then
         preproc%time  = c_loc(preproc_f90%time(1, 1))
@@ -509,7 +530,7 @@ integer function seviri_read_and_preproc_f90(filename, preproc_f90, n_bands, &
 
     status = seviri_read_and_preproc(trim(filename)//C_NULL_CHAR, preproc, &
         n_bands, band_ids, band_units, bounds, line0, line1, column0, column1, &
-        lat0, lat1, lon0, lon1, do_not_alloc)
+        lat0, lat1, lon0, lon1, do_calib, do_not_alloc)
     if (status .ne. 0) then
         write(6, *) 'ERROR: seviri_read_and_preproc()'
         return

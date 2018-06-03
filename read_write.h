@@ -459,6 +459,21 @@ struct seviri_15HEADER_RadiometricProcessing_Level1_5ImageCalibration_data {
 };
 
 
+struct seviri_15HEADER_RadiometricProcessing_MPEFCalFeedback_data {
+     char  ImageQualityFlag;
+     char  ReferenceDataFlag;
+     char  AbsCalMethod;
+     char  Pad1;
+     float AbsCalWeightVic;
+     float AbsCalWeightXsat;
+     float AbsCalCoeff;
+     float AbsCalError;
+     float GSICSCalCoeff;
+     float GSICSCalError;
+     float GSICSOffsetCount;
+};
+
+
 struct seviri_15HEADER_RadiometricProcessing_data {
      /* RPSummary */
      uchar RadianceLinearization[12];
@@ -472,7 +487,13 @@ struct seviri_15HEADER_RadiometricProcessing_data {
      struct seviri_15HEADER_RadiometricProcessing_Level1_5ImageCalibration_data
           Level1_5ImageCalibration[12];
 
-     uchar dummy[20551];
+     uchar dummy1[967];
+
+     struct seviri_15HEADER_RadiometricProcessing_MPEFCalFeedback_data
+          MPEFCalFeedback_data[12];
+
+     uchar dummy2[19200];
+
 };
 
 

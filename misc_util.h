@@ -16,7 +16,8 @@
 extern "C" {
 #endif
 
-
+float snu_get_ar_val(float ac, float bc, float g0);
+float snu_get_br_val(float bc, float gs);
 int snu_is_little_endian(void);
 double snu_rint(double x);
 void snu_init_array_uc(uchar *a, uint n, uchar x);

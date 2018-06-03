@@ -10,7 +10,7 @@
  *
  ******************************************************************************/
 
-#include "SEVIRI_tool.h"
+#include "SEVIRI_util.h"
 #include <tiffio.h>
 #include <netcdf.h>
 #include <hdf5.h>
@@ -28,7 +28,7 @@
 int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc)
 {
      if (seviri_read_and_preproc(driver.infdir,preproc, driver.sev_bands.nbands, driver.sev_bands.band_ids,
-     driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., 0., 0))
+     driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., 0., driver.do_calib, 0))
      {E_L_R();}
      return 0;
 }
@@ -46,7 +46,7 @@ int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc
 int run_sev_hrit(struct driver_data driver,struct seviri_preproc_data *preproc)
 {
      if (seviri_read_and_preproc_hrit(driver.infdir,driver.timeslot,driver.satnum, preproc, driver.sev_bands.nbands, driver.sev_bands.band_ids,
-     driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., 0., 0, 0))
+     driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., 0., 0, 0, driver.do_calib, 0))
      {E_L_R();}
      return 0;
 }
