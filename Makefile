@@ -34,8 +34,8 @@ seviri_util.so: seviri_util_py.o libseviri_util.a
 seviri_util_dlm.so: seviri_util_dlm.o libseviri_util.a
 	$(CC) $(CCFLAGS) -shared -o seviri_util_dlm.so seviri_util_dlm.o libseviri_util.a
 
-SEVIRI_tool: SEVIRI_tool.o SEVIRI_tool_funcs.o SEVIRI_tool_prog.o libseviri_util.a
-	$(CC) $(CCFLAGS) -o SEVIRI_tool SEVIRI_tool_funcs.o SEVIRI_tool_prog.o SEVIRI_tool.o \
+SEVIRI_util: SEVIRI_util.o SEVIRI_util_funcs.o SEVIRI_util_prog.o libseviri_util.a
+	$(CC) $(CCFLAGS) -o SEVIRI_util SEVIRI_util_funcs.o SEVIRI_util_prog.o SEVIRI_util.o \
         libseviri_util.a $(INCDIRS) $(LIBDIRS) $(LINKS)
 
 example_c: example_c.c libseviri_util.a
