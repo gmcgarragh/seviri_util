@@ -18,29 +18,13 @@
 #define VERBOSE 1
 
 /* Define some useful types that are using during processing. */
-enum seviri_intypes  {SEVIRI_INFILE_HRIT, SEVIRI_INFILE_NAT, N_SEVIRI_INTYPES};
-enum seviri_outtypes {SEVIRI_OUTFILE_HDF, SEVIRI_OUTFILE_CDF, SEVIRI_OUTFILE_TIF, N_SEVIRI_OUTTYPES};
-enum sat_nums        {SAT_MSG1, SAT_MSG2, SAT_MSG3, SAT_MSG4, N_SEVIRI_SATNUMS};
+enum seviri_intypes {SEVIRI_INFILE_HRIT, SEVIRI_INFILE_NAT, N_SEVIRI_INTYPES};
+enum seviri_outtypes{SEVIRI_OUTFILE_HDF, SEVIRI_OUTFILE_CDF, SEVIRI_OUTFILE_TIF, N_SEVIRI_OUTTYPES};
+enum sat_nums       {SAT_MSG1, SAT_MSG2, SAT_MSG3, SAT_MSG4, N_SEVIRI_SATNUMS};
 
 
 extern const char *bnames[];
 
-
-/*******************************************************************************
- * Error, location and return macros.
- ******************************************************************************/
-#define E_L_R() do { \
-     fprintf(stderr, "ERROR: file = %s, line = %d, function = %s()\n", \
-             __FILE__, __LINE__, __func__); \
-     return -1; \
-} while (0)
-
-
-#define E_L_R_MSG(MSG) do { \
-     fprintf(stderr, "ERROR: file = %s, line = %d, function = %s(): %s\n", \
-             __FILE__, __LINE__, __func__, MSG); \
-     return -1; \
-} while (0)
 
 /*  Struct that contains the band information, both number of bands and which to process */
 struct bands_st {
