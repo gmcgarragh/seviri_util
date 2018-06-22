@@ -13,20 +13,6 @@
 
 
 /*******************************************************************************
- * SIZE constants useful for skipping around.
- ******************************************************************************/
-/*
-#define UMARF_HEADER_SIZE	5114
-*/
-#define PACKET_HEADER_SIZE	38
-#define LINE_SIDE_INFO_SIZE	27
-/*
-#define _15HEADER_SIZE		445248
-#define _15TRAILER_SIZE		380325
-*/
-
-
-/*******************************************************************************
  * Allocate and free data required by the low level read and write functions.
  ******************************************************************************/
 int seviri_auxillary_alloc(struct seviri_auxillary_io_data *d)

@@ -15,20 +15,6 @@
 
 
 /*******************************************************************************
- * SIZE constants useful for skipping around.
- ******************************************************************************/
-/*
-#define UMARF_HEADER_SIZE	5114
-*/
-#define PACKET_HEADER_SIZE	38
-#define LINE_SIDE_INFO_SIZE	27
-/*
-#define _15HEADER_SIZE		445248
-#define _15TRAILER_SIZE		380325
-*/
-
-
-/*******************************************************************************
  * Read a VIS/IR line record structure - the actual image data.
  *
  * fp		: Pointer to the image data file set to the beginning of the
