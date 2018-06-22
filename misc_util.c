@@ -11,25 +11,6 @@
 #include "internal.h"
 #include "misc_util.h"
 
-/*******************************************************************************
- * Calculate and return the GSICS calibration offset from the values contained
- * in the Level 1.5 header file
- ******************************************************************************/
-double snu_get_ar_val(double ac, double bc, double g0)
-{
-	return (ac - (bc * g0));
-}
-
-
-/*******************************************************************************
- * Calculate and return the GSICS calibration slope from the values contained
- * in the Level 1.5 header file
- ******************************************************************************/
-double snu_get_br_val(double bc, double gs)
-{
-	return (bc / gs);
-}
-
 
 /*******************************************************************************
  * Return non-zero if the current machine is Little-endian and zero if it is
@@ -94,6 +75,28 @@ void snu_init_array_d(double *a, uint n, double x)
 
      for (i = 0; i < n; ++i)
           a[i] = x;
+}
+
+
+
+/*******************************************************************************
+ * Calculate and return the GSICS calibration offset from the values contained
+ * in the Level 1.5 header file
+ ******************************************************************************/
+double snu_get_ar_val(double ac, double bc, double g0)
+{
+     return (ac - (bc * g0));
+}
+
+
+
+/*******************************************************************************
+ * Calculate and return the GSICS calibration slope from the values contained
+ * in the Level 1.5 header file
+ ******************************************************************************/
+double snu_get_br_val(double bc, double gs)
+{
+     return (bc / gs);
 }
 
 

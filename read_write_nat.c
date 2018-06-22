@@ -236,8 +236,8 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
 
 
      /* Considerable effort is gone into dealing with starting columns and
-        ending columns that are not aligned on 4 pixel/5 byte boundaries.
-        Below are quantities used for this effort. */
+        ending columns that are not aligned on 4 pixel/5 byte boundaries. Below
+        are quantities used for this effort. */
 
      /* Quantities for approach 1 which simply checks every pixel to see if they
         are in the requested image area.  Simple but has an if statement within
@@ -285,7 +285,7 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
                     return -1;
                }
 
-               if (seviri_LineSideInfo_read(fp, &image->LineSideInfo[i_band][i], aux)) {
+               if (seviri_LineSideInfo_read(fp, &image->LineSideInfo  [i_band][i], aux)) {
                     fprintf(stderr, "ERROR: seviri_LineSideInfo_read()\n");
                     return -1;
                }
@@ -412,7 +412,7 @@ static int seviri_image_write(FILE *fp, const struct seviri_image_data *image,
                     return -1;
                }
 
-               if (seviri_LineSideInfo_read(fp, &image->LineSideInfo[i_band][i], aux)) {
+               if (seviri_LineSideInfo_read(fp, &image->LineSideInfo  [i_band][i], aux)) {
                     fprintf(stderr, "ERROR: seviri_LineSideInfo_read()\n");
                     return -1;
                }

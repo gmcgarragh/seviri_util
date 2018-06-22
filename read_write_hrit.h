@@ -25,7 +25,8 @@ int seviri_get_dimens_hrit(const char *indir, const char *timeslot, int sat,
 int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      struct seviri_data *d, uint n_bands, const uint *band_ids,
      enum seviri_bounds bounds, uint line0, uint line1, uint column0,
-     uint column1, double lat0, double lat1, double lon0, double lon1, int rss, int iodc);
+     uint column1, double lat0, double lat1, double lon0, double lon1, int rss,
+     int iodc);
 
 
 #ifdef __cplusplus

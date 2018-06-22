@@ -152,16 +152,20 @@ void IDL_CDECL seviri_preproc_dlm(int argc, IDL_VPTR argv[], char *argk)
 
      static int pixel_coords_flag;
      static short pixel_coords_data[4];
-     static IDL_KW_ARR_DESC pixel_coords_desc   = {(char *) pixel_coords_data,   4, 4, 0};
+     static IDL_KW_ARR_DESC pixel_coords_desc   = {(char *) pixel_coords_data,
+                                                   4, 4, 0};
 
      static int lat_lon_coords_flag;
      static float lat_lon_coords_data[4];
-     static IDL_KW_ARR_DESC lat_lon_coords_desc = {(char *) lat_lon_coords_data, 4, 4, 0};
+     static IDL_KW_ARR_DESC lat_lon_coords_desc = {(char *) lat_lon_coords_data,
+                                                   4, 4, 0};
 
      static IDL_KW_PAR kw_pars[] = {
           IDL_KW_FAST_SCAN,
-          {"LAT_LON_COORDS", IDL_TYP_FLOAT, 1, IDL_KW_ARRAY, &lat_lon_coords_flag, IDL_CHARA(lat_lon_coords_desc)},
-          {"PIXEL_COORDS",   IDL_TYP_INT,   1, IDL_KW_ARRAY, &pixel_coords_flag,   IDL_CHARA(pixel_coords_desc)},
+          {"LAT_LON_COORDS", IDL_TYP_FLOAT, 1, IDL_KW_ARRAY, &lat_lon_coords_flag,
+           IDL_CHARA(lat_lon_coords_desc)},
+          {"PIXEL_COORDS",   IDL_TYP_INT,   1, IDL_KW_ARRAY, &pixel_coords_flag,
+           IDL_CHARA(pixel_coords_desc)},
           {NULL}
      };
 
@@ -179,41 +183,55 @@ void IDL_CDECL seviri_preproc_dlm(int argc, IDL_VPTR argv[], char *argk)
      IDL_ENSURE_ARRAY (argv[1]);
      n_bands = argv[1]->value.arr->n_elts;
      if (n_bands > SEVIRI_N_BANDS)
-          IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP, "ERROR: to many band Ids given, max = SEVIRI_N_BANDS");
+          IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP,
+               "ERROR: to many band Ids given, max = SEVIRI_N_BANDS");
      if (argv[1]->type != IDL_TYP_INT)
-          IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP, "ERROR: band Ids must be an array of ints");
+          IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP,
+               "ERROR: band Ids must be an array of ints");
      for (i = 0; i < n_bands; ++i)
           band_ids[i] = ((short *) argv[1]->value.arr->data)[i];
 
      IDL_ENSURE_ARRAY (argv[2]);
      if (n_bands != argv[2]->value.arr->n_elts)
-          IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP, "ERROR: number of band ids and number of units do not match");
+          IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP,
+               "ERROR: number of band ids and number of units do not match");
      if (argv[2]->type != IDL_TYP_STRING)
-          IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP, "ERROR: band units must be an array of strings");
+          IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP,
+               "ERROR: band units must be an array of strings");
      for (i = 0; i < n_bands; ++i)
-          unit_string_to_enum(((IDL_STRING *) argv[2]->value.arr->data)[i].s, &band_units[i]);
+          unit_string_to_enum(((IDL_STRING *) argv[2]->value.arr->data)[i].s,
+                              &band_units[i]);
 
      IDL_ENSURE_STRING(argv[3])
      bounds_string_to_enum(IDL_VarGetString(argv[3]), &bounds);
 
 
      if (pixel_coords_flag && lat_lon_coords_flag)
-          IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP, "ERROR: cannot use both the \"pixel_coords\" and \"lat_lon_coords\" keywords");
+          IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP,
+               "ERROR: cannot use both the \"pixel_coords\" and "
+               "\"lat_lon_coords\" keywords");
 
      if (bounds == SEVIRI_BOUNDS_FULL_DISK ||
          bounds == SEVIRI_BOUNDS_ACTUAL_IMAGE) {
           if (pixel_coords_flag || lat_lon_coords_flag)
-               IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP, "ERROR: cannot use the \"pixel_coords\" or \"lat_lon_coords\" keywords with \"full_disk\" or \"actual_image\" bounds");
+               IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP,
+                    "ERROR: cannot use the \"pixel_coords\" or "
+                    "\"lat_lon_coords\" keywords with \"full_disk\" or "
+                    "\"actual_image\" bounds");
      }
      else if (bounds == SEVIRI_BOUNDS_LINE_COLUMN) {
           if (! pixel_coords_flag)
-               IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP, "ERROR: must use the \"pixel_coords\" keyword with \"line_column\" bounds");
+               IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP,
+                    "ERROR: must use the \"pixel_coords\" keyword with "
+                    "\"line_column\" bounds");
           for (i = 0; i < 4; ++i)
                pixel_coords[i] = pixel_coords_data[i];
      }
      else if (bounds == SEVIRI_BOUNDS_LAT_LON) {
           if (! lat_lon_coords_flag)
-               IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP, "ERROR: must use the \"lat_lon_coords\" keyword with \"lat_lon\" bounds");
+               IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP,
+                    "ERROR: must use the \"lat_lon_coords\" keyword with "
+                    "\"lat_lon\" bounds");
           for (i = 0; i < 4; ++i)
                lat_lon_coords[i] = lat_lon_coords_data[i];
      }
@@ -224,8 +242,12 @@ void IDL_CDECL seviri_preproc_dlm(int argc, IDL_VPTR argv[], char *argk)
       *-----------------------------------------------------------------------*/
      struct seviri_preproc_data preproc;
 
-     if (seviri_read_and_preproc(filename, &preproc, n_bands, band_ids, band_units, bounds, pixel_coords[0], pixel_coords[1], pixel_coords[2], pixel_coords[3], lat_lon_coords[0], lat_lon_coords[1], lat_lon_coords[2], lat_lon_coords[3], 0))
-          IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP, "ERROR: seviri_read_and_preproc()");
+     if (seviri_read_and_preproc(filename, &preproc, n_bands, band_ids,
+          band_units, bounds, pixel_coords[0], pixel_coords[1], pixel_coords[2],
+          pixel_coords[3], lat_lon_coords[0], lat_lon_coords[1], lat_lon_coords[2],
+          lat_lon_coords[3], 0))
+          IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP,
+               "ERROR: seviri_read_and_preproc()");
 
 
      /*-------------------------------------------------------------------------
@@ -301,7 +323,8 @@ void IDL_CDECL seviri_preproc_dlm(int argc, IDL_VPTR argv[], char *argk)
      s_data.n_lines   = 2;
      s_data.n_columns = 4;
 
-     s_data.time = malloc(preproc.n_bands * preproc.n_lines * preproc.n_columns * sizeof(float));
+     s_data.time = malloc(preproc.n_bands * preproc.n_lines * preproc.n_columns *
+                          sizeof(float));
 
      v = IDL_ImportArray(1, &one, IDL_TYP_STRUCT, (UCHAR *) &s_data, 0, s);
 

@@ -62,7 +62,8 @@ const char *chan_name(int cnum)
 /*******************************************************************************
  *
  ******************************************************************************/
-char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *timeslot, int *rss, int *iodc)
+char *extract_path_sat_id_timeslot(const char *filename, int *sat_id,
+                                   char *timeslot, int *rss, int *iodc)
 {
      int startfnam;
      int gopos;
@@ -85,23 +86,15 @@ char *extract_path_sat_id_timeslot(const char *filename, int *sat_id, char *time
 
      ptr=strstr(filename,"RSS");
      if (ptr!=NULL)
-     {
           *rss=1;
-     }
      else
-     {
           *rss=0;
-     }
 
      ptr=strstr(filename,"IODC");
      if (ptr!=NULL)
-     {
           *iodc=1;
-     }
      else
-     {
           *iodc=0;
-     }
 
      return indir;
 }
@@ -130,8 +123,7 @@ int assemble_fnames(char ****fnam, const char *indir, const char *timeslot,
 
      char ***arr = malloc(sizeof(char **) * nbands);
 
-     for (c=0;c<nbands;c++)
-     {
+     for (c=0;c<nbands;c++) {
           if (bids[c]==12)
                nsegs[c]=24;
           else nsegs[c]=8;
@@ -150,20 +142,17 @@ int assemble_fnames(char ****fnam, const char *indir, const char *timeslot,
                     /* HRIT filename is 61 so use that plus indir len */
                     arr[c][i] = malloc(61+strlen(indir)+1);
                     if (rss==1)
-                    {
-                    		sprintf(arr[c][i], "%sH-000-MSG%d__-MSG%d_RSS____-%s___-%.6d___-%s-__",
-                    	        indir, sat, sat, band, i+1, timeslot);
-                    }
+                         sprintf(arr[c][i],
+                             "%sH-000-MSG%d__-MSG%d_RSS____-%s___-%.6d___-%s-__",
+                             indir, sat, sat, band, i+1, timeslot);
                     else if (iodc==1)
-                    {
-                    		sprintf(arr[c][i], "%sH-000-MSG%d__-MSG%d_IODC___-%s___-%.6d___-%s-__",
-                    	        indir, sat, sat, band, i+1, timeslot);
-                    }
+                         sprintf(arr[c][i],
+                             "%sH-000-MSG%d__-MSG%d_IODC___-%s___-%.6d___-%s-__",
+                             indir, sat, sat, band, i+1, timeslot);
                     else
-                    {
-                    		sprintf(arr[c][i], "%sH-000-MSG%d__-MSG%d________-%s___-%.6d___-%s-__",
-                    	        indir, sat, sat, band, i+1, timeslot);
-                    }
+                         sprintf(arr[c][i],
+                             "%sH-000-MSG%d__-MSG%d________-%s___-%.6d___-%s-__",
+                             indir, sat, sat, band, i+1, timeslot);
                }
           }
      }
@@ -186,27 +175,22 @@ int assemble_fnames(char ****fnam, const char *indir, const char *timeslot,
  *
  * returns:     Zero if successful
  ******************************************************************************/
-int assemble_epiname(char **enam, const char *indir, const char *timeslot, int sat, int rss, int iodc)
+int assemble_epiname(char **enam, const char *indir, const char *timeslot,
+                     int sat, int rss, int iodc)
 {
      /* HRIT filename is 61 so use that plus indir len. */
      char *arr = malloc(61+strlen(indir)+1);
      const char *band;
      band=chan_name(0);
      if (rss==1)
-     {
-        sprintf(arr, "%sH-000-MSG%d__-MSG%d_RSS____-%s___-EPI______-%s-__",
-             indir, sat, sat,  band, timeslot);
-     }
+          sprintf(arr, "%sH-000-MSG%d__-MSG%d_RSS____-%s___-EPI______-%s-__",
+                  indir, sat, sat,  band, timeslot);
      else if (iodc==1)
-     {
-        sprintf(arr, "%sH-000-MSG%d__-MSG%d_IODC___-%s___-EPI______-%s-__",
-             indir, sat, sat, band, timeslot);
-     }
-	  else
-	  {
-        sprintf(arr, "%sH-000-MSG%d__-MSG%d________-%s___-EPI______-%s-__",
-             indir, sat, sat,  band, timeslot);
-	  }
+          sprintf(arr, "%sH-000-MSG%d__-MSG%d_IODC___-%s___-EPI______-%s-__",
+                  indir, sat, sat, band, timeslot);
+     else
+          sprintf(arr, "%sH-000-MSG%d__-MSG%d________-%s___-EPI______-%s-__",
+                  indir, sat, sat,  band, timeslot);
      *enam=arr;
 
      return 0;
@@ -226,27 +210,22 @@ int assemble_epiname(char **enam, const char *indir, const char *timeslot, int s
  *
  * returns:     Zero if successful
  ******************************************************************************/
-int assemble_proname(char **pnam, const char *indir, const char *timeslot, int sat, int rss, int iodc)
+int assemble_proname(char **pnam, const char *indir, const char *timeslot,
+                     int sat, int rss, int iodc)
 {
      /* HRIT filename is 61 so use that plus indir len. */
      char *arr = malloc(61+strlen(indir)+1);
      const char *band;
      band=chan_name(0);
      if (rss==1)
-     {
-        sprintf(arr, "%sH-000-MSG%d__-MSG%d_RSS____-%s___-PRO______-%s-__",
-             indir, sat, sat,  band, timeslot);
-     }
+          sprintf(arr, "%sH-000-MSG%d__-MSG%d_RSS____-%s___-PRO______-%s-__",
+                  indir, sat, sat,  band, timeslot);
      else if (iodc==1)
-     {
-        sprintf(arr, "%sH-000-MSG%d__-MSG%d_IODC___-%s___-PRO______-%s-__",
-             indir, sat, sat, band, timeslot);
-     }
-	  else
-	  {
-        sprintf(arr, "%sH-000-MSG%d__-MSG%d________-%s___-PRO______-%s-__",
-             indir, sat, sat,  band, timeslot);
-	  }
+          sprintf(arr, "%sH-000-MSG%d__-MSG%d_IODC___-%s___-PRO______-%s-__",
+                  indir, sat, sat, band, timeslot);
+     else
+          sprintf(arr, "%sH-000-MSG%d__-MSG%d________-%s___-PRO______-%s-__",
+                  indir, sat, sat,  band, timeslot);
      *pnam=arr;
 
      return 0;
@@ -268,10 +247,10 @@ int assemble_proname(char **pnam, const char *indir, const char *timeslot, int s
  *
  * returns:     Zero if successful
  ******************************************************************************/
-int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d, int rss)
+int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d,
+                     int rss)
 {
-
-	if (rss==1 && segnum<5) return 0;
+     if (rss==1 && segnum<5) return 0;
 
      /* Set up the various data that is required*/
      uchar *data10;
@@ -307,25 +286,19 @@ int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d, i
           /* Each segment if 464 lines, so skip to correct part of image based
              on segnum. */
           if (rss==1)
-          {
-          	offset=(segnum-5)*464;
-          }
+               offset=(segnum-5)*464;
           else
-          {
-          	offset=segnum*464;
-          }
+               offset=segnum*464;
           ushort tmpline[ncols];
 
           data10 = malloc(ncols / 4 * 5 * sizeof(uchar));
 
           /* Loop over all lines in segment */
-          for (x=offset;x<offset+464;x++)
-          {
+          for (x=offset;x<offset+464;x++) {
                out_d_line=(x-first_line)*(last_col-first_col+1);
                /* If we're outside the requested image boundary: move file
                   pointed and skip. */
-               if (x<first_line || x>last_line)
-               {
+               if (x<first_line || x>last_line) {
                     fseek(fp,ncols/4*5,SEEK_CUR);
                     continue;
                }
@@ -342,7 +315,8 @@ int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d, i
 
                          if (j>=first_col && j<=last_col) {
                               out_d_col=j-first_col;
-                              d->image.data_vir[cnum-1][out_d_line+out_d_col]=tmpline[j];
+                              d->image.data_vir[cnum-1][out_d_line+out_d_col] =
+                                   tmpline[j];
                          }
                          j++, jj++;
                     }
@@ -365,7 +339,8 @@ int read_data_oneseg(char *fname, int segnum, int cnum, struct seviri_data *d, i
                     for (k = 0; k < 4; ++k) {
                          temp = *((ushort *) (data10 + jj));
                          SWAP_2(temp, temp);
-                         d->image.data_hrv[(x*ncols*2)+j] = (temp & masks[k]) >> shifts[k];
+                         d->image.data_hrv[(x*ncols*2)+j] =
+                              (temp & masks[k]) >> shifts[k];
                          j--, jj++;
                     }
                     jj++;

@@ -493,7 +493,6 @@ struct seviri_15HEADER_RadiometricProcessing_data {
           MPEFCalFeedback_data[12];
 
      uchar dummy2[19200];
-
 };
 
 

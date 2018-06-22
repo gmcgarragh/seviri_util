@@ -256,8 +256,9 @@ int seviri_get_dimens_hrit(const char *indir, const char *timeslot, int sat,
  ******************************************************************************/
 int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      struct seviri_data *d, uint n_bands, const uint *band_ids,
-     enum seviri_bounds bounds, uint line0, uint line1, uint column0,uint column1,
-     double lat0, double lat1, double lon0, double lon1, int rss, int iodc)
+     enum seviri_bounds bounds, uint line0, uint line1, uint column0,
+     uint column1, double lat0, double lat1, double lon0, double lon1, int rss,
+     int iodc)
 {
      long int out,i,j;
      char *proname;
@@ -280,7 +281,8 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
           fprintf(stderr, "ERROR: assemble_epiname()\n");
           return -1;
      }
-     out = assemble_fnames(&bnames,indir,timeslot, n_bands, band_ids,sat, rss, iodc);
+     out = assemble_fnames(&bnames, indir, timeslot, n_bands, band_ids,sat, rss,
+                           iodc);
      if (out != 0) {
           fprintf(stderr, "ERROR: assemble_fnames()\n");
           return -1;
@@ -344,7 +346,7 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      for (i = 0; i < n_bands; i++) {
           for (j = 0; j < 8; j++)
           {
-          		if (rss==1 && j<5) continue;
+               if (rss==1 && j<5) continue;
                if (read_data_oneseg(bnames[i][j], j, i+1, d,rss)) {
                     fprintf(stderr, "ERROR: read_data_oneseg()\n");
                     return -1;
@@ -357,9 +359,8 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      free(proname);
      free(epiname);
      for (i = 0; i < n_bands; i++) {
-          for (j = 0; j < 8 ; j++)
-          {
-          		if (rss==1 && j<6) continue;
+          for (j = 0; j < 8 ; j++) {
+               if (rss==1 && j<6) continue;
                free(bnames[i][j]);
           }
           free(bnames[i]);

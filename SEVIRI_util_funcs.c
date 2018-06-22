@@ -23,7 +23,6 @@ const char *bnames[] = {"VIS006", "VIS008", "IR_016", "IR_039", "WV_062",
 /* Prints a message that shows how to use the utility. */
 void show_usage()
 {
-
      printf("To run this program please use:\n\t./SEVIRI_tool <filename>\n");
      printf("Where <filename> points to a driver file containing the following lines:\n");
      printf("\tLine 1,  Input data format: HRIT or NAT\n");
@@ -50,10 +49,10 @@ void show_usage()
    it into a list of bands to process. */
 static void parsebands(char *bands, struct bands_st *inbands)
 {
-     int len          =     strlen(bands);
-     int recval     =     11;
-     int i          =     0;
-     int act_bands     =     0;
+     int len       = strlen(bands);
+     int recval    = 11;
+     int i         = 0;
+     int act_bands = 0;
      if (len<11) recval=len;
      recval = recval;
 
@@ -65,10 +64,10 @@ static void parsebands(char *bands, struct bands_st *inbands)
                inbands->band_ids[act_bands-1]=i+1;
           }
      }
-     inbands->nbands     =     act_bands;
+     inbands->nbands = act_bands;
+
      return;
 }
-
 
 /*******************************************************************************
  *    Utility function to assist with debugging.
@@ -332,6 +331,7 @@ int parse_driver(char *fname,struct driver_data *driver)
           if (driver->fline>3711) driver->fline=3711;
           if (driver->fcol>3711) driver->fcol=3711;
      }
+
      /* Read the anciliary data line.*/
      /* ancsave contains: 0-time, 1-lat, 2-lon, 3-sza, 4-saa, 5-vza, 6-vaa */
      driver->compression=0;
@@ -347,12 +347,11 @@ int parse_driver(char *fname,struct driver_data *driver)
           if (strcmp(line,"vza")==0)     driver->ancsave[5]=1;
           if (strcmp(line,"vaa")==0)     driver->ancsave[6]=1;
           if (strcmp(line,"calib")==0)
-             driver->do_calib=1;
+               driver->do_calib=1;
           else
-             driver->do_calib=0;
+               driver->do_calib=0;
      }
      fclose(fp);
 
      return 0;
-
 }

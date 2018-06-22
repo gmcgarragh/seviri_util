@@ -42,7 +42,8 @@ static double TIME_CDS_SHORT_to_jtime(const struct seviri_TIME_CDS_SHORT_data *d
  * returns	: Non-zero on error
  ******************************************************************************/
 int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
-                   const enum seviri_units *band_units, int rss, int do_gsics, int do_not_alloc)
+                   const enum seviri_units *band_units, int rss, int do_gsics,
+                   int do_not_alloc)
 {
      uint i;
      uint ii;
@@ -254,7 +255,8 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                                           &d2->lat[i_image], &d2->lon[i_image],
                                           lon0, &nav_scaling_factors_vir);
 
-               if (d2->lat[i_image] != FILL_VALUE_F && d2->lon[i_image] != FILL_VALUE_F) {
+               if (d2->lat[i_image] != FILL_VALUE_F &&
+                   d2->lon[i_image] != FILL_VALUE_F) {
                     d2->time[i_image] = jtime2;
 
                     snu_solar_params2(jtime2, d2->lat[i_image] * D2R,
@@ -307,30 +309,29 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
       *-----------------------------------------------------------------------*/
      for (i = 0; i < d->image.n_bands; ++i) {
           if (band_units[i] == SEVIRI_UNIT_RAD) {
-          		ac = d->header.RadiometricProcessing.
-                        Level1_5ImageCalibration[d->image.band_ids[i] - 1].Cal_Offset;
+               ac = d->header.RadiometricProcessing.
+                    Level1_5ImageCalibration[d->image.band_ids[i] - 1].Cal_Offset;
                bc = d->header.RadiometricProcessing.
-                        Level1_5ImageCalibration[d->image.band_ids[i] - 1].Cal_Slope;
+                    Level1_5ImageCalibration[d->image.band_ids[i] - 1].Cal_Slope;
                slope  = bc;
-               offset  = ac;
-               if (do_gsics)
-               {
-               	gs = d->header.RadiometricProcessing.
-                       MPEFCalFeedback_data[d->image.band_ids[i] - 1].GSICSCalCoeff;
-                  go = d->header.RadiometricProcessing.
-                       MPEFCalFeedback_data[d->image.band_ids[i] - 1].GSICSOffsetCount;
-                  if (gs<0.0000001)
-                  {
-                  	fprintf(stderr,"WARNING: GSICS coefficients unavailable. Using IMPF calibration.\n");
-                  }
-                  else
-                  {
-                  	br = snu_get_br_val(bc, gs);
-                  	ar = snu_get_ar_val(ac, bc, go);
-                  	slope =  (bc / br);
-                  	offset = (ac-ar) / br;
-                  }
+               offset = ac;
+
+               if (do_gsics) {
+                    gs = d->header.RadiometricProcessing.
+                         MPEFCalFeedback_data[d->image.band_ids[i] - 1].GSICSCalCoeff;
+                    go = d->header.RadiometricProcessing.
+                         MPEFCalFeedback_data[d->image.band_ids[i] - 1].GSICSOffsetCount;
+                    if (gs<0.0000001)
+                         fprintf(stderr,"WARNING: GSICS coefficients unavailable. "
+                                        "Using IMPF calibration.\n");
+                    else {
+                         br = snu_get_br_val(bc, gs);
+                         ar = snu_get_ar_val(ac, bc, go);
+                         slope =  (bc / br);
+                         offset = (ac-ar) / br;
+                    }
                }
+
                for (j = 0; j < d->image.n_lines; ++j) {
                     for (k = 0; k < d->image.n_columns; ++k) {
                          i_image = j * d->image.n_columns + k;
@@ -357,28 +358,26 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      for (i = 0; i < d->image.n_bands; ++i) {
           if (band_units[i] == SEVIRI_UNIT_REF || band_units[i] == SEVIRI_UNIT_BRF) {
                ac = d->header.RadiometricProcessing.
-                        Level1_5ImageCalibration[d->image.band_ids[i] - 1].Cal_Offset;
+                    Level1_5ImageCalibration[d->image.band_ids[i] - 1].Cal_Offset;
                bc = d->header.RadiometricProcessing.
-                        Level1_5ImageCalibration[d->image.band_ids[i] - 1].Cal_Slope;
+                    Level1_5ImageCalibration[d->image.band_ids[i] - 1].Cal_Slope;
                slope  = bc;
-               offset  = ac;
-               if (do_gsics)
-               {
-               	gs = d->header.RadiometricProcessing.
-                       MPEFCalFeedback_data[d->image.band_ids[i] - 1].GSICSCalCoeff;
-                  go = d->header.RadiometricProcessing.
-                       MPEFCalFeedback_data[d->image.band_ids[i] - 1].GSICSOffsetCount;
-                  if (gs<0.0000001)
-                  {
-                  	fprintf(stderr,"WARNING: GSICS coefficients unavailable. Using IMPF calibration.\n");
-                  }
-                  else
-                  {
-                  	br = snu_get_br_val(bc, gs);
-                  	ar = snu_get_ar_val(ac, bc, go);
-                  	slope =  (bc / br);
-                  	offset = (ac-ar) / br;
-                  }
+               offset = ac;
+
+               if (do_gsics) {
+                    gs = d->header.RadiometricProcessing.
+                         MPEFCalFeedback_data[d->image.band_ids[i] - 1].GSICSCalCoeff;
+                    go = d->header.RadiometricProcessing.
+                         MPEFCalFeedback_data[d->image.band_ids[i] - 1].GSICSOffsetCount;
+                    if (gs<0.0000001)
+                         fprintf(stderr,"WARNING: GSICS coefficients unavailable. "
+                                        "Using IMPF calibration.\n");
+                    else {
+                         br = snu_get_br_val(bc, gs);
+                         ar = snu_get_ar_val(ac, bc, go);
+                         slope =  (bc / br);
+                         offset = (ac-ar) / br;
+                    }
                }
 
                b = a / band_solar_irradiance[i_sat][d->image.band_ids[i] - 1];
@@ -411,28 +410,26 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      for (i = 0; i < d->image.n_bands; ++i) {
           if (band_units[i] == SEVIRI_UNIT_BT) {
                ac = d->header.RadiometricProcessing.
-                        Level1_5ImageCalibration[d->image.band_ids[i] - 1].Cal_Offset;
+                    Level1_5ImageCalibration[d->image.band_ids[i] - 1].Cal_Offset;
                bc = d->header.RadiometricProcessing.
-                        Level1_5ImageCalibration[d->image.band_ids[i] - 1].Cal_Slope;
+                    Level1_5ImageCalibration[d->image.band_ids[i] - 1].Cal_Slope;
                slope  = bc;
-               offset  = ac;
-               if (do_gsics)
-               {
-               	gs = d->header.RadiometricProcessing.
-                       MPEFCalFeedback_data[d->image.band_ids[i] - 1].GSICSCalCoeff;
-                  go = d->header.RadiometricProcessing.
-                       MPEFCalFeedback_data[d->image.band_ids[i] - 1].GSICSOffsetCount;
-                  if (gs<0.0000001)
-                  {
-                  	fprintf(stderr,"WARNING: GSICS coefficients unavailable. Using IMPF calibration.\n");
-                  }
-                  else
-                  {
-                  	br = snu_get_br_val(bc, gs);
-                  	ar = snu_get_ar_val(ac, bc, go);
-                  	slope =  (bc / br);
-                  	offset = (ac-ar) / br;
-                  }
+               offset = ac;
+
+               if (do_gsics) {
+                    gs = d->header.RadiometricProcessing.
+                         MPEFCalFeedback_data[d->image.band_ids[i] - 1].GSICSCalCoeff;
+                    go = d->header.RadiometricProcessing.
+                         MPEFCalFeedback_data[d->image.band_ids[i] - 1].GSICSOffsetCount;
+                    if (gs<0.0000001)
+                         fprintf(stderr,"WARNING: GSICS coefficients unavailable. "
+                                        "Using IMPF calibration.\n");
+                    else {
+                         br = snu_get_br_val(bc, gs);
+                         ar = snu_get_ar_val(ac, bc, go);
+                         slope =  (bc / br);
+                         offset = (ac-ar) / br;
+                    }
                }
 /*
                nu = 1.e4 / channel_center_wavelength[d->image.band_ids[i] - 1];
@@ -560,7 +557,8 @@ int seviri_read_and_preproc_hrit(const char *indir, const char *timeslot,
      struct seviri_data seviri;
 
      if (seviri_read_hrit(indir, timeslot, satnum, &seviri, n_bands, band_ids,
-          bounds, line0, line1, column0, column1, lat0, lat1, lon0, lon1, rss,iodc)) {
+          bounds, line0, line1, column0, column1, lat0, lat1, lon0, lon1, rss,
+          iodc)) {
           fprintf(stderr, "ERROR: seviri_read()\n");
           return -1;
      }
@@ -635,7 +633,8 @@ int seviri_read_and_preproc(const char *filename,
           }
      }
      else {
-          if ((indir = extract_path_sat_id_timeslot(filename, &satnum, timeslot,&rss, &iodc)) == NULL) {
+          if ((indir = extract_path_sat_id_timeslot(filename, &satnum, timeslot,
+               &rss, &iodc)) == NULL) {
                fprintf(stderr, "ERROR: extract_path_sat_id_timeslot()\n");
                return -1;
           }
@@ -730,7 +729,8 @@ int seviri_get_dimens(const char *filename, uint *i_line, uint *i_column,
           }
      }
      else {
-          if ((indir = extract_path_sat_id_timeslot(filename, &satnum, timeslot,&rss,&iodc)) == NULL) {
+          if ((indir = extract_path_sat_id_timeslot(filename, &satnum, timeslot,
+               &rss, &iodc)) == NULL) {
                fprintf(stderr, "ERROR: extract_path_sat_id_timeslot()\n");
                return -1;
           }

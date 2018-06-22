@@ -142,27 +142,26 @@ int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc)
 *******************************************************************************/
 int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
 {
+     static float cnt_range[]    = {0.0, 1024.0};
+     static float rad_range[]    = {0.0, 2000.0};
+     static float brf_range[]    = {-0.5, 5.0};
+     static float bt_range[]     = {150.0, 400.0};
 
-     static float cnt_range[]     = {0.0, 1024.0};
-     static float rad_range[]     = {0.0, 2000.0};
-     static float brf_range[]     = {-0.5, 5.0};
-     static float bt_range[]          = {150.0, 400.0};
+     static float latlon_range[] = {-90.0, 90.0};
+     static float zen_range[]    = {-180.0, 180.0};
+     static float azi_range[]    = {0.0, 360.0};
 
-     static float latlon_range[]     = {-90.0, 90.0};
-     static float zen_range[]     = {-180.0, 180.0};
-     static float azi_range[]     = {0.0, 360.0};
-
-     static char title_cnt[]          = "SEVIRI data in raw count format.";
-     static char title_rad[]          = "SEVIRI data in radiance format";
-     static char title_brf[]          = "SEVIRI data in solar reflectance format";
-     static char title_bt[]          = "SEVIRI data in brightness temperature format";
+     static char title_cnt[]     = "SEVIRI data in raw count format.";
+     static char title_rad[]     = "SEVIRI data in radiance format";
+     static char title_brf[]     = "SEVIRI data in solar reflectance format";
+     static char title_bt[]      = "SEVIRI data in brightness temperature format";
 
      int nbands=preproc.n_bands,i=0;
      for (i=0;i<7;i++)if (driver.ancsave[i]==1)nbands+=1;
      int ncid, x_dimid, y_dimid;
      int dimids[2];
      int *varid;
-     varid     =     (int*) malloc(sizeof(int)*nbands);
+     varid = (int*) malloc(sizeof(int)*nbands);
 
      /* Create the NetCDF file and initialise the data*/
      if(nc_create(driver.outf, NC_CLOBBER|NC_NETCDF4 , &ncid)) {E_L_R();};
@@ -265,34 +264,34 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
 int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
 {
 /*
-     static float cnt_range[]     = {0.0, 1024.0};
-     static float rad_range[]     = {0.0, 2000.0};
-     static float brf_range[]     = {-0.5, 5.0};
-     static float bt_range[]          = {150.0, 400.0};
+     static float cnt_range[]    = {0.0, 1024.0};
+     static float rad_range[]    = {0.0, 2000.0};
+     static float brf_range[]    = {-0.5, 5.0};
+     static float bt_range[]     = {150.0, 400.0};
 
-     static float latlon_range[]     = {-90.0, 90.0};
-     static float zen_range[]     = {-180.0, 180.0};
-     static float azi_range[]     = {0.0, 360.0};
+     static float latlon_range[] = {-90.0, 90.0};
+     static float zen_range[]    = {-180.0, 180.0};
+     static float azi_range[]    = {0.0, 360.0};
 
-     static char title_cnt[]          = "SEVIRI data in raw count format.";
-     static char title_rad[]          = "SEVIRI data in radiance format";
-     static char title_brf[]          = "SEVIRI data in solar reflectance format";
-     static char title_bt[]          = "SEVIRI data in brightness temperature format";
+     static char title_cnt[]     = "SEVIRI data in raw count format.";
+     static char title_rad[]     = "SEVIRI data in radiance format";
+     static char title_brf[]     = "SEVIRI data in solar reflectance format";
+     static char title_bt[]      = "SEVIRI data in brightness temperature format";
 */
      int nbands=preproc.n_bands,i=0;
      for (i=0;i<7;i++)if (driver.ancsave[i]==1)nbands+=1;
      int *varid;
-     varid     =     (int*) malloc(sizeof(int)*nbands);
+     varid = (int*) malloc(sizeof(int)*nbands);
      varid = varid;
 
      /* Create the HDF5 file and initialise the data*/
-     hid_t      outfile;
+     hid_t   outfile;
      outfile = H5Fcreate(driver.outf,H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
-     herr_t      status;
-     hid_t     dataspace,dataset,dcpl;
+     herr_t  status;
+     hid_t   dataspace,dataset,dcpl;
      hsize_t dims[2]={preproc.n_lines,preproc.n_columns};
 
-     hsize_t     chunk[2] = {(dims[0]/100), (dims[1]/100)};
+     hsize_t chunk[2] = {(dims[0]/100), (dims[1]/100)};
 
      status = status;
 
