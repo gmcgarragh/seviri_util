@@ -15,7 +15,7 @@
  * Calculate and return the GSICS calibration offset from the values contained
  * in the Level 1.5 header file
  ******************************************************************************/
-float snu_get_ar_val(float ac, float bc, float g0)
+double snu_get_ar_val(double ac, double bc, double g0)
 {
 	return (ac - (bc * g0));
 }
@@ -25,7 +25,7 @@ float snu_get_ar_val(float ac, float bc, float g0)
  * Calculate and return the GSICS calibration slope from the values contained
  * in the Level 1.5 header file
  ******************************************************************************/
-float snu_get_br_val(float bc, float gs)
+double snu_get_br_val(double bc, double gs)
 {
 	return (bc / gs);
 }

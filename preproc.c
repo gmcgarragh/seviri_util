@@ -90,7 +90,9 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      double slope;
      double offset;
 
-     float ar,br,ac,bc,gs,go;
+     double ar, br;
+     double ac, bc;
+     double gs, go;
 
      double day_of_year;
 
