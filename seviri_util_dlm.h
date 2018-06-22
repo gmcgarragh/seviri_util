@@ -1,3 +1,12 @@
+/******************************************************************************%
+ *
+ *    Copyright (C) 2014-2018 Greg McGarragh <mcgarragh@atm.ox.ac.uk>
+ *
+ *    This source code is licensed under the GNU General Public License (GPL),
+ *    Version 3.  See the file COPYING for more details.
+ *
+ ******************************************************************************/
+
 #ifndef SEVIRI_UTIL_DLM_H
 #define SEVIRI_UTIL_DLM_H
 
