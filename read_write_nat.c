@@ -207,7 +207,7 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
      image->data_vir = malloc(image->n_bands * sizeof(ushort *));
      for (i = 0; i < image->n_bands; ++i) {
           image->data_vir[i] = malloc(length * sizeof(float));
-          snu_init_array_us(image->data_vir[i], length, image->fill_value);
+          su_init_array_us(image->data_vir[i], length, image->fill_value);
      }
 
 
@@ -403,7 +403,7 @@ static int seviri_image_write(FILE *fp, const struct seviri_image_data *image,
                     return -1;
                }
 
-               snu_init_array_uc(data10, dimens->n_columns_to_read_VIR / 4 * 5, 0);
+               su_init_array_uc(data10, dimens->n_columns_to_read_VIR / 4 * 5, 0);
 
                i_image = ii * dimens->n_columns_requested_VIR + dimens->i_column_in_output_VIR;
 
@@ -507,7 +507,7 @@ int seviri_get_dimens_nat(const char *filename, uint *i_line, uint *i_column,
      struct seviri_marf_header_data marf_header;
 
      aux.operation  = 0;
-     aux.swap_bytes = snu_is_little_endian();
+     aux.swap_bytes = su_is_little_endian();
 
      seviri_auxillary_alloc(&aux);
 
@@ -593,7 +593,7 @@ int seviri_read_nat(const char *filename, struct seviri_data *d,
      struct seviri_auxillary_io_data aux;
 
      aux.operation  = 0;
-     aux.swap_bytes = snu_is_little_endian();
+     aux.swap_bytes = su_is_little_endian();
 
      seviri_auxillary_alloc(&aux);
 
@@ -668,7 +668,7 @@ int seviri_write_nat(const char *filename, const struct seviri_data *d)
      struct seviri_auxillary_io_data aux;
 
      aux.operation  = 1;
-     aux.swap_bytes = snu_is_little_endian();
+     aux.swap_bytes = su_is_little_endian();
 
      seviri_auxillary_alloc(&aux);
 

@@ -31,7 +31,7 @@
  *
  * Ref: PDF_CGMS_LRIT_HRIT_2_6, Section 4.4
  ******************************************************************************/
-int snu_line_column_to_lat_lon(uint line, uint column, float *lat, float *lon,
+int su_line_column_to_lat_lon(uint line, uint column, float *lat, float *lon,
           double lon0, const struct nav_scaling_factors *nav)
 {
      double x;
@@ -101,7 +101,7 @@ int snu_line_column_to_lat_lon(uint line, uint column, float *lat, float *lon,
  *
  * Ref: PDF_CGMS_LRIT_HRIT_2_6, Section 4.4
  ******************************************************************************/
-int snu_lat_lon_to_line_column(float lat, float lon, uint *line, uint *column,
+int su_lat_lon_to_line_column(float lat, float lon, uint *line, uint *column,
           double lon0, const struct nav_scaling_factors *nav)
 {
      double x;
@@ -153,8 +153,8 @@ int snu_lat_lon_to_line_column(float lat, float lon, uint *line, uint *column,
      x = atan(-r_2 / r_1);
      y = asin(-r_3 / r_n);
 
-     *column = nav->COFF + snu_rint(x * pow(2, -16) * nav->CFAC);
-     *line   = nav->LOFF + snu_rint(y * pow(2, -16) * nav->LFAC);
+     *column = nav->COFF + su_rint(x * pow(2, -16) * nav->CFAC);
+     *line   = nav->LOFF + su_rint(y * pow(2, -16) * nav->LFAC);
 
      return 0;
 }
@@ -397,8 +397,8 @@ static void solar_angles(double delta, double lat, double hour, double eot,
  *
  * Ref: The Astronomical Almanac, 2003
  ******************************************************************************/
-void snu_solar_params2(double jtime, double lat, double lon, double *mu0,
-                       double *theta0, double *phi0, double *solar_dist_fac)
+void su_solar_params2(double jtime, double lat, double lon, double *mu0,
+                      double *theta0, double *phi0, double *solar_dist_fac)
 {
      int year;
      int month;
@@ -447,11 +447,11 @@ void snu_solar_params2(double jtime, double lat, double lon, double *mu0,
 
 
      if (solar_dist_fac) {
-          snu_jul_to_cal_date(jwhole, &year, &month, &day);
+          su_jul_to_cal_date(jwhole, &year, &month, &day);
 
-          jday = (int) (jtime - (snu_cal_to_jul_day(year, 1, 1) - .5));
+          jday = (int) (jtime - (su_cal_to_jul_day(year, 1, 1) - .5));
 
-          *solar_dist_fac = snu_solar_distance_factor2(jday + local_hour / 24.);
+          *solar_dist_fac = su_solar_distance_factor2(jday + local_hour / 24.);
      }
 }
 
@@ -469,8 +469,8 @@ void snu_solar_params2(double jtime, double lat, double lon, double *mu0,
  *
  * Ref: GIESKE_A_S_M, Page 6
  ******************************************************************************/
-int snu_vza_and_vaa(double lat, double lon, double height,
-                    double X, double Y, double Z, float *vza, float *vaa)
+int su_vza_and_vaa(double lat, double lon, double height,
+                   double X, double Y, double Z, float *vza, float *vaa)
 {
      /* Below are the values given by Gieske et. al. */
 /*

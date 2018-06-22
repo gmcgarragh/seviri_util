@@ -1382,18 +1382,18 @@ int seviri_get_dimension_data(
      }
      else if (bounds == SEVIRI_BOUNDS_LINE_COLUMN || bounds == SEVIRI_BOUNDS_LAT_LON) {
           if (bounds == SEVIRI_BOUNDS_LAT_LON) {
-               if (snu_lat_lon_to_line_column(lat0, lon1, &line0, &column0, 0.,
-                                              &nav_scaling_factors_vir)) {
-                    fprintf(stderr, "ERROR: snu_lat_lon_to_line_column()\n");
+               if (su_lat_lon_to_line_column(lat0, lon1, &line0, &column0, 0.,
+                                             &nav_scaling_factors_vir)) {
+                    fprintf(stderr, "ERROR: su_lat_lon_to_line_column()\n");
                     return -1;
                }
 
                line0--;
                column0--;
 
-               if (snu_lat_lon_to_line_column(lat1, lon0, &line1, &column1, 0.,
-                                              &nav_scaling_factors_vir)) {
-                    fprintf(stderr, "ERROR: snu_lat_lon_to_line_column()\n");
+               if (su_lat_lon_to_line_column(lat1, lon0, &line1, &column1, 0.,
+                                             &nav_scaling_factors_vir)) {
+                    fprintf(stderr, "ERROR: su_lat_lon_to_line_column()\n");
                     return -1;
                }
 

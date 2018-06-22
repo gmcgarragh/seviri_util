@@ -156,7 +156,7 @@ static int alloc_imagearr(uint nbands, const uint *band_ids, struct seviri_data 
      d->image.data_vir = malloc(virb * sizeof(ushort *));
      for (i = 0; i < virb; ++i) {
           d->image.data_vir[i] = malloc(length_vir * sizeof(float));
-          snu_init_array_us(d->image.data_vir[i], length_vir, d->image.fill_value);
+          su_init_array_us(d->image.data_vir[i], length_vir, d->image.fill_value);
      }
      if (proc_hrv==1) d->image.data_hrv = malloc(length_hrv * sizeof(float));
 
@@ -291,7 +291,7 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      /* Set up the aux data struct and check endianness */
      seviri_auxillary_alloc(&aux);
      aux.operation  = 0;
-     aux.swap_bytes = snu_is_little_endian();
+     aux.swap_bytes = su_is_little_endian();
 
      /* Read the epilogue file */
      if (read_hrit_epilogue(epiname,d,&aux)) {

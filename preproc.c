@@ -20,7 +20,7 @@
  ******************************************************************************/
 static double TIME_CDS_SHORT_to_jtime(const struct seviri_TIME_CDS_SHORT_data *d)
 {
-     double jtime_epoch = (double) snu_cal_to_jul_day(1958, 1, 1) - .5;
+     double jtime_epoch = (double) su_cal_to_jul_day(1958, 1, 1) - .5;
 
      return jtime_epoch + d->day + d->msec / 1.e3 / 60. / 60. / 24.;
 }
@@ -56,8 +56,8 @@ static void get_cal_slope_and_offset(const struct seviri_data *d, int band_id,
                fprintf(stderr,"WARNING: GSICS coefficients unavailable. "
                               "Using IMPF calibration.\n");
           else {
-               br = snu_get_br_val(bc, gs);
-               ar = snu_get_ar_val(ac, bc, go);
+               br = su_get_br_val(bc, gs);
+               ar = su_get_ar_val(ac, bc, go);
                *slope  = (bc / br);
                *offset = (ac-ar) / br;
           }
@@ -222,15 +222,15 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
           d2->data[i] = &d2->data2[i * length];
 
 
-     snu_init_array_d(d2->time, length, d2->fill_value);
-     snu_init_array_f(d2->lat,  length, d2->fill_value);
-     snu_init_array_f(d2->lon,  length, d2->fill_value);
-     snu_init_array_f(d2->sza,  length, d2->fill_value);
-     snu_init_array_f(d2->saa,  length, d2->fill_value);
-     snu_init_array_f(d2->vza,  length, d2->fill_value);
-     snu_init_array_f(d2->vaa,  length, d2->fill_value);
+     su_init_array_d(d2->time, length, d2->fill_value);
+     su_init_array_f(d2->lat,  length, d2->fill_value);
+     su_init_array_f(d2->lon,  length, d2->fill_value);
+     su_init_array_f(d2->sza,  length, d2->fill_value);
+     su_init_array_f(d2->saa,  length, d2->fill_value);
+     su_init_array_f(d2->vza,  length, d2->fill_value);
+     su_init_array_f(d2->vaa,  length, d2->fill_value);
 
-     snu_init_array_f(d2->data2, d->image.n_bands * length, d2->fill_value);
+     su_init_array_f(d2->data2, d->image.n_bands * length, d2->fill_value);
 
 
      /*-------------------------------------------------------------------------
@@ -243,8 +243,8 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
 
      jtime = (jtime_start + jtime_end) / 2.;
 
-     snu_jul_to_cal_date((long) floor(jtime       + .5), &year, &month, &day);
-     day_of_year = jtime       - (snu_cal_to_jul_day(year, 1, 0) - .5);
+     su_jul_to_cal_date((long) floor(jtime       + .5), &year, &month, &day);
+     day_of_year = jtime       - (su_cal_to_jul_day(year, 1, 0) - .5);
 
 
      /*-------------------------------------------------------------------------
@@ -290,7 +290,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
           for (j = 0; j < d->image.n_columns; ++j) {
                i_image = i * d->image.n_columns + j;
 
-               snu_line_column_to_lat_lon(ii + 1 + nav_off, d->image.i_column + j + 1,
+               su_line_column_to_lat_lon(ii + 1 + nav_off, d->image.i_column + j + 1,
                                           &d2->lat[i_image], &d2->lon[i_image],
                                           lon0, &nav_scaling_factors_vir);
 
@@ -298,7 +298,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                    d2->lon[i_image] != FILL_VALUE_F) {
                     d2->time[i_image] = jtime2;
 
-                    snu_solar_params2(jtime2, d2->lat[i_image] * D2R,
+                    su_solar_params2(jtime2, d2->lat[i_image] * D2R,
                                       d2->lon[i_image] * D2R, &mu0, &theta0,
                                       &phi0, NULL);
                     d2->sza[i_image] = theta0 * R2D;
@@ -308,7 +308,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                     if (d2->saa[i_image] > 360.)
                          d2->saa[i_image] = d2->saa[i_image] - 360.;
 
-                    snu_vza_and_vaa(d2->lat[i_image], d2->lon[i_image], 0.,
+                    su_vza_and_vaa(d2->lat[i_image], d2->lon[i_image], 0.,
                                     X, Y, Z, &d2->vza[i_image], &d2->vaa[i_image]);
 
                     d2->vaa[i_image] = d2->vaa[i_image] + 180.;
@@ -373,7 +373,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
       *
       * Ref: PDF_MSG_SEVIRI_RAD2REFL, Page 8
       *-----------------------------------------------------------------------*/
-     a = PI * sqrt(snu_solar_distance_factor2(day_of_year));
+     a = PI * sqrt(su_solar_distance_factor2(day_of_year));
 
      for (i = 0; i < d->image.n_bands; ++i) {
           if (band_units[i] == SEVIRI_UNIT_REF || band_units[i] == SEVIRI_UNIT_BRF) {
