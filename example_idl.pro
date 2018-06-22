@@ -20,7 +20,6 @@ print, preproc.n_columns
 
 ;print "i_line:                       %4d"   % i_line
 ;print "i_column:                     %4d"   % i_column
-;print ""
 ;print "Julian Day Number:            % .8e" % util.time[i_line, i_column]
 ;print "latitude:                     % .8e" % util.lat [i_line, i_column]
 ;print "longitude:                    % .8e" % util.lon [i_line, i_column]

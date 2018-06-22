@@ -26,14 +26,14 @@
     /* FOR IDL < 5.3 */
     /* Define the procedures */
     static IDL_SYSFUN_DEF seviri_util_procedures[] = {
-        {(IDL_FUN_RET) seviri_preproc_dlm, "SEVIRI_PREPROC_DLM", 4, 6,
+        {(IDL_FUN_RET) seviri_preproc_dlm, "SEVIRI_PREPROC_DLM", 4, 7,
          IDL_SYSFUN_DEF_F_KEYWORDS},
     };
 #else
     /* FOR IDL >= 5.3 */
     /* Define the procedures */
     static IDL_SYSFUN_DEF2 seviri_util_procedures[] = {
-        {(IDL_FUN_RET) seviri_preproc_dlm, "SEVIRI_PREPROC_DLM", 4, 6,
+        {(IDL_FUN_RET) seviri_preproc_dlm, "SEVIRI_PREPROC_DLM", 4, 7,
          IDL_SYSFUN_DEF_F_KEYWORDS, 0},
     };
 #endif
@@ -151,7 +151,7 @@ void IDL_CDECL seviri_preproc_dlm(int argc, IDL_VPTR argv[], char *argk)
      IDL_VPTR out_argv[1];
 
      static int pixel_coords_flag;
-     static short pixel_coords_data[4];
+     static int pixel_coords_data[4];
      static IDL_KW_ARR_DESC pixel_coords_desc   = {(char *) pixel_coords_data,
                                                    4, 4, 0};
 
@@ -160,12 +160,17 @@ void IDL_CDECL seviri_preproc_dlm(int argc, IDL_VPTR argv[], char *argk)
      static IDL_KW_ARR_DESC lat_lon_coords_desc = {(char *) lat_lon_coords_data,
                                                    4, 4, 0};
 
+     static int do_gsics_flag;
+     static int do_gsics;
+
      static IDL_KW_PAR kw_pars[] = {
           IDL_KW_FAST_SCAN,
+          {"PIXEL_COORDS",   IDL_TYP_LONG,  1, IDL_KW_ARRAY, &pixel_coords_flag,
+           IDL_CHARA(pixel_coords_desc)},
           {"LAT_LON_COORDS", IDL_TYP_FLOAT, 1, IDL_KW_ARRAY, &lat_lon_coords_flag,
            IDL_CHARA(lat_lon_coords_desc)},
-          {"PIXEL_COORDS",   IDL_TYP_INT,   1, IDL_KW_ARRAY, &pixel_coords_flag,
-           IDL_CHARA(pixel_coords_desc)},
+          {"DO_GSICS",       IDL_TYP_LONG,  1, IDL_KW_ZERO,  &do_gsics_flag,
+           IDL_CHARA(do_gsics)},
           {NULL}
      };
 
@@ -245,7 +250,7 @@ void IDL_CDECL seviri_preproc_dlm(int argc, IDL_VPTR argv[], char *argk)
      if (seviri_read_and_preproc(filename, &preproc, n_bands, band_ids,
           band_units, bounds, pixel_coords[0], pixel_coords[1], pixel_coords[2],
           pixel_coords[3], lat_lon_coords[0], lat_lon_coords[1], lat_lon_coords[2],
-          lat_lon_coords[3], 0))
+          lat_lon_coords[3], do_gsics, 0))
           IDL_Message(IDL_M_NAMED_GENERIC, IDL_MSG_LONGJMP,
                "ERROR: seviri_read_and_preproc()");
 

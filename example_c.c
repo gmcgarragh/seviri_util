@@ -63,9 +63,8 @@ int main(int argc, char *argv[])
      i_column = preproc.n_columns / 2;
      i_pixel  = i_line * preproc.n_columns + i_column;
 
-     printf("i_line:                       %4d\n", i_line);
-     printf("i_column:                     %4d\n", i_column);
-     printf("i_pixel:                      %8d\n", i_pixel);
+     printf("i_line:                       %d\n", i_line);
+     printf("i_column:                     %d\n", i_column);
      printf("Julian Day Number:            % .8e\n", preproc.time[i_pixel]);
      printf("latitude:                     % .8e\n", preproc.lat [i_pixel]);
      printf("longitude:                    % .8e\n", preproc.lon [i_pixel]);

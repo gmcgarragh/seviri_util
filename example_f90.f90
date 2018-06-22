@@ -49,7 +49,8 @@ program example_f90
      ! of the arrguments.
      if (seviri_read_and_preproc_f90(trim(filename), preproc, n_bands, band_ids, &
                             band_units, SEVIRI_BOUNDS_LINE_COLUMN, line0, line1, &
-                            column0, column1, 0.d0, 0.d0, 0.d0, 0.d0, .false., .false.) &
+                            column0, column1, 0.d0, 0.d0, 0.d0, 0.d0, .false., &
+                            .false.) &
                             .ne. 0) then
         print *, 'ERROR: seviri_read_and_preproc_f90()'
         stop -1
@@ -61,7 +62,6 @@ program example_f90
 
      print '("i_line:                       ", I4)', i_line - 1
      print '("i_column:                     ", I4)', i_column - 1
-     print *, ''
      print '("Julian Day Number:            ", ES15.8)', preproc%time(i_column, i_line)
      print '("latitude:                     ", ES15.8)', preproc%lat (i_column, i_line)
      print '("longitude:                    ", ES15.8)', preproc%lon (i_column, i_line)

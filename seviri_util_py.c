@@ -110,6 +110,8 @@ static int seviri_preproc_init(struct seviri_preproc_data_py *self,
       /* Return value initialized to -1 (failure) */
      int r = -1;
 
+     int do_gsics = 0;
+
      uint i;
 
      uint i_line;
@@ -139,11 +141,11 @@ static int seviri_preproc_init(struct seviri_preproc_data_py *self,
      PyListObject *band_units_list = NULL;
 
      static char *kw[] = {"filename", "band_ids", "units", "bounds", "pixel_coords",
-                          "lat_lon_coords", NULL};
+                          "lat_lon_coords", "do_gsics", NULL};
 
-     if (! PyArg_ParseTupleAndKeywords(args, keywords, "sOOs|(IIII)(dddd)", kw,
+     if (! PyArg_ParseTupleAndKeywords(args, keywords, "sOOs|(IIII)(dddd)i", kw,
           &self->filename, &band_ids_list, &band_units_list, &bounds_string,
-          &line0, &line1, &column0, &column1, &lat0, &lat1, &lon0, &lon1))
+          &line0, &line1, &column0, &column1, &lat0, &lat1, &lon0, &lon1, &do_gsics))
           goto error;
 
      n_bands = PyList_Size((PyObject *) band_ids_list);
@@ -206,7 +208,7 @@ static int seviri_preproc_init(struct seviri_preproc_data_py *self,
 
      if (seviri_read_and_preproc(self->filename, &self->d, n_bands, band_ids_array,
           band_units_array, bounds, line0, line1, column0, column1, lat0, lat1,
-          lon0, lon1, 0)) {
+          lon0, lon1, do_gsics, 0)) {
           PyErr_SetString(SEVIRI_PREPROC_Error, "ERROR: seviri_read_and_preproc()");
           goto error;
      }
