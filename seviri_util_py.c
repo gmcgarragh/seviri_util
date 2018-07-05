@@ -324,7 +324,7 @@ static PyTypeObject seviri_type = {
      0,
      0,
      Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
-     "SEVIRI_NATIVE object",
+     "SEVIRI_PREPROC object",
      0,
      0,
      0,

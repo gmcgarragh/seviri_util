@@ -17,7 +17,7 @@ try:
         'BT', 'BT'], 'line_column', pixel_coords = (1899, 2199, 1700, 2299),
         do_gsics = False)
 except seviri_preproc.error:
-    print('ERROR: seviri_preproc.init()')
+    print('ERROR: seviri_preproc.init()', file=sys.stderr)
     exit()
 
 # Print the values for the central pixel.

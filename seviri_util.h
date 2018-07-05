@@ -7,15 +7,15 @@
  *
  ******************************************************************************/
 
-#ifndef SEVIRI_NATIVE_UTIL_H
-#define SEVIRI_NATIVE_UTIL_H
+#ifndef SEVIRI_UTIL_H
+#define SEVIRI_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-#define SEVIRI_NATIVE_UTIL_VERSION "0.01"
+#define SEVIRI_UTIL_VERSION "0.01"
 
 
 #include "external.h"
@@ -28,4 +28,4 @@ extern "C" {
 }
 #endif
 
-#endif /* SEVIRI_NATIVE_UTIL_H */
+#endif /* SEVIRI_UTIL_H */
