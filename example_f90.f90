@@ -12,6 +12,7 @@ program example_f90
 
      ! Filename of the file to be read.
      character(1024) :: filename
+     character(128)  :: satposstr
 
      integer :: i_line
      integer :: i_column
@@ -49,9 +50,8 @@ program example_f90
      ! of the arrguments.
      if (seviri_read_and_preproc_f90(trim(filename), preproc, n_bands, band_ids, &
                             band_units, SEVIRI_BOUNDS_LINE_COLUMN, line0, line1, &
-                            column0, column1, 0.d0, 0.d0, 0.d0, 0.d0, .false., &
-                            .false.) &
-                            .ne. 0) then
+                            column0, column1, 0.d0, 0.d0, 0.d0, 0.d0, .false.,   &
+                            satposstr, .false.) .ne. 0) then
         print *, 'ERROR: seviri_read_and_preproc_f90()'
         stop -1
      end if

@@ -63,8 +63,8 @@ int parse_driver(char *fname,struct driver_data *driver);
 int print_preproc_out(struct driver_data, struct seviri_preproc_data preproc, unsigned int i_line, unsigned int i_column);
 
 /*   In SEVIRI_tool_prog.c */
-int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc);
-int run_sev_hrit(struct driver_data driver,struct seviri_preproc_data *preproc);
+int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc, char satposstr[128]);
+int run_sev_hrit(struct driver_data driver,struct seviri_preproc_data *preproc, char satposstr[128]);
 
 int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc);
 int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc);

@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
 {
      /* Filename of the file to be read. */
      char *filename;
+     char satposstr[128];
 
      unsigned int i_line;
      unsigned int i_column;
@@ -53,7 +54,7 @@ int main(int argc, char *argv[])
      if (seviri_read_and_preproc(filename, &preproc, n_bands, band_ids,
                                  band_units, SEVIRI_BOUNDS_LINE_COLUMN,
                                  line0, line1, column0, column1,
-                                 0., 0., 0., 0., 0, 0)) {
+                                 0., 0., 0., 0., 0, satposstr, 0)) {
           fprintf(stderr, "ERROR: seviri_read_and_preproc_main()\n");
           exit(1);
      }

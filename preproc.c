@@ -82,7 +82,7 @@ static void get_cal_slope_and_offset(const struct seviri_data *d, int band_id,
  ******************************************************************************/
 int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                    const enum seviri_units *band_units, int rss, int do_gsics,
-                   int do_not_alloc)
+                   char satposstr[128], int do_not_alloc)
 {
      uint i;
      uint ii;
@@ -143,6 +143,9 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      double L;
 
      int nav_off=0;
+
+     float orbalt;
+     char tmpsatstr[12];
 
      if (rss) nav_off=464*5;
 
@@ -269,11 +272,16 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                  ((jtime_end2   - jtime_start2) / 2.);
 
      X = d->header.SatelliteStatus.OrbitPolynomial[i].X[0] +
-         d->header.SatelliteStatus.OrbitPolynomial[i].X[1] * t;
+         d->header.SatelliteStatus.OrbitPolynomial[i].X[1] * t -
+         0.5* d->header.SatelliteStatus.OrbitPolynomial[i].X[0];
+
      Y = d->header.SatelliteStatus.OrbitPolynomial[i].Y[0] +
-         d->header.SatelliteStatus.OrbitPolynomial[i].Y[1] * t;
+         d->header.SatelliteStatus.OrbitPolynomial[i].Y[1] * t -
+         0.5* d->header.SatelliteStatus.OrbitPolynomial[i].Y[0];
+
      Z = d->header.SatelliteStatus.OrbitPolynomial[i].Z[0] +
-         d->header.SatelliteStatus.OrbitPolynomial[i].Z[1] * t;
+         d->header.SatelliteStatus.OrbitPolynomial[i].Z[1] * t -
+         0.5* d->header.SatelliteStatus.OrbitPolynomial[i].Z[0];
 
      /*-------------------------------------------------------------------------
       * Compute latitude and longitude and solar and sensor zenith and azimuth
@@ -318,6 +326,43 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
           }
      }
 
+     /*-------------------------------------------------------------------------
+      * Compute the satellite position string.
+      *-----------------------------------------------------------------------*/
+
+     //Satellite latitude, assumed to be 0.0N
+     sprintf(tmpsatstr,"%010.7f",0.0);
+     strncat(tmpsatstr,"\0",1);
+     strncpy(satposstr,tmpsatstr,11);
+     strncat(satposstr,",\0",2);
+
+     // Satellite longitude, taken from L1.5 header
+     sprintf(tmpsatstr,"%010.7f",lon0);
+     strncat(tmpsatstr,"\0",1);
+     strncat(satposstr,tmpsatstr,11);
+     strncat(satposstr,",\0",2);
+
+     // Satellite height, computed from orbit polynomial
+     orbalt = sqrt(X*X + Y*Y + Z*Z);
+     sprintf(tmpsatstr,"%010.2f",orbalt);
+     strncat(tmpsatstr,"\0",1);
+     strncat(satposstr,tmpsatstr,11);
+     strncat(satposstr,",\0",2);
+
+     // Equatorial radius from the L1.5 header
+     sprintf(tmpsatstr,"%010.2f",d->header.GeometricProcessing.EquatorialRadius);
+     strncat(tmpsatstr,"\0",1);
+     strncat(satposstr,tmpsatstr,11);
+     strncat(satposstr,",\0",2);
+
+     // North polar radius from the L1.5 header
+     // There is also a South polar radius in the header, unsure if these are ever different.
+     sprintf(tmpsatstr,"%010.2f",d->header.GeometricProcessing.NorthPolarRadius);
+     strncat(tmpsatstr,"\0",1);
+     strncat(satposstr,tmpsatstr,11);
+     strncat(satposstr,"\0",1);
+
+     for (i=strlen(satposstr);i<127;i++)strncat(satposstr,"_\0",2);
 
      /*-------------------------------------------------------------------------
       * Extract the raw pixel counts only. Do not scale or transform in any way.
@@ -464,6 +509,9 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
  * lat1		: 	''
  * lon0		: 	''
  * lon1		: 	''
+ * do_gsics	: 	Flag indicating whether to apply GSICS or IMPF calibration.
+ * satposstr: 	String to store the satellite position information required for
+ *					parallax correction.
  * do_not_alloc	: Flag indicating not to allocate space for the output data.
  *                Useful for avoiding unnecessary memory allocations and use.
  *
@@ -476,7 +524,7 @@ int seviri_read_and_preproc_nat(const char *filename,
                                 enum seviri_bounds bounds,
                                 uint line0, uint line1, uint column0, uint column1,
                                 double lat0, double lat1, double lon0, double lon1,
-                                int do_gsics, int do_not_alloc)
+                                int do_gsics, char satposstr[128], int do_not_alloc)
 {
      struct seviri_data seviri;
      int rss=0;
@@ -487,7 +535,7 @@ int seviri_read_and_preproc_nat(const char *filename,
           return -1;
      }
 
-     if (seviri_preproc(&seviri, preproc, band_units, rss, do_gsics, do_not_alloc)) {
+     if (seviri_preproc(&seviri, preproc, band_units, rss, do_gsics, satposstr, do_not_alloc)) {
           fprintf(stderr, "ERROR: seviri_preproc()\n");
           return -1;
      }
@@ -519,6 +567,9 @@ int seviri_read_and_preproc_nat(const char *filename,
  * lat1		:      ''
  * lon0		:      ''
  * lon1		:      ''
+ * do_gsics	: 	Flag indicating whether to apply GSICS or IMPF calibration.
+ * satposstr: 	String to store the satellite position information required for
+ *					parallax correction.
  * do_not_alloc	: Flag indicating not to allocate space for the output data.
  *                Useful for avoiding unnecessary memory allocations and use.
  *
@@ -532,7 +583,8 @@ int seviri_read_and_preproc_hrit(const char *indir, const char *timeslot,
                                  enum seviri_bounds bounds,
                                  uint line0, uint line1, uint column0, uint column1,
                                  double lat0, double lat1, double lon0, double lon1,
-                                 int rss, int iodc, int do_gsics, int do_not_alloc)
+                                 int rss, int iodc, int do_gsics, char satposstr[128],
+                                 int do_not_alloc)
 {
      int i, proc_hrv = 0;
 
@@ -545,7 +597,7 @@ int seviri_read_and_preproc_hrit(const char *indir, const char *timeslot,
           return -1;
      }
 
-     if (seviri_preproc(&seviri, preproc, band_units, rss, do_gsics, do_not_alloc)) {
+     if (seviri_preproc(&seviri, preproc, band_units, rss, do_gsics, satposstr, do_not_alloc)) {
          fprintf(stderr, "ERROR: seviri_preproc()\n");
           return -1;
      }
@@ -598,7 +650,7 @@ int seviri_read_and_preproc(const char *filename,
                             enum seviri_bounds bounds,
                             uint line0, uint line1, uint column0, uint column1,
                             double lat0, double lat1, double lon0, double lon1,
-                            int do_gsics, int do_not_alloc)
+                            int do_gsics, char satposstr[128], int do_not_alloc)
 {
      char *indir;
      int satnum;
@@ -609,7 +661,7 @@ int seviri_read_and_preproc(const char *filename,
      if (strstr(filename, ".nat") != NULL) {
           if (seviri_read_and_preproc_nat(filename, preproc, n_bands, band_ids,
                band_units, bounds, line0, line1, column0, column1, lat0, lat1,
-               lon0, lon1, do_gsics, do_not_alloc)) {
+               lon0, lon1, do_gsics, satposstr, do_not_alloc)) {
                fprintf(stderr, "ERROR: seviri_read_and_preproc_nat()\n");
                return -1;
           }
@@ -623,7 +675,7 @@ int seviri_read_and_preproc(const char *filename,
 
           if (seviri_read_and_preproc_hrit(indir, timeslot, satnum, preproc,
                n_bands, band_ids, band_units, bounds, line0, line1, column0,
-               column1, lat0, lat1, lon0, lon1, rss, iodc, do_gsics, do_not_alloc)) {
+               column1, lat0, lat1, lon0, lon1, rss, iodc, do_gsics, satposstr, do_not_alloc)) {
                fprintf(stderr, "ERROR: seviri_read_and_preproc_hrit()\n");
                return -1;
           }

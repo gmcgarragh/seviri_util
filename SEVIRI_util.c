@@ -83,14 +83,17 @@ int main(int argc, char *argv[])
      /* This struct will contain the image data and some metadata. */
      struct seviri_preproc_data preproc;
 
+     /* Char array to store information required for parallax correction */
+     char satposstr[128];
+
      /* Parse the input driver file into the driver structure */
      if (argc!=2){show_usage();exit(-1);}
      if (parse_driver(argv[1],&driver)!=0) {E_L_R();}
      if (VERBOSE) if (print_driver(driver)!=0) {E_L_R();}
 
      /* Run the appropriate processing chain, HRIT or NAT */
-     if (driver.infrmt==SEVIRI_INFILE_HRIT) if (run_sev_hrit(driver,&preproc)!=0) {E_L_R();}
-     if (driver.infrmt==SEVIRI_INFILE_NAT) if (run_sev_native(driver,&preproc)!=0) {E_L_R();}
+     if (driver.infrmt==SEVIRI_INFILE_HRIT) if (run_sev_hrit(driver,&preproc, satposstr)!=0) {E_L_R();}
+     if (driver.infrmt==SEVIRI_INFILE_NAT) if (run_sev_native(driver,&preproc, satposstr)!=0) {E_L_R();}
 
      /* If we're in verbose mode then print info about a sample pixel in the preprocessed data
         By default we'll examine the central pixel in the image */
