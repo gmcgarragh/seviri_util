@@ -46,48 +46,48 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
                              double lat0, double lat1, double lon0, double lon1,
                              struct seviri_auxillary_io_data *aux)
 {
-     uchar *data10;
+     uchar *data10 = '\0';
 
      const uchar shifts[] = {6, 4, 2, 0};
 
-     ushort temp;
+     ushort temp=0;
 
      const ushort masks[] = {0xFFC0, 0x3FF0, 0x0FFC, 0x03FF};
 
-     uint i;
-     uint ii;
-     uint iii;
-     uint j;
-     uint jj;
-     uint jjj;
-     uint k;
+     uint i=0;
+     uint ii=0;
+     uint iii=0;
+     uint j=0;
+     uint jj=0;
+     uint jjj=0;
+     uint k=0;
 
-     uint length;
+     uint length=0;
 
-     uint i_band;
+     uint i_band=0;
 
-     uint i_image;
+     uint i_image=0;
 
-     uint n_bands_VIR;
-     uint n_bands_HRV;
+     uint n_bands_VIR=0;
+     uint n_bands_HRV=0;
 
-     uint n_bytes_VIR_line;
-     uint n_bytes_HRV_line;
+     uint n_bytes_VIR_line=0;
+     uint n_bytes_HRV_line=0;
 
-     uint n_bytes_line_group;
+     uint n_bytes_line_group=0;
 
-     uint j_offset;
-     uint i_column0;
-     uint i_column1;
+     uint j_offset=0;
+     uint i_column0=0;
+     uint i_column1=0;
 
-     uint i_alignment0;
-     uint i_alignment1;
-     uint n_loop0;
-     uint n_loop1;
+     uint i_alignment0=0;
+     uint i_alignment1=0;
+     uint n_loop0=0;
+     uint n_loop1=0;
 
-     long file_start;
-     long file_offset;
-     long file_offset2;
+     long file_start=0;
+     long file_offset=0;
+     long file_offset2=0;
 
      struct seviri_dimension_data *dimens;
 

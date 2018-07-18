@@ -173,7 +173,7 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
 
      /* Initialise each variable, loop first over all bands included in the preproc data*/
      for (i=0;i<preproc.n_bands;i++) {
-          if(nc_def_var(ncid, bnames[driver.sev_bands.band_ids[i-1]], NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
+          if(nc_def_var(ncid, bnames[driver.sev_bands.band_ids[i]], NC_FLOAT, 2,dimids, &varid[i])) {E_L_R();};
           if (driver.compression==1) if(nc_def_var_deflate(ncid, varid[i], 1,1,2)) {E_L_R();};
           if(nc_put_att_float(ncid, varid[i], "_FillValue",NC_FLOAT, 1, &preproc.fill_value)) {E_L_R();};
           if (driver.outtype[i] == SEVIRI_UNIT_CNT){if(nc_put_att_float(ncid, varid[i], "valid_range",NC_FLOAT, 2, cnt_range)) {E_L_R();};if(nc_put_att_text (ncid, NC_GLOBAL, "title",strlen(title_cnt), title_cnt)) {E_L_R();};}
@@ -247,6 +247,8 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
 
      /* Now we are done, so close the file*/
      if(nc_close(ncid)) {E_L_R();};
+
+     free(varid);
 
      return 0;
 }
