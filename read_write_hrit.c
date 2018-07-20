@@ -360,7 +360,6 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      free(epiname);
      for (i = 0; i < n_bands; i++) {
           for (j = 0; j < 8 ; j++) {
-               if (rss==1 && j<6) continue;
                free(bnames[i][j]);
           }
           free(bnames[i]);
