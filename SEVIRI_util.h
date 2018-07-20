@@ -38,6 +38,8 @@ struct driver_data {
      char              *infdir;
      char              *timeslot;
      int               satnum;
+     int               rss;
+     int               iodc;
      char              read_bands[12];
      struct            bands_st sev_bands;
      int               outfrmt;

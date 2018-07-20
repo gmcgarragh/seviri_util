@@ -18,16 +18,18 @@
  *   Line 2,  Input directory (if HRIT) or input file (if NAT)
  *   Line 3,  Timeslot (if HRIT, YYYYMMDDHHMM) or blank (if NAT)
  *   Line 4,  Satellite number (if HRIT, 1/2/3/4) or blank (if nat)
- *   Line 5,  Bands to read (HRIT and NAT) in format: 11010100100
+ *   Line 5,  Rapid scan coverage, 1 for yes 0 for no.
+ *   Line 6,  Indian Ocean coverage, 1 for yes 0 for no.
+ *   Line 7,  Bands to read (HRIT and NAT) in format: 11010100100
  *            1 = read this band, 0 = do not read this band
  *            max length: 11 chars. If shorter, defaults to 0 for missing bands
- *   Line 6,  Output data format: HDF, CDF or TIF
- *   Line 7,  Output data type: CNT, RAD or RBT (for count, radiance, refl/bt)
- *   Line 8,  Output directory
- *   Line 9,  Initial line
- *   Line 10, Final line
- *   Line 11, Initial column
- *   Line 12, Final column
+ *   Line 8,  Output data format: HDF, CDF or TIF
+ *   Line 9,  Output data type: CNT, RAD or RBT (for count, radiance, refl/bt)
+ *   Line 10,  Output directory
+ *   Line 11,  Initial line
+ *   Line 12, Final line
+ *   Line 13, Initial column
+ *   Line 14, Final column
  *            If final vals < initial vals: Program will quit
  *            If initial vals are < 0:      Program assumes initial vals = 0
  *            If final vals are > 3711:     Program assumes final vals = 3711
@@ -47,7 +49,9 @@
  *   Example file:
  *   HRT
  *   $HOME/my_data/RAW_SEVIRI_data/
- *   200603031200
+ *   201703031200
+ *   1
+ *   0
  *   1
  *   11100011011
  *   HDF
@@ -64,7 +68,8 @@
  *   compress
  *   calib
  *
- *   This example will read HRIT data from 12:00 UTC on 3rd March 2006
+ *   This example will read HRIT data from 12:00 UTC on 3rd March 2017
+ *   will search for IODC data but not RSS data
  *   Will save in the HDF5 file format
  *   Will convert into reflectance or brightness temp (depending on channel)
  *   Will work on a 500x1000 segment of the image

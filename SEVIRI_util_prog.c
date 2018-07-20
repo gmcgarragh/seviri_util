@@ -28,7 +28,7 @@
 int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc, char satposstr[128])
 {
      if (seviri_read_and_preproc(driver.infdir,preproc, driver.sev_bands.nbands, driver.sev_bands.band_ids,
-     driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., 0., driver.do_calib, satposstr, 0))
+     driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., driver.rss, driver.iodc, satposstr, 0))
      {E_L_R();}
      return 0;
 }
@@ -45,10 +45,8 @@ int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc
 *******************************************************************************/
 int run_sev_hrit(struct driver_data driver,struct seviri_preproc_data *preproc, char satposstr[128])
 {
-     int iodc =0;
-     if (driver.satnum==SAT_MSG1+1) iodc=1;
      if (seviri_read_and_preproc_hrit(driver.infdir,driver.timeslot,driver.satnum, preproc, driver.sev_bands.nbands, driver.sev_bands.band_ids,
-     driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., 0., 0, iodc, driver.do_calib, satposstr, 0))
+     driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., 0., driver.rss, driver.iodc, driver.do_calib, satposstr, 0))
      {E_L_R();}
      return 0;
 }

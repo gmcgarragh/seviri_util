@@ -256,6 +256,22 @@ int parse_driver(char *fname,struct driver_data *driver)
           else {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      }
 
+     /* Read the rss mode */
+     if (getline(&line,&len,fp)==-1) {printf("Failure reading RSS flag line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+     if (strlen(line)<1 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading RSS flag line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+     line[strlen(line)-1]='\0';
+     if (atoi(line)==0) driver->rss     =     0;
+     else if (atoi(line)==1) driver->rss     =     1;
+     else {printf("Failure reading RSS flag line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+
+     /* Read the iodc mode */
+     if (getline(&line,&len,fp)==-1) {printf("Failure reading IODC flag line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+     if (strlen(line)<1 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading IODC flag line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+     line[strlen(line)-1]='\0';
+     if (atoi(line)==0) driver->iodc     =     0;
+     else if (atoi(line)==1) driver->iodc     =     1;
+     else {printf("Failure reading IODC flag line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+
      /* Read the bands to process */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading bands to process line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';

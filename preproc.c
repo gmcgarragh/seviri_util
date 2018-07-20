@@ -53,9 +53,13 @@ static void get_cal_slope_and_offset(const struct seviri_data *d, int band_id,
                MPEFCalFeedback_data[band_id - 1].GSICSOffsetCount;
 
           if (gs < 0.0000001)
+          {
                fprintf(stderr,"WARNING: GSICS coefficients unavailable. "
                               "Using IMPF calibration.\n");
-          else {
+               *slope = bc;
+               *offset = ac;
+          }
+          else{
                br = su_get_br_val(bc, gs);
                ar = su_get_ar_val(ac, bc, go);
                *slope  = (bc / br);
