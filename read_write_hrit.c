@@ -193,7 +193,7 @@ static int alloc_imagearr(uint nbands, const uint *band_ids, struct seviri_data 
 int seviri_get_dimens_hrit(const char *indir, const char *timeslot, int sat,
      uint *i_line, uint *i_column, uint *n_lines, uint *n_columns,
      enum seviri_bounds bounds, uint line0, uint line1, uint column0,
-     uint column1, double lat0, double lat1, double lon0, double lon1)
+     uint column1, double lat0, double lat1, double lon0, double lon1, int rss)
 {
      struct seviri_dimension_data dimens;
 
@@ -215,7 +215,7 @@ int seviri_get_dimens_hrit(const char *indir, const char *timeslot, int sat,
 
      /* Allocate and fill in the seviri_dimension_data struct. */
      if (seviri_get_dimension_data(&dimens, &marf_header, bounds, line0, line1,
-                                   column0, column1, lat0, lat1, lon0, lon1)) {
+                                   column0, column1, lat0, lat1, lon0, lon1, rss)) {
           fprintf(stderr, "ERROR: seviri_get_dimension_data()\n");
           return -1;
      }
@@ -308,22 +308,37 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      /* Put image info in the correct place. This is done for consistency with
         the .nat reader. HRIT files contain different data, so need to move
         things around. */
-     sprintf(d->marf_header.secondary.NumberLinesVISIR.Value,   "%i", IMAGE_SIZE_VIR_LINES);
-     sprintf(d->marf_header.secondary.NumberColumnsVISIR.Value, "%i", IMAGE_SIZE_VIR_COLUMNS);
-     sprintf(d->marf_header.secondary.NumberLinesHRV.Value,     "%i", IMAGE_SIZE_HRV_LINES);
-     sprintf(d->marf_header.secondary.NumberColumnsHRV.Value,   "%i", IMAGE_SIZE_HRV_COLUMNS);
+     if (rss!=1)
+     {
+		  sprintf(d->marf_header.secondary.NumberLinesVISIR.Value,   "%i", IMAGE_SIZE_VIR_LINES);
+		  sprintf(d->marf_header.secondary.NumberColumnsVISIR.Value, "%i", IMAGE_SIZE_VIR_COLUMNS);
+		  sprintf(d->marf_header.secondary.NumberLinesHRV.Value,     "%i", IMAGE_SIZE_HRV_LINES);
+		  sprintf(d->marf_header.secondary.NumberColumnsHRV.Value,   "%i", IMAGE_SIZE_HRV_COLUMNS);
 
-     sprintf(d->marf_header.secondary.SouthLineSelectedRectangle.Value,  "%i",1);
-     sprintf(d->marf_header.secondary.NorthLineSelectedRectangle.Value,  "%i",IMAGE_SIZE_VIR_LINES);
-     sprintf(d->marf_header.secondary.EastColumnSelectedRectangle.Value, "%i",1);
-     sprintf(d->marf_header.secondary.WestColumnSelectedRectangle.Value, "%i",IMAGE_SIZE_VIR_COLUMNS);
+		  sprintf(d->marf_header.secondary.SouthLineSelectedRectangle.Value,  "%i",1);
+		  sprintf(d->marf_header.secondary.NorthLineSelectedRectangle.Value,  "%i",IMAGE_SIZE_VIR_LINES);
+		  sprintf(d->marf_header.secondary.EastColumnSelectedRectangle.Value, "%i",1);
+		  sprintf(d->marf_header.secondary.WestColumnSelectedRectangle.Value, "%i",IMAGE_SIZE_VIR_COLUMNS);
+     }
+     else
+     {
+		  sprintf(d->marf_header.secondary.NumberLinesVISIR.Value,   "%i", IMAGE_SIZE_VIR_RSSLINES);
+		  sprintf(d->marf_header.secondary.NumberColumnsVISIR.Value, "%i", IMAGE_SIZE_VIR_RSSCOLUMNS);
+		  sprintf(d->marf_header.secondary.NumberLinesHRV.Value,     "%i", IMAGE_SIZE_HRV_LINES);
+		  sprintf(d->marf_header.secondary.NumberColumnsHRV.Value,   "%i", IMAGE_SIZE_HRV_COLUMNS);
+
+		  sprintf(d->marf_header.secondary.SouthLineSelectedRectangle.Value,  "%i",1);
+		  sprintf(d->marf_header.secondary.NorthLineSelectedRectangle.Value,  "%i",IMAGE_SIZE_VIR_RSSLINES);
+		  sprintf(d->marf_header.secondary.EastColumnSelectedRectangle.Value, "%i",1);
+		  sprintf(d->marf_header.secondary.WestColumnSelectedRectangle.Value, "%i",IMAGE_SIZE_VIR_RSSCOLUMNS);
+     }
 
 
      /* Allocate and fill in the seviri_dimension_data struct. */
      dimens = (struct seviri_dimension_data *) &d->image.dimens;
 
      if (seviri_get_dimension_data(dimens, &d->marf_header, bounds, line0, line1,
-                                   column0, column1, lat0, lat1, lon0, lon1)) {
+                                   column0, column1, lat0, lat1, lon0, lon1, rss)) {
           fprintf(stderr, "ERROR: seviri_get_dimension_data()\n");
           return -1;
      }

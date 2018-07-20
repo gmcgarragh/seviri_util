@@ -1298,7 +1298,7 @@ int seviri_get_dimension_data(
           const struct seviri_marf_header_data *marf_header,
           enum seviri_bounds bounds,
           uint line0, uint line1, uint column0, uint column1,
-          double lat0, double lat1, double lon0, double lon1)
+          double lat0, double lat1, double lon0, double lon1, int rss)
 {
      uint column0_2;
      uint column1_2;
@@ -1352,8 +1352,16 @@ int seviri_get_dimension_data(
           d->i_line_requested_VIR    = 0;
           d->i_column_requested_VIR  = 0;
 
-          d->n_lines_requested_VIR   = IMAGE_SIZE_VIR_LINES;
-          d->n_columns_requested_VIR = IMAGE_SIZE_VIR_COLUMNS;
+          if (rss==0)
+          {
+             d->n_lines_requested_VIR   = IMAGE_SIZE_VIR_LINES;
+             d->n_columns_requested_VIR = IMAGE_SIZE_VIR_COLUMNS;
+          }
+          else
+          {
+             d->n_lines_requested_VIR   = IMAGE_SIZE_VIR_RSSLINES;
+             d->n_columns_requested_VIR = IMAGE_SIZE_VIR_RSSCOLUMNS;
+          }
 
           d->i_line_to_read_VIR      = 0;
           d->i_column_to_read_VIR    = 0;

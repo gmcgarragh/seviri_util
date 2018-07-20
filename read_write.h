@@ -1082,7 +1082,7 @@ int seviri_get_dimension_data(
           const struct seviri_marf_header_data *marf_header,
           enum seviri_bounds bounds,
           uint line0, uint line1, uint column0, uint column1,
-          double lat0, double lat1, double lon0, double lon1);
+          double lat0, double lat1, double lon0, double lon1, int rss);
 
 int seviri_free(struct seviri_data *d);
 

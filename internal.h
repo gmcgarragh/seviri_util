@@ -58,6 +58,9 @@ extern "C" {
 #define IMAGE_SIZE_VIR_LINES	3712
 #define IMAGE_SIZE_VIR_COLUMNS	3712
 
+#define IMAGE_SIZE_VIR_RSSLINES	1392
+#define IMAGE_SIZE_VIR_RSSCOLUMNS	3712
+
 #define IMAGE_SIZE_HRV_LINES	11136
 #define IMAGE_SIZE_HRV_COLUMNS	5568
 
@@ -80,6 +83,7 @@ struct nav_scaling_factors {
      double COFF;
      double LOFF;
 };
+
 
 
 /*******************************************************************************

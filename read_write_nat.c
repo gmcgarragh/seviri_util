@@ -157,7 +157,7 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
      dimens = (struct seviri_dimension_data *) &image->dimens;
 
      if (seviri_get_dimension_data(dimens, marf_header, bounds, line0, line1,
-                                   column0, column1, lat0, lat1, lon0, lon1)) {
+                                   column0, column1, lat0, lat1, lon0, lon1, 0)) {
           fprintf(stderr, "ERROR: seviri_get_dimension_data()\n");
           return -1;
      }
@@ -525,7 +525,7 @@ int seviri_get_dimens_nat(const char *filename, uint *i_line, uint *i_column,
      }
 
      if (seviri_get_dimension_data(&dimens, &marf_header, bounds, line0, line1,
-                                   column0, column1, lat0, lat1, lon0, lon1)) {
+                                   column0, column1, lat0, lat1, lon0, lon1, 0)) {
           fprintf(stderr, "ERROR: seviri_get_dimension_data()\n");
           fclose(fp);
           return -1;
