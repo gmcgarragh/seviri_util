@@ -54,40 +54,40 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
 
      const ushort masks[] = {0xFFC0, 0x3FF0, 0x0FFC, 0x03FF};
 
-     uint i=0;
-     uint ii=0;
-     uint iii=0;
-     uint j=0;
-     uint jj=0;
-     uint jjj=0;
-     uint k=0;
+     uint i;
+     uint ii;
+     uint iii;
+     uint j;
+     uint jj;
+     uint jjj;
+     uint k;
 
-     uint length=0;
+     uint length;
 
-     uint i_band=0;
+     uint i_band;
 
-     uint i_image=0;
+     uint i_image;
 
-     uint n_bands_VIR=0;
-     uint n_bands_HRV=0;
+     uint n_bands_VIR;
+     uint n_bands_HRV;
 
-     uint n_bytes_VIR_line=0;
-     uint n_bytes_HRV_line=0;
+     uint n_bytes_VIR_line;
+     uint n_bytes_HRV_line;
 
-     uint n_bytes_line_group=0;
+     uint n_bytes_line_group;
 
-     uint j_offset=0;
-     uint i_column0=0;
-     uint i_column1=0;
+     uint j_offset;
+     uint i_column0;
+     uint i_column1;
 
-     uint i_alignment0=0;
-     uint i_alignment1=0;
-     uint n_loop0=0;
-     uint n_loop1=0;
+     uint i_alignment0;
+     uint i_alignment1;
+     uint n_loop0;
+     uint n_loop1;
 
-     long file_start=0;
-     long file_offset=0;
-     long file_offset2=0;
+     long file_start;
+     long file_offset;
+     long file_offset2;
 
      struct seviri_dimension_data *dimens;
 
