@@ -37,7 +37,6 @@ static long get_time_since_launch(const struct seviri_data *d) {
      short  satnum;
      double jtime_start, jtime_end, jtime;
      double dayssince;
-     int    year, month, day, day_of_year;
 
      const  double launches[4] = {2452514.5,  // MSG-1
                                   2453725.5,  // MSG-2
@@ -67,8 +66,6 @@ static long get_time_since_launch(const struct seviri_data *d) {
 static float *get_nasa_calib(short satnum, int band_id, long dayssince) {
 
      static float retval[3];
-     const  int   c0  =  51;
-     const  long  iodc_move  =  1485907200;
 
      // Define arrays with g0, g1 and g2 values for each satellite
      // MSG-1 has two sets, one pre- and one post-IODC move.
@@ -197,7 +194,6 @@ static void get_cal_slope_and_offset(const struct seviri_data *d, int band_id,
      double ar, br;
      double ac, bc;
      double gs, go;
-     long days_launch;
 
      ac = d->header.RadiometricProcessing.
           Level1_5ImageCalibration[band_id - 1].Cal_Offset;
@@ -297,10 +293,6 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
 
      double slope;
      double offset;
-
-     double ar, br;
-     double ac, bc;
-     double gs, go;
 
      double day_of_year;
 
@@ -446,6 +438,15 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                  ((jtime_end2   - jtime_start2) / 2.);
 
      X = d->header.SatelliteStatus.OrbitPolynomial[i].X[0] +
+         d->header.SatelliteStatus.OrbitPolynomial[i].X[1] * t;
+
+     Y = d->header.SatelliteStatus.OrbitPolynomial[i].Y[0] +
+         d->header.SatelliteStatus.OrbitPolynomial[i].Y[1] * t;
+
+     Z = d->header.SatelliteStatus.OrbitPolynomial[i].Z[0] +
+         d->header.SatelliteStatus.OrbitPolynomial[i].Z[1] * t;
+/*
+     X = d->header.SatelliteStatus.OrbitPolynomial[i].X[0] +
          d->header.SatelliteStatus.OrbitPolynomial[i].X[1] * t -
          0.5* d->header.SatelliteStatus.OrbitPolynomial[i].X[0];
 
@@ -456,7 +457,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      Z = d->header.SatelliteStatus.OrbitPolynomial[i].Z[0] +
          d->header.SatelliteStatus.OrbitPolynomial[i].Z[1] * t -
          0.5* d->header.SatelliteStatus.OrbitPolynomial[i].Z[0];
-
+*/
 
      /*-------------------------------------------------------------------------
       * Compute latitude and longitude and solar and sensor zenith and azimuth
@@ -607,7 +608,10 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
       *
       * Ref: PDF_MSG_SEVIRI_RAD2REFL, Page 8
       *-----------------------------------------------------------------------*/
+/*
      a = sqrt(su_solar_distance_factor2(day_of_year));
+*/
+     a = PI * sqrt(su_solar_distance_factor2(day_of_year));
 
      for (i = 0; i < d->image.n_bands; ++i) {
           if (band_units[i] == SEVIRI_UNIT_REF || band_units[i] == SEVIRI_UNIT_BRF) {
@@ -648,7 +652,9 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                                    d2->data[i][i_image] = b * R;
 
                                    if (band_units[i] == SEVIRI_UNIT_BRF) {
+/*
                                         d2->data[i][i_image] *= PI;
+*/
                                         d2->data[i][i_image] /= cos(d2->sza[i_image] * D2R);
                                    }
                               }
