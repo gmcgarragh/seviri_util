@@ -144,7 +144,8 @@ module seviri_util
     interface
         integer(c_int) function seviri_read_and_preproc_nat(filename, preproc, &
             n_bands, band_ids, band_units, bounds, line0, line1, column0, column1, &
-            lat0, lat1, lon0, lon1, do_calib, satposstr, do_not_alloc) bind(C, name = 'seviri_read_and_preproc_nat')
+            lat0, lat1, lon0, lon1, do_calib, satposstr, do_not_alloc) bind(C, &
+            name = 'seviri_read_and_preproc_nat')
 
             use iso_c_binding
 
@@ -159,7 +160,7 @@ module seviri_util
             integer(c_int),         intent(in)        :: band_units(*)
             integer(c_int),         intent(in), value :: bounds
             integer(c_int),         intent(in), value :: line0, line1, &
-                                                        column0, column1
+                                                         column0, column1
             real(c_double),         intent(in), value :: lat0, lat1, lon0, lon1
             integer(c_int),         intent(in), value :: do_calib
             character(c_char),      intent(inout)     :: satposstr(128)
@@ -170,8 +171,8 @@ module seviri_util
     interface
         integer(c_int) function seviri_read_and_preproc_hrit(filename, timeslot, &
 	    satnum, preproc, n_bands, band_ids, band_units, bounds, line0, line1, &
-            column0, column1, lat0, lat1, lon0, lon1, rss, &
-            do_calib, satposstr, do_not_alloc) bind(C, name = 'seviri_read_and_preproc_hrit')
+            column0, column1, lat0, lat1, lon0, lon1, rss, do_calib, satposstr, &
+            do_not_alloc) bind(C, name = 'seviri_read_and_preproc_hrit')
 
             use iso_c_binding
 
@@ -200,7 +201,8 @@ module seviri_util
     interface
         integer(c_int) function seviri_read_and_preproc(filename, preproc, &
             n_bands, band_ids, band_units, bounds, line0, line1, column0, column1, &
-            lat0, lat1, lon0, lon1, do_calib, satposstr, do_not_alloc) bind(C, name = 'seviri_read_and_preproc')
+            lat0, lat1, lon0, lon1, do_calib, satposstr, do_not_alloc) bind(C, &
+            name = 'seviri_read_and_preproc')
 
             use iso_c_binding
 
@@ -318,7 +320,7 @@ end function seviri_get_dimens_f90
 
 
 integer function seviri_read_and_preproc_nat_f90(filename, preproc_f90, n_bands, &
-   band_ids, band_units, bounds, line0, line1, column0, column1, lat0, lat1, &
+    band_ids, band_units, bounds, line0, line1, column0, column1, lat0, lat1, &
     lon0, lon1, do_calib_f90, satposstr, do_not_alloc_f90) result(status)
 
     implicit none
@@ -401,7 +403,8 @@ end function seviri_read_and_preproc_nat_f90
 
 integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
     preproc_f90, n_bands, band_ids, band_units, bounds, line0, line1, column0, &
-    column1, lat0, lat1, lon0, lon1, rss_f90, do_calib_f90, satposstr, do_not_alloc_f90) result(status)
+    column1, lat0, lat1, lon0, lon1, rss_f90, do_calib_f90, satposstr, &
+    do_not_alloc_f90) result(status)
 
     implicit none
 

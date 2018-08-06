@@ -26,13 +26,13 @@ enum sat_nums       {SAT_MSG1, SAT_MSG2, SAT_MSG3, SAT_MSG4, N_SEVIRI_SATNUMS};
 extern const char *bnames[];
 
 
-/*  Struct that contains the band information, both number of bands and which to process */
+/* Struct that contains the band information, both number of bands and which to process */
 struct bands_st {
      unsigned int nbands;
      unsigned int *band_ids;
 };
 
-/*  Struct that contains the driver info, main info needed by the utility. */
+/* Struct that contains the driver info, main info needed by the utility. */
 struct driver_data {
      int               infrmt;
      char              *infdir;
@@ -57,17 +57,17 @@ struct driver_data {
 };
 
 
-/*   In SEVIRI_tool_funcs.c */
+/* In SEVIRI_tool_funcs.c */
 void show_usage();
 int print_driver(struct driver_data driver);
 int free_driver(struct driver_data *driver);
 int parse_driver(char *fname,struct driver_data *driver);
 int print_preproc_out(struct driver_data, struct seviri_preproc_data preproc, unsigned int i_line, unsigned int i_column);
 
-/*   In SEVIRI_tool_prog.c */
-int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc, char satposstr[128]);
-int run_sev_hrit(struct driver_data driver,struct seviri_preproc_data *preproc, char satposstr[128]);
+/* In SEVIRI_tool_prog.c */
+int run_sev_native(struct driver_data driver, struct seviri_preproc_data *preproc, char satposstr[128]);
+int run_sev_hrit(struct driver_data driver, struct seviri_preproc_data *preproc, char satposstr[128]);
 
-int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc);
-int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc);
-int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc);
+int save_sev_tiff(struct driver_data driver, struct seviri_preproc_data preproc);
+int save_sev_cdf(struct driver_data driver, struct seviri_preproc_data preproc);
+int save_sev_hdf(struct driver_data driver, struct seviri_preproc_data preproc);

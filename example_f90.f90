@@ -1,7 +1,5 @@
-
 ! Example program calling seviri_util to read a native SEVIRI level 1.5 image
 ! file and preprocess it to obtain several fields.
-
 
 program example_f90
 

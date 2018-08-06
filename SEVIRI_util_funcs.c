@@ -1,14 +1,14 @@
 /*******************************************************************************
-**
-**    Copyright (C) 2015-2018 Simon Proud <simon.proud@physics.ox.ac.uk>
-**
-**    This source code is licensed under the GNU General Public License (GPL),
-**    Version 3.  See the file COPYING for more details.
-**
-**    This file contains helper code for the main SEVIRI utility.
-**    These functions parse input, display options and perform most of
-**    the set-up operations prior to actually parsing the SEVIRI data
-**
+*
+*    Copyright (C) 2015-2018 Simon Proud <simon.proud@physics.ox.ac.uk>
+*
+*    This source code is licensed under the GNU General Public License (GPL),
+*    Version 3.  See the file COPYING for more details.
+*
+*    This file contains helper code for the main SEVIRI utility.
+*    These functions parse input, display options and perform most of
+*    the set-up operations prior to actually parsing the SEVIRI data
+*
 *******************************************************************************/
 
 #include "SEVIRI_util.h"
@@ -224,8 +224,8 @@ int parse_driver(char *fname,struct driver_data *driver)
      /* Read the type of input file from line 1 of the driver */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading HRIT line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
-     if (!strcmp(line,"HRIT"))     driver->infrmt = SEVIRI_INFILE_HRIT;
-     else if (!strcmp(line,"NAT"))     driver->infrmt = SEVIRI_INFILE_NAT;
+     if (!strcmp(line,"HRIT")) driver->infrmt = SEVIRI_INFILE_HRIT;
+     else if (!strcmp(line,"NAT")) driver->infrmt = SEVIRI_INFILE_NAT;
      else {printf("Incorrect input type in driver file. Must be HRIT or NAT.\n");free(line);fclose(fp);E_L_R();}
 
      /* Read the filename / input file directory. */
@@ -249,10 +249,10 @@ int parse_driver(char *fname,struct driver_data *driver)
      if (strlen(line)<1 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (driver->infrmt==SEVIRI_INFILE_HRIT) {
           line[strlen(line)-1]='\0';
-          if (atoi(line)==1) driver->satnum     =     SAT_MSG1+1;
-          else if (atoi(line)==2) driver->satnum     =     SAT_MSG2+1;
-          else if (atoi(line)==3) driver->satnum     =     SAT_MSG3+1;
-          else if (atoi(line)==4) driver->satnum     =     SAT_MSG4+1;
+          if (atoi(line)==1) driver->satnum  = SAT_MSG1+1;
+          else if (atoi(line)==2) driver->satnum = SAT_MSG2+1;
+          else if (atoi(line)==3) driver->satnum = SAT_MSG3+1;
+          else if (atoi(line)==4) driver->satnum = SAT_MSG4+1;
           else {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      }
 
@@ -260,41 +260,40 @@ int parse_driver(char *fname,struct driver_data *driver)
      if (getline(&line,&len,fp)==-1) {printf("Failure reading RSS flag line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (strlen(line)<1 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading RSS flag line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
-     if (atoi(line)==0) driver->rss     =     0;
-     else if (atoi(line)==1) driver->rss     =     1;
+     if (atoi(line)==0) driver->rss = 0;
+     else if (atoi(line)==1) driver->rss = 1;
      else {printf("Failure reading RSS flag line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
 
      /* Read the iodc mode */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading IODC flag line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (strlen(line)<1 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading IODC flag line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
-     if (atoi(line)==0) driver->iodc     =     0;
-     else if (atoi(line)==1) driver->iodc     =     1;
+     if (atoi(line)==0) driver->iodc = 0;
+     else if (atoi(line)==1) driver->iodc = 1;
      else {printf("Failure reading IODC flag line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
 
      /* Read the bands to process */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading bands to process line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
      parsebands(line,&driver->sev_bands);
-     driver->outtype     =     (enum seviri_units*) malloc(sizeof(enum seviri_units)*driver->sev_bands.nbands);
+     driver->outtype = (enum seviri_units*) malloc(sizeof(enum seviri_units)*driver->sev_bands.nbands);
      if (driver->outtype == NULL) {printf("Failure reading bands to process line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (driver->sev_bands.nbands<=0 || driver->sev_bands.nbands>11) {printf("Failure reading bands to process line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
 
      /* Read the output file type */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading output file type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
-     if (!strcmp(line,"HDF"))     driver->outfrmt = SEVIRI_OUTFILE_HDF;
-     else if (!strcmp(line,"CDF"))     driver->outfrmt = SEVIRI_OUTFILE_CDF;
-     else if (!strcmp(line,"TIF"))     driver->outfrmt = SEVIRI_OUTFILE_TIF;
+     if (!strcmp(line,"HDF")) driver->outfrmt = SEVIRI_OUTFILE_HDF;
+     else if (!strcmp(line,"CDF")) driver->outfrmt = SEVIRI_OUTFILE_CDF;
+     else if (!strcmp(line,"TIF")) driver->outfrmt = SEVIRI_OUTFILE_TIF;
      else {printf("Failure reading output file type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
 
      /* Read the output units type */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading output units type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
-     if (!strcmp(line,"CNT"))     for (i=0;i<driver->sev_bands.nbands;i++) driver->outtype[i] = SEVIRI_UNIT_CNT;
-     else if (!strcmp(line,"RAD"))     for (i=0;i<driver->sev_bands.nbands;i++) driver->outtype[i] = SEVIRI_UNIT_RAD;
-     else if (!strcmp(line,"RBT"))     for (i=0;i<driver->sev_bands.nbands;i++)
-                              if (driver->sev_bands.band_ids[i]<=3) driver->outtype[i] = SEVIRI_UNIT_BRF; else driver->outtype[i] = SEVIRI_UNIT_BT;
+     if (!strcmp(line,"CNT")) for (i=0;i<driver->sev_bands.nbands;i++) driver->outtype[i] = SEVIRI_UNIT_CNT;
+     else if (!strcmp(line,"RAD")) for (i=0;i<driver->sev_bands.nbands;i++) driver->outtype[i] = SEVIRI_UNIT_RAD;
+     else if (!strcmp(line,"RBT")) for (i=0;i<driver->sev_bands.nbands;i++) if (driver->sev_bands.band_ids[i]<=3) driver->outtype[i] = SEVIRI_UNIT_BRF; else driver->outtype[i] = SEVIRI_UNIT_BT;
      else {printf("Failure reading output units type line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
 
      /* Read the output filename. */
@@ -311,24 +310,24 @@ int parse_driver(char *fname,struct driver_data *driver)
      /* Read the initial line */
      if (getline(&line,&len,fp)==-1) {printf("Failure reading input initial line line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      line[strlen(line)-1]='\0';
-     iline     =     atoi(line);
+     iline = atoi(line);
      driver->bounds = SEVIRI_BOUNDS_LINE_COLUMN;
      if (iline==-100) { driver->bounds = SEVIRI_BOUNDS_FULL_DISK; setline(driver);}
      if (iline==-200) { driver->bounds = SEVIRI_BOUNDS_ACTUAL_IMAGE; setline(driver);}
      if (iline!=-100 && iline!=-200) {
-          driver->iline     =     iline;
+          driver->iline = iline;
           /* Read the final line */
           if (getline(&line,&len,fp)==-1) {printf("Failure reading input final line line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
           line[strlen(line)-1]='\0';
-          driver->fline     =     atoi(line);
+          driver->fline = atoi(line);
           /* Read the initial column */
           if (getline(&line,&len,fp)==-1) {printf("Failure reading input initial column line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
           line[strlen(line)-1]='\0';
-          driver->icol     =     atoi(line);
+          driver->icol = atoi(line);
           /* Read the final column */
           if (getline(&line,&len,fp)==-1) {printf("Failure reading input final column line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
           line[strlen(line)-1]='\0';
-          driver->fcol     =     atoi(line);
+          driver->fcol = atoi(line);
 
           /* Check image boundaries to make sure the start and end line / col
              are sensible. */

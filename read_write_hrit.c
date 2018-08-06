@@ -249,7 +249,7 @@ int seviri_get_dimens_hrit(const char *indir, const char *timeslot, int sat,
  * lat1:	Final latitude
  * lon0:	Initial longitude
  * lon1:	Final longitude
- * rss:	Flag to set rss processing (1=yes, 0=no)
+ * rss:		Flag to set rss processing (1=yes, 0=no)
  * iodc:	Flag to set IODC processing (1=yes, 0=no)
  *
  * returns:	Zero if successful, nonzero if error
@@ -308,29 +308,27 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
      /* Put image info in the correct place. This is done for consistency with
         the .nat reader. HRIT files contain different data, so need to move
         things around. */
-     if (rss!=1)
-     {
-		  sprintf(d->marf_header.secondary.NumberLinesVISIR.Value,   "%i", IMAGE_SIZE_VIR_LINES);
-		  sprintf(d->marf_header.secondary.NumberColumnsVISIR.Value, "%i", IMAGE_SIZE_VIR_COLUMNS);
-		  sprintf(d->marf_header.secondary.NumberLinesHRV.Value,     "%i", IMAGE_SIZE_HRV_LINES);
-		  sprintf(d->marf_header.secondary.NumberColumnsHRV.Value,   "%i", IMAGE_SIZE_HRV_COLUMNS);
+     if (rss!=1) {
+          sprintf(d->marf_header.secondary.NumberLinesVISIR.Value,   "%i", IMAGE_SIZE_VIR_LINES);
+          sprintf(d->marf_header.secondary.NumberColumnsVISIR.Value, "%i", IMAGE_SIZE_VIR_COLUMNS);
+          sprintf(d->marf_header.secondary.NumberLinesHRV.Value,     "%i", IMAGE_SIZE_HRV_LINES);
+          sprintf(d->marf_header.secondary.NumberColumnsHRV.Value,   "%i", IMAGE_SIZE_HRV_COLUMNS);
 
-		  sprintf(d->marf_header.secondary.SouthLineSelectedRectangle.Value,  "%i",1);
-		  sprintf(d->marf_header.secondary.NorthLineSelectedRectangle.Value,  "%i",IMAGE_SIZE_VIR_LINES);
-		  sprintf(d->marf_header.secondary.EastColumnSelectedRectangle.Value, "%i",1);
-		  sprintf(d->marf_header.secondary.WestColumnSelectedRectangle.Value, "%i",IMAGE_SIZE_VIR_COLUMNS);
+          sprintf(d->marf_header.secondary.SouthLineSelectedRectangle.Value,  "%i",1);
+          sprintf(d->marf_header.secondary.NorthLineSelectedRectangle.Value,  "%i",IMAGE_SIZE_VIR_LINES);
+          sprintf(d->marf_header.secondary.EastColumnSelectedRectangle.Value, "%i",1);
+          sprintf(d->marf_header.secondary.WestColumnSelectedRectangle.Value, "%i",IMAGE_SIZE_VIR_COLUMNS);
      }
-     else
-     {
-		  sprintf(d->marf_header.secondary.NumberLinesVISIR.Value,   "%i", IMAGE_SIZE_VIR_RSSLINES);
-		  sprintf(d->marf_header.secondary.NumberColumnsVISIR.Value, "%i", IMAGE_SIZE_VIR_RSSCOLUMNS);
-		  sprintf(d->marf_header.secondary.NumberLinesHRV.Value,     "%i", IMAGE_SIZE_HRV_LINES);
-		  sprintf(d->marf_header.secondary.NumberColumnsHRV.Value,   "%i", IMAGE_SIZE_HRV_COLUMNS);
+     else {
+          sprintf(d->marf_header.secondary.NumberLinesVISIR.Value,   "%i", IMAGE_SIZE_VIR_RSS_LINES);
+          sprintf(d->marf_header.secondary.NumberColumnsVISIR.Value, "%i", IMAGE_SIZE_VIR_RSS_COLUMNS);
+          sprintf(d->marf_header.secondary.NumberLinesHRV.Value,     "%i", IMAGE_SIZE_HRV_LINES);
+          sprintf(d->marf_header.secondary.NumberColumnsHRV.Value,   "%i", IMAGE_SIZE_HRV_COLUMNS);
 
-		  sprintf(d->marf_header.secondary.SouthLineSelectedRectangle.Value,  "%i",1);
-		  sprintf(d->marf_header.secondary.NorthLineSelectedRectangle.Value,  "%i",IMAGE_SIZE_VIR_RSSLINES);
-		  sprintf(d->marf_header.secondary.EastColumnSelectedRectangle.Value, "%i",1);
-		  sprintf(d->marf_header.secondary.WestColumnSelectedRectangle.Value, "%i",IMAGE_SIZE_VIR_RSSCOLUMNS);
+          sprintf(d->marf_header.secondary.SouthLineSelectedRectangle.Value,  "%i",1);
+          sprintf(d->marf_header.secondary.NorthLineSelectedRectangle.Value,  "%i",IMAGE_SIZE_VIR_RSS_LINES);
+          sprintf(d->marf_header.secondary.EastColumnSelectedRectangle.Value, "%i",1);
+          sprintf(d->marf_header.secondary.WestColumnSelectedRectangle.Value, "%i",IMAGE_SIZE_VIR_RSS_COLUMNS);
      }
 
 
@@ -359,10 +357,10 @@ int seviri_read_hrit(const char *indir, const char *timeslot, int sat,
 
      /* Loop over each band and each segment. Note: VIR only, no HRV */
      for (i = 0; i < n_bands; i++) {
-          for (j = 0; j < 8; j++)
-          {
-               if (rss==1 && j<5) continue;
-               if (read_data_oneseg(bnames[i][j], j, i+1, d,rss)) {
+          for (j = 0; j < 8; j++) {
+               if (rss == 1 && j < 5)
+                    continue;
+               if (read_data_oneseg(bnames[i][j], j, i+1, d, rss)) {
                     fprintf(stderr, "ERROR: read_data_oneseg()\n");
                     return -1;
                }

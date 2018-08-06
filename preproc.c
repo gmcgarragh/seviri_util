@@ -28,25 +28,23 @@ static double TIME_CDS_SHORT_to_jtime(const struct seviri_TIME_CDS_SHORT_data *d
 
 
 /*******************************************************************************
- *
- *  This function computes the number of days since satellite launch, based upon
- *  the image time and a const array storing launch dates. Needed for the NASA
- *  VIS calibration routines.
- *
+ * This function computes the number of days since satellite launch, based upon
+ * the image time and a const array storing launch dates. Needed for the NASA
+ * VIS calibration routines.
  ******************************************************************************/
 static long get_time_since_launch(const struct seviri_data *d) {
 
-	  double jtime_start, jtime_end, jtime;
-	  int    year, month, day, day_of_year;
-	  short  satnum;
-	  double dayssince;
+     short  satnum;
+     double jtime_start, jtime_end, jtime;
+     double dayssince;
+     int    year, month, day, day_of_year;
 
-     const  double launches[4] = {2452514.5,   // MSG-1
-                                  2453725.5,   // MSG-2
-                                  2456113.5,   // MSG-3
-                                  2457218.5};  // MSG-4
+     const  double launches[4] = {2452514.5,  // MSG-1
+                                  2453725.5,  // MSG-2
+                                  2456113.5,  // MSG-3
+                                  2457218.5}; // MSG-4
 
-	  satnum	=	d->trailer.ImageProductionStats.SatelliteID;
+     satnum = d->trailer.ImageProductionStats.SatelliteID;
 
      jtime_start = TIME_CDS_SHORT_to_jtime(
           &d->trailer.ImageProductionStats.ActScanForwardStart);
@@ -55,142 +53,142 @@ static long get_time_since_launch(const struct seviri_data *d) {
 
      jtime = (jtime_start + jtime_end) / 2.;
 
-	  dayssince = jtime-launches[satnum-321];
+     dayssince = jtime - launches[satnum-321];
 
      return dayssince;
 }
 
+
+
 /*******************************************************************************
- *
- *  This function generates an array of NASA calibration values for the VIS
- *  channels based upon satellite ID, band and days since satellite launch.
- *
+ * This function generates an array of NASA calibration values for the VIS
+ * channels based upon satellite ID, band and days since satellite launch.
  ******************************************************************************/
-float* get_nasa_calib(short satnum, int band_id, long dayssince) {
+static float *get_nasa_calib(short satnum, int band_id, long dayssince) {
 
-   static float retval[3];
-   const  int   c0  =  51;
-   const  long  iodc_move  =  1485907200;
+     static float retval[3];
+     const  int   c0  =  51;
+     const  long  iodc_move  =  1485907200;
 
-   // Subtract 320 from satnum to give a value between 1-4
-   satnum = satnum - 320;
-   // Add 1 to band_id to give a value between 1-12
-   band_id = band_id + 1;
+     // Define arrays with g0, g1 and g2 values for each satellite
+     // MSG-1 has two sets, one pre- and one post-IODC move.
+     const double gval_met8_a1[3]  = {0.6208,   9.56e-6,  0.};
+     const double gval_met8_a2[3]  = {0.4862,   -1e-6,    0.};
+     const double gval_met8_a3[3]  = {8.66e-2,  0.,       0.};
 
-   // Define arrays with g0, g1 and g2 values for each satellite
-   // MSG-1 has two sets, one pre- and one post-IODC move.
-   const  double gval_met8_a1[3]	=	{0.6208,   9.56e-6,  0.};
-   const  double gval_met8_a2[3]	=	{0.4862,   -1e-6,    0.};
-   const  double gval_met8_a3[3]	=	{8.66e-2,  0.,       0.};
+     const double gval_met8_b1[3]  = {0.6715,   0.,       0.};
+     const double gval_met8_b2[3]  = {0.4952,   0.,       0.};
+     const double gval_met8_b3[3]  = {8.541e-2, 0.,       0.};
 
-   const  double gval_met8_b1[3]	=	{0.6715,   0.,       0.};
-   const  double gval_met8_b2[3]	=	{0.4952,   0.,       0.};
-   const  double gval_met8_b3[3]	=	{8.541e-2, 0.,       0.};
+     const double gval_met9_a1[3]  = {0.5461,   4.602e-6, 0.};
+     const double gval_met9_a2[3]  = {0.416,    5.57e-6,  0.};
+     const double gval_met9_a3[3]  = {8.173e-2, 0.,       0.};
 
-   const  double gval_met9_a1[3]	=	{0.5461,   4.602e-6, 0.};
-   const  double gval_met9_a2[3]	=	{0.416,    5.57e-6,  0.};
-   const  double gval_met9_a3[3]	=	{8.173e-2, 0.,       0.};
+     const double gval_met10_a1[3] = {0.5638,   1.607e-5, 0.};
+     const double gval_met10_a2[3] = {0.4444,   2.464e-6, 0.};
+     const double gval_met10_a3[3] = {8.673e-2, 0.,       0.};
 
-   const  double gval_met10_a1[3]=	{0.5638,   1.607e-5, 0.};
-   const  double gval_met10_a2[3]=	{0.4444,   2.464e-6, 0.};
-   const  double gval_met10_a3[3]=	{8.673e-2, 0.,       0.};
+     const double gval_met11_a1[3] = {0.5758,   0.,       0.};
+     const double gval_met11_a2[3] = {0.4334,   0.,       0.};
+     const double gval_met11_a3[3] = {8.341e-2, 0.,       0.};
 
-   const  double gval_met11_a1[3]=	{0.5758,   0.,       0.};
-   const  double gval_met11_a2[3]=	{0.4334,   0.,       0.};
-   const  double gval_met11_a3[3]=	{8.341e-2, 0.,       0.};
+     const double solar_met8_a[3]  = {516.2,    354.6,    75.68};
+     const double solar_met8_b[3]  = {516.2,    354.6,    75.68};
+     const double solar_met9_a[3]  = {516.1,    355.4,    75.29};
+     const double solar_met10_a[3] = {518.3,    355.4,    75.32};
+     const double solar_met11_a[3] = {516.5,    355.3,    75.27};
 
-   const  double solar_met8_a[3]	=	{516.2,    354.6,    75.68};
-   const  double solar_met8_b[3]	=	{516.2,    354.6,    75.68};
-   const  double solar_met9_a[3]	=	{516.1,    355.4,    75.29};
-   const  double solar_met10_a[3]=	{518.3,    355.4,    75.32};
-   const  double solar_met11_a[3]=	{516.5,    355.3,    75.27};
+     // Subtract 320 from satnum to give a value between 1-4
+     satnum = satnum - 320;
+     // Add 1 to band_id to give a value between 1-12
+     band_id = band_id + 1;
 
-	// The 'deep space' count is (possibly erroneously) given as 51 for all
-	// bands and all sensors.
-	retval[1] = 51;
+     // The 'deep space' count is (possibly erroneously) given as 51 for all
+     // bands and all sensors.
+     retval[1] = 51;
 
-	// MSG-1
-   if (satnum==1){
-      if (dayssince>=5271){					// Pre-IODC
-			if (band_id==1) retval[0]	=gval_met8_a1[0] +
-			                            gval_met8_a1[1]*dayssince +
-			                            gval_met8_a1[2]*dayssince*dayssince;
-			if (band_id==2) retval[0]	=gval_met8_a2[0] +
-			                            gval_met8_a2[1]*dayssince +
-			                            gval_met8_a2[2]*dayssince*dayssince;
-			if (band_id==3) retval[0]	=gval_met8_a3[0] +
-			                            gval_met8_a3[1]*dayssince +
-			                            gval_met8_a3[2]*dayssince*dayssince;
-			retval[2] = solar_met8_a[band_id-1];
-		}
-   	else{ 										// Post-IODC
-			if (band_id==1) retval[0]	=gval_met8_b1[0] +
-			                            gval_met8_b1[1]*dayssince +
-			                            gval_met8_b1[2]*dayssince*dayssince;
-			if (band_id==2) retval[0]	=gval_met8_b2[0] +
-			                            gval_met8_b2[1]*dayssince +
-			                            gval_met8_b2[2]*dayssince*dayssince;
-			if (band_id==3) retval[0]	=gval_met8_b3[0] +
-			                            gval_met8_b3[1]*dayssince +
-			                            gval_met8_b3[2]*dayssince*dayssince;
-			retval[2] = solar_met8_b[band_id-1];
-   	}
-   }
-	// MSG-2
-   else if (satnum==2){
-		if (band_id==1) retval[0]	=gval_met9_a1[0] +
-		                            gval_met9_a1[1]*dayssince +
-		                            gval_met9_a1[2]*dayssince*dayssince;
-		if (band_id==2) retval[0]	=gval_met9_a2[0] +
-		                            gval_met9_a2[1]*dayssince +
-		                            gval_met9_a2[2]*dayssince*dayssince;
-		if (band_id==3) retval[0]	=gval_met9_a3[0] +
-		                            gval_met9_a3[1]*dayssince +
-		                            gval_met9_a3[2]*dayssince*dayssince;
+     // MSG-1
+     if (satnum==1) {
+          if (dayssince>=5271) { // Pre-IODC
+               if (band_id == 1) retval[0] = gval_met8_a1[0] +
+                                             gval_met8_a1[1]*dayssince +
+                                             gval_met8_a1[2]*dayssince*dayssince;
+               if (band_id == 2) retval[0] = gval_met8_a2[0] +
+                                             gval_met8_a2[1]*dayssince +
+                                             gval_met8_a2[2]*dayssince*dayssince;
+               if (band_id == 3) retval[0] = gval_met8_a3[0] +
+                                             gval_met8_a3[1]*dayssince +
+                                             gval_met8_a3[2]*dayssince*dayssince;
+               retval[2] = solar_met8_a[band_id-1];
+          }
+          else { // Post-IODC
+               if (band_id == 1) retval[0] = gval_met8_b1[0] +
+                                             gval_met8_b1[1]*dayssince +
+                                             gval_met8_b1[2]*dayssince*dayssince;
+               if (band_id == 2) retval[0] = gval_met8_b2[0] +
+                                             gval_met8_b2[1]*dayssince +
+                                             gval_met8_b2[2]*dayssince*dayssince;
+               if (band_id == 3) retval[0] = gval_met8_b3[0] +
+                                             gval_met8_b3[1]*dayssince +
+                                             gval_met8_b3[2]*dayssince*dayssince;
+               retval[2] = solar_met8_b[band_id-1];
+          }
+     }
+
+     // MSG-2
+     else if (satnum==2) {
+          if (band_id == 1) retval[0] = gval_met9_a1[0] +
+		                        gval_met9_a1[1]*dayssince +
+		                        gval_met9_a1[2]*dayssince*dayssince;
+          if (band_id == 2) retval[0] = gval_met9_a2[0] +
+		                        gval_met9_a2[1]*dayssince +
+		                        gval_met9_a2[2]*dayssince*dayssince;
+          if (band_id == 3) retval[0] = gval_met9_a3[0] +
+		                        gval_met9_a3[1]*dayssince +
+		                        gval_met9_a3[2]*dayssince*dayssince;
 		retval[2] = solar_met9_a[band_id-1];
-   }
-	// MSG-3
-   else if (satnum==3){
-		if (band_id==1) retval[0]	=gval_met10_a1[0] +
-		                            gval_met10_a1[1]*dayssince +
-		                            gval_met10_a1[2]*dayssince*dayssince;
-		if (band_id==2) retval[0]	=gval_met10_a2[0] +
-		                            gval_met10_a2[1]*dayssince +
-		                            gval_met10_a2[2]*dayssince*dayssince;
-		if (band_id==3) retval[0]	=gval_met10_a3[0] +
-		                            gval_met10_a3[1]*dayssince +
-		                            gval_met10_a3[2]*dayssince*dayssince;
+     }
+     // MSG-3
+     else if (satnum==3) {
+          if (band_id == 1) retval[0] = gval_met10_a1[0] +
+		                        gval_met10_a1[1]*dayssince +
+		                        gval_met10_a1[2]*dayssince*dayssince;
+          if (band_id == 2) retval[0] = gval_met10_a2[0] +
+		                        gval_met10_a2[1]*dayssince +
+		                        gval_met10_a2[2]*dayssince*dayssince;
+          if (band_id == 3) retval[0] = gval_met10_a3[0] +
+		                        gval_met10_a3[1]*dayssince +
+		                        gval_met10_a3[2]*dayssince*dayssince;
 		retval[2] = solar_met10_a[band_id-1];
-   }
-	// MSG-4
-   else if (satnum==4){
-		if (band_id==1) retval[0]	=gval_met11_a1[0] +
-		                            gval_met11_a1[1]*dayssince +
-		                            gval_met11_a1[2]*dayssince*dayssince;
-		if (band_id==2) retval[0]	=gval_met11_a2[0] +
-		                            gval_met11_a2[1]*dayssince +
-		                            gval_met11_a2[2]*dayssince*dayssince;
-		if (band_id==3) retval[0]	=gval_met11_a3[0] +
-		                            gval_met11_a3[1]*dayssince +
-		                            gval_met11_a3[2]*dayssince*dayssince;
-		retval[2] = solar_met11_a[band_id-1];
-	}
-	else{
-		fprintf(stderr,"ERROR: Unrecognised satellite platform: %i\n",satnum);
-		exit(-1);
-	}
+     }
+     // MSG-4
+     else if (satnum==4) {
+          if (band_id == 1) retval[0] = gval_met11_a1[0] +
+		                        gval_met11_a1[1]*dayssince +
+		                        gval_met11_a1[2]*dayssince*dayssince;
+          if (band_id == 2) retval[0] = gval_met11_a2[0] +
+		                        gval_met11_a2[1]*dayssince +
+		                        gval_met11_a2[2]*dayssince*dayssince;
+          if (band_id == 3) retval[0] = gval_met11_a3[0] +
+		                        gval_met11_a3[1]*dayssince +
+		                        gval_met11_a3[2]*dayssince*dayssince;
+          retval[2] = solar_met11_a[band_id-1];
+     }
+     else {
+          fprintf(stderr, "ERROR: Unrecognised satellite platform: %d\n", satnum);
+          exit(-1);
+     }
 
- 	return retval;
+     return retval;
 }
 
 
+
 /*******************************************************************************
- *
- *  This function attempts to extract the GSICS calibration from the MPEF header
- *  Should GSICS calibration be unavailable (true for VIS channels as mid-2018)
- *  Then a NASA calibration will be used instead. If that fails then the default
- *  IMPF calibration will be used instead as a fallback.
- *
+ * This function attempts to extract the GSICS calibration from the MPEF header
+ * Should GSICS calibration be unavailable (true for VIS channels as mid-2018)
+ * Then a NASA calibration will be used instead. If that fails then the default
+ * IMPF calibration will be used instead as a fallback.
  ******************************************************************************/
 static void get_cal_slope_and_offset(const struct seviri_data *d, int band_id,
                                      int do_gsics, double *slope, double *offset,
@@ -199,7 +197,7 @@ static void get_cal_slope_and_offset(const struct seviri_data *d, int band_id,
      double ar, br;
      double ac, bc;
      double gs, go;
-     long 	days_launch;
+     long days_launch;
 
      ac = d->header.RadiometricProcessing.
           Level1_5ImageCalibration[band_id - 1].Cal_Offset;
@@ -216,12 +214,13 @@ static void get_cal_slope_and_offset(const struct seviri_data *d, int band_id,
           go = d->header.RadiometricProcessing.
                MPEFCalFeedback_data[band_id - 1].GSICSOffsetCount;
 
-          if (gs < 0.0000001)
-          {
-/*               fprintf(stderr,"WARNING: GSICS coefficients unavailable. "*/
-/*                              "Using IMPF calibration.\n");*/
+          if (gs < 0.0000001) {
+/*
+               fprintf(stderr,"WARNING: GSICS coefficients unavailable. "
+                              "Using IMPF calibration.\n");
+*/
                *do_nasa = 1;
-               *slope = bc;
+               *slope  = bc;
                *offset = ac;
           }
           else{
@@ -313,7 +312,6 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
 
      int nav_off = 0;
 
-     // Variables for NASA calibration (if needed)
      int   do_nasa = 0;
      long  ldays   = 0;
      float *calivals;
@@ -321,7 +319,9 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      float orbalt;
      char tmpsatstr[12];
 
-     if (rss) nav_off=464*5;
+
+     if (rss)
+          nav_off = 464 * 5;
 
 
      /*-------------------------------------------------------------------------
@@ -457,6 +457,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
          d->header.SatelliteStatus.OrbitPolynomial[i].Z[1] * t -
          0.5* d->header.SatelliteStatus.OrbitPolynomial[i].Z[0];
 
+
      /*-------------------------------------------------------------------------
       * Compute latitude and longitude and solar and sensor zenith and azimuth
       * angles.
@@ -500,11 +501,12 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
           }
      }
 
+
      /*-------------------------------------------------------------------------
       * Compute the satellite position string.
       *-----------------------------------------------------------------------*/
 
-     //Satellite latitude, assumed to be 0.0N
+     // Satellite latitude, assumed to be 0.0N
      sprintf(tmpsatstr,"%010.7f",0.0);
      strncat(tmpsatstr,"\0",1);
      strncpy(satposstr,tmpsatstr,11);
@@ -530,13 +532,15 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      strncat(satposstr,",\0",2);
 
      // North polar radius from the L1.5 header
-     // There is also a South polar radius in the header, unsure if these are ever different.
+     // There is also a South polar radius in the header, unsure if these are
+     // ever different.
      sprintf(tmpsatstr,"%010.2f",d->header.GeometricProcessing.NorthPolarRadius);
      strncat(tmpsatstr,"\0",1);
      strncat(satposstr,tmpsatstr,11);
      strncat(satposstr,"\0",1);
 
      for (i=strlen(satposstr);i<127;i++)strncat(satposstr,"_\0",2);
+
 
      /*-------------------------------------------------------------------------
       * Extract the raw pixel counts only. Do not scale or transform in any way.
@@ -568,29 +572,28 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      for (i = 0; i < d->image.n_bands; ++i) {
           if (band_units[i] == SEVIRI_UNIT_RAD) {
 
-					do_nasa = 0;
+               do_nasa = 0;
                get_cal_slope_and_offset(d, d->image.band_ids[i], do_gsics,
                                         &slope, &offset, &do_nasa);
 
-               if(do_nasa){
-                  ldays     =  get_time_since_launch(d);
-                  calivals  =  get_nasa_calib(d->trailer.ImageProductionStats.SatelliteID,
-                	                            d->image.band_ids[i]-1, ldays);
+               if (do_nasa) {
+                    ldays    = get_time_since_launch(d);
+                    calivals = get_nasa_calib(d->trailer.ImageProductionStats.SatelliteID,
+                                              d->image.band_ids[i]-1, ldays);
                }
 
                for (j = 0; j < d->image.n_lines; ++j) {
                     for (k = 0; k < d->image.n_columns; ++k) {
                          i_image = j * d->image.n_columns + k;
-                         if(do_nasa){
-                         	d2->data[i][i_image] =
-		                   		(d->image.data_vir[i][i_image] - calivals[1]) * calivals[0];
-		                   }
-		                   else{
-		                      if (d->image.data_vir[i][i_image] != FILL_VALUE_US &&
-		                          d->image.data_vir[i][i_image] > 0) {
-		                           d2->data[i][i_image] =
-		                                d->image.data_vir[i][i_image] * slope + offset;
-		                   }
+                         if (do_nasa)
+                              d2->data[i][i_image] = (d->image.data_vir[i][i_image] -
+                                                      calivals[1]) * calivals[0];
+                         else{
+                              if (d->image.data_vir[i][i_image] != FILL_VALUE_US &&
+                                  d->image.data_vir[i][i_image] > 0) {
+                                   d2->data[i][i_image] =
+                                        d->image.data_vir[i][i_image] * slope + offset;
+                              }
                          }
                     }
                }
@@ -609,49 +612,46 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      for (i = 0; i < d->image.n_bands; ++i) {
           if (band_units[i] == SEVIRI_UNIT_REF || band_units[i] == SEVIRI_UNIT_BRF) {
 
-					do_nasa = 0;
+               do_nasa = 0;
                get_cal_slope_and_offset(d, d->image.band_ids[i], do_gsics,
                                         &slope, &offset, &do_nasa);
 
                b = a / band_solar_irradiance[i_sat][d->image.band_ids[i] - 1];
-               if(do_nasa){
+
+               if (do_nasa) {
                   ldays     =  get_time_since_launch(d);
                   calivals  =  get_nasa_calib(d->trailer.ImageProductionStats.SatelliteID,
-                	                            d->image.band_ids[i]-1, ldays);
+                                              d->image.band_ids[i]-1, ldays);
                }
 
                for (j = 0; j < d->image.n_lines; ++j) {
                     for (k = 0; k < d->image.n_columns; ++k) {
                          i_image = j * d->image.n_columns + k;
-                         if(do_nasa)
-                         {
-                            if (d->image.data_vir[i][i_image] <= calivals[1]+1)
-                            {
-                               d2->data[i][i_image] = FILL_VALUE_F;
-                            }
-                            else
-                            {
-                               R = (d->image.data_vir[i][i_image] - calivals[1]) * calivals[0];
-                         	    d2->data[i][i_image] = (R * a) / calivals[2];
 
-		                   	    if (band_units[i] == SEVIRI_UNIT_BRF)
-		                   	       d2->data[i][i_image] /= cos(d2->sza[i_image] * D2R);
-		                   	 }
-		                   }
-		                   else
-		                   {
-		                      if (d->image.data_vir[i][i_image] != FILL_VALUE_US &&
-		                          d->image.data_vir[i][i_image] > 0 &&
-		                          d2->sza[i_image] >= 0. && d2->sza[i_image] < 90.)
-		                      {
-		                         R = d->image.data_vir[i][i_image] * slope + offset;
-		                         d2->data[i][i_image] = b * R;
-                               if (band_units[i] == SEVIRI_UNIT_BRF)
-                               {
-                                  d2->data[i][i_image] *= PI;
-		                            d2->data[i][i_image] /= cos(d2->sza[i_image] * D2R);
-		                         }
-		                   	 }
+                         if (do_nasa) {
+                              if (d->image.data_vir[i][i_image] <= calivals[1]+1)
+                                   d2->data[i][i_image] = FILL_VALUE_F;
+                              else {
+                                   R = (d->image.data_vir[i][i_image] -
+                                        calivals[1]) * calivals[0];
+                                   d2->data[i][i_image] = (R * a) / calivals[2];
+
+                                   if (band_units[i] == SEVIRI_UNIT_BRF)
+                                        d2->data[i][i_image] /= cos(d2->sza[i_image] * D2R);
+                              }
+                         }
+                         else {
+                              if (d->image.data_vir[i][i_image] != FILL_VALUE_US &&
+                                  d->image.data_vir[i][i_image] > 0 &&
+                                  d2->sza[i_image] >= 0. && d2->sza[i_image] < 90.) {
+                                   R = d->image.data_vir[i][i_image] * slope + offset;
+                                   d2->data[i][i_image] = b * R;
+
+                                   if (band_units[i] == SEVIRI_UNIT_BRF) {
+                                        d2->data[i][i_image] *= PI;
+                                        d2->data[i][i_image] /= cos(d2->sza[i_image] * D2R);
+                                   }
+                              }
                          }
                     }
                }
@@ -666,7 +666,8 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
       *-----------------------------------------------------------------------*/
      for (i = 0; i < d->image.n_bands; ++i) {
           if (band_units[i] == SEVIRI_UNIT_BT) {
-					do_nasa = 0;
+
+               do_nasa = 0;
                get_cal_slope_and_offset(d, d->image.band_ids[i], do_gsics,
                                         &slope, &offset, &do_nasa);
 /*
@@ -709,20 +710,20 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
  * filename	: Native SEVIRI level 1.5 filename
  * preproc	: The struct containing the preprocessed output
  * n_bands	: Described in the seviri_read_nat() header (read_write_nat.c)
- * band_ids	: 	''
+ * band_ids	:      ''
  * band_units	: Array of band_unit types of length n_bands
  * bounds	: Described in the seviri_read_nat() header (read_write_nat.c)
- * line0	: 	''
- * line1	: 	''
- * column0	: 	''
- * column1	: 	''
- * lat0		: 	''
- * lat1		: 	''
- * lon0		: 	''
- * lon1		: 	''
- * do_gsics	: 	Flag indicating whether to apply GSICS or IMPF calibration.
- * satposstr: 	String to store the satellite position information required for
- *					parallax correction.
+ * line0	:      ''
+ * line1	:      ''
+ * column0	:      ''
+ * column1	:      ''
+ * lat0		:      ''
+ * lat1		:      ''
+ * lon0		:      ''
+ * lon1		:      ''
+ * do_gsics	: Flag indicating whether to apply GSICS or IMPF calibration.
+ * satposstr	: String to store the satellite position information required for
+ *                parallax correction.
  * do_not_alloc	: Flag indicating not to allocate space for the output data.
  *                Useful for avoiding unnecessary memory allocations and use.
  *
@@ -746,7 +747,8 @@ int seviri_read_and_preproc_nat(const char *filename,
           return -1;
      }
 
-     if (seviri_preproc(&seviri, preproc, band_units, rss, do_gsics, satposstr, do_not_alloc)) {
+     if (seviri_preproc(&seviri, preproc, band_units, rss, do_gsics, satposstr,
+                        do_not_alloc)) {
           fprintf(stderr, "ERROR: seviri_preproc()\n");
           return -1;
      }
@@ -778,9 +780,9 @@ int seviri_read_and_preproc_nat(const char *filename,
  * lat1		:      ''
  * lon0		:      ''
  * lon1		:      ''
- * do_gsics	: 	Flag indicating whether to apply GSICS or IMPF calibration.
- * satposstr: 	String to store the satellite position information required for
- *					parallax correction.
+ * do_gsics	: Flag indicating whether to apply GSICS or IMPF calibration.
+ * satposstr	: String to store the satellite position information required for
+ *                parallax correction.
  * do_not_alloc	: Flag indicating not to allocate space for the output data.
  *                Useful for avoiding unnecessary memory allocations and use.
  *
@@ -808,7 +810,8 @@ int seviri_read_and_preproc_hrit(const char *indir, const char *timeslot,
           return -1;
      }
 
-     if (seviri_preproc(&seviri, preproc, band_units, rss, do_gsics, satposstr, do_not_alloc)) {
+     if (seviri_preproc(&seviri, preproc, band_units, rss, do_gsics, satposstr,
+                        do_not_alloc)) {
          fprintf(stderr, "ERROR: seviri_preproc()\n");
           return -1;
      }
@@ -886,7 +889,8 @@ int seviri_read_and_preproc(const char *filename,
 
           if (seviri_read_and_preproc_hrit(indir, timeslot, satnum, preproc,
                n_bands, band_ids, band_units, bounds, line0, line1, column0,
-               column1, lat0, lat1, lon0, lon1, rss, iodc, do_gsics, satposstr, do_not_alloc)) {
+               column1, lat0, lat1, lon0, lon1, rss, iodc, do_gsics, satposstr,
+               do_not_alloc)) {
                fprintf(stderr, "ERROR: seviri_read_and_preproc_hrit()\n");
                return -1;
           }
@@ -941,14 +945,14 @@ int seviri_preproc_free(struct seviri_preproc_data *d)
  * n_lines	: Output number of lines of the actual image
  * n_columns	: Output number of columns of the actual image
  * bounds	: Described in the seviri_read_nat() header.
- * line0	: 	''
- * line1	: 	''
- * column0	: 	''
- * column1	: 	''
- * lat0		: 	''
- * lat1		: 	''
- * lon0		: 	''
- * lon1		: 	''
+ * line0	:      ''
+ * line1	:      ''
+ * column0	:      ''
+ * column1	:      ''
+ * lat0		:      ''
+ * lat1		:      ''
+ * lon0		:      ''
+ * lon1		:      ''
  * aux		: Seviri_auxillary_io_data struct containing information related
  *                to the read operation
  *

@@ -1352,15 +1352,13 @@ int seviri_get_dimension_data(
           d->i_line_requested_VIR    = 0;
           d->i_column_requested_VIR  = 0;
 
-          if (rss==0)
-          {
+          if (rss == 0) {
              d->n_lines_requested_VIR   = IMAGE_SIZE_VIR_LINES;
              d->n_columns_requested_VIR = IMAGE_SIZE_VIR_COLUMNS;
           }
-          else
-          {
-             d->n_lines_requested_VIR   = IMAGE_SIZE_VIR_RSSLINES;
-             d->n_columns_requested_VIR = IMAGE_SIZE_VIR_RSSCOLUMNS;
+          else {
+             d->n_lines_requested_VIR   = IMAGE_SIZE_VIR_RSS_LINES;
+             d->n_columns_requested_VIR = IMAGE_SIZE_VIR_RSS_COLUMNS;
           }
 
           d->i_line_to_read_VIR      = 0;

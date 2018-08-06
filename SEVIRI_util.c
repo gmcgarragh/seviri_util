@@ -7,43 +7,42 @@
  *
  *******************************************************************************
  *
- *   This program will read a NAT or HRIT file and save the data into
- *   a specific output format, one of HDF5, NetCDF or TIFF.
- *   A text file is used as a driver to describe the read/write.
- *   The name of the driver file should be given as the argument when
- *   running this program. e.g: ./SEVIRI_tool driver_file_name
+ *    This program will read a NAT or HRIT file and save the data into
+ *    a specific output format, one of HDF5, NetCDF or TIFF.
+ *    A text file is used as a driver to describe the read/write.
+ *    The name of the driver file should be given as the argument when
+ *    running this program. e.g: ./SEVIRI_tool driver_file_name
  *
- *   Text file format:
- *   Line 1,  Input data format: HRIT or NAT
- *   Line 2,  Input directory (if HRIT) or input file (if NAT)
- *   Line 3,  Timeslot (if HRIT, YYYYMMDDHHMM) or blank (if NAT)
- *   Line 4,  Satellite number (if HRIT, 1/2/3/4) or blank (if nat)
- *   Line 5,  Rapid scan coverage, 1 for yes 0 for no.
- *   Line 6,  Indian Ocean coverage, 1 for yes 0 for no.
- *   Line 7,  Bands to read (HRIT and NAT) in format: 11010100100
- *            1 = read this band, 0 = do not read this band
- *            max length: 11 chars. If shorter, defaults to 0 for missing bands
- *   Line 8,  Output data format: HDF, CDF or TIF
- *   Line 9,  Output data type: CNT, RAD or RBT (for count, radiance, refl/bt)
- *   Line 10,  Output directory
- *   Line 11,  Initial line
- *   Line 12, Final line
- *   Line 13, Initial column
- *   Line 14, Final column
- *            If final vals < initial vals: Program will quit
- *            If initial vals are < 0:      Program assumes initial vals = 0
- *            If final vals are > 3711:     Program assumes final vals = 3711
- *   Special values:
- *            Initial line = -200 means actual scanned image will be processed
- *            Initial line = -100 means full disk will be processed
- *   Subsequent lines,
- *            The remaining lines can be used to define optional outputs
- *            These are: time, lat, lon, sza, saa, vza, vaa
- *            List one of these per line to save the appropriate variable
- *            Adding a line with 'compress' to the driver will compress
- *            the output data, saves disk space at expense of read/write time
- *            calib will apply GSICS calibration coefficients.
- *
+ *    Text file format:
+ *    Line 1,  Input data format: HRIT or NAT
+ *    Line 2,  Input directory (if HRIT) or input file (if NAT)
+ *    Line 3,  Timeslot (if HRIT, YYYYMMDDHHMM) or blank (if NAT)
+ *    Line 4,  Satellite number (if HRIT, 1/2/3/4) or blank (if nat)
+ *    Line 5,  Rapid scan coverage, 1 for yes 0 for no.
+ *    Line 6,  Indian Ocean coverage, 1 for yes 0 for no.
+ *    Line 7,  Bands to read (HRIT and NAT) in format: 11010100100
+ *             1 = read this band, 0 = do not read this band
+ *             max length: 11 chars. If shorter, defaults to 0 for missing bands
+ *    Line 8,  Output data format: HDF, CDF or TIF
+ *    Line 9,  Output data type: CNT, RAD or RBT (for count, radiance, refl/bt)
+ *    Line 10, Output directory
+ *    Line 11, Initial line
+ *    Line 12, Final line
+ *    Line 13, Initial column
+ *    Line 14, Final column
+ *             If final vals < initial vals: Program will quit
+ *             If initial vals are < 0:      Program assumes initial vals = 0
+ *             If final vals are > 3711:     Program assumes final vals = 3711
+ *    Special values:
+ *             Initial line = -200 means actual scanned image will be processed
+ *             Initial line = -100 means full disk will be processed
+ *    Subsequent lines,
+ *             The remaining lines can be used to define optional outputs
+ *             These are: time, lat, lon, sza, saa, vza, vaa
+ *             List one of these per line to save the appropriate variable
+ *             Adding a line with 'compress' to the driver will compress
+ *             the output data, saves disk space at expense of read/write time
+ *             calib will apply GSICS calibration coefficients.
  *
  *******************************************************************************
  *   Example file:

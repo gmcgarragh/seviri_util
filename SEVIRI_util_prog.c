@@ -16,15 +16,14 @@
 #include <hdf5.h>
 
 /*******************************************************************************
-      Wrapper for the native reader. Converts the driver info into something
-      that the reader can understand.
-      Inputs:
-            driver:      Structure containing the driver info
-            preproc:     Main structure that will contain the SEVIRI data
-      Outputs:
-            integer:     Returns 0 if successful, otherwise -1
-
-*******************************************************************************/
+ *    Wrapper for the native reader. Converts the driver info into something
+ *    that the reader can understand.
+ *    Inputs:
+ *        driver:     Structure containing the driver info
+ *        preproc:    Main structure that will contain the SEVIRI data
+ *    Outputs:
+ *        integer:    Returns 0 if successful, otherwise -1
+ ******************************************************************************/
 int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc, char satposstr[128])
 {
      if (seviri_read_and_preproc(driver.infdir,preproc, driver.sev_bands.nbands, driver.sev_bands.band_ids,
@@ -34,15 +33,14 @@ int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc
 }
 
 /*******************************************************************************
-      Wrapper for the HRIT reader. Converts the driver info into something
-      that the reader can understand.
-      Inputs:
-            driver:      Structure containing the driver info
-            preproc:     Main structure that will contain the SEVIRI data
-      Outputs:
-            integer:     Returns 0 if successful, otherwise -1
-
-*******************************************************************************/
+ *    Wrapper for the HRIT reader. Converts the driver info into something
+ *    that the reader can understand.
+ *    Inputs:
+ *        driver:     Structure containing the driver info
+ *        preproc:    Main structure that will contain the SEVIRI data
+ *    Outputs:
+ *        integer:    Returns 0 if successful, otherwise -1
+ ******************************************************************************/
 int run_sev_hrit(struct driver_data driver,struct seviri_preproc_data *preproc, char satposstr[128])
 {
      if (seviri_read_and_preproc_hrit(driver.infdir,driver.timeslot,driver.satnum, preproc, driver.sev_bands.nbands, driver.sev_bands.band_ids,
@@ -52,16 +50,15 @@ int run_sev_hrit(struct driver_data driver,struct seviri_preproc_data *preproc, 
 }
 
 /*******************************************************************************
-      Initialises the array that will contain output data for the TIFF writer
-      All elements of the output array will contain the fill value.
-      Inputs:
-            outline:     The float array that will contain the data
-            sizer:       Size of the output array
-            filler:      The fill value to be placed into each array element
-      Outputs:
-            integer:     Returns 0 if successful
-
-*******************************************************************************/
+ *    Initialises the array that will contain output data for the TIFF writer
+ *    All elements of the output array will contain the fill value.
+ *    Inputs:
+ *        outline:    The float array that will contain the data
+ *        sizer:      Size of the output array
+ *        filler:     The fill value to be placed into each array element
+ *    Outputs:
+ *        integer:    Returns 0 if successful
+ ******************************************************************************/
 static int init_outline(float* outline,unsigned int sizer,float filler)
 {
      int i=0;
@@ -70,15 +67,14 @@ static int init_outline(float* outline,unsigned int sizer,float filler)
 }
 
 /*******************************************************************************
-      Writes the processed SEVIRI data (and any ancilliary data) into a TIFF
-      file. All data is saved as floating point type.
-      Inputs:
-            driver:     The float array that will contain the data
-            preproc:     Main structure that will contain the SEVIRI data
-      Outputs:
-            integer:     Returns 0 if successful, otherwise -1
-
-*******************************************************************************/
+ *    Writes the processed SEVIRI data (and any ancilliary data) into a TIFF
+ *    file. All data is saved as floating point type.
+ *    Inputs:
+ *        driver:  The float array that will contain the data
+ *        preproc: Main structure that will contain the SEVIRI data
+ *    Outputs:
+ *        integer: Returns 0 if successful, otherwise -1
+ ******************************************************************************/
 int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc)
 {
      char outstr[2048];
@@ -129,15 +125,14 @@ int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc)
 }
 
 /*******************************************************************************
-      Writes the processed SEVIRI data (and any ancilliary data) into a NetCDF
-      file. All data is saved as floating point type, aside from "Time" (double)
-      Inputs:
-            driver:     The float array that will contain the data
-            preproc:     Main structure that will contain the SEVIRI data
-      Outputs:
-            integer:     Returns 0 if successful, otherwise -1
-
-*******************************************************************************/
+ *    Writes the processed SEVIRI data (and any ancilliary data) into a NetCDF
+ *    file. All data is saved as floating point type, aside from "Time" (double)
+ *    Inputs:
+ *        driver:     The float array that will contain the data
+ *        preproc:    Main structure that will contain the SEVIRI data
+ *    Outputs:
+ *        integer:    Returns 0 if successful, otherwise -1
+ ******************************************************************************/
 int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
 {
      static float cnt_range[]    = {0.0, 1024.0};
@@ -252,15 +247,14 @@ int save_sev_cdf(struct driver_data driver,struct seviri_preproc_data preproc)
 }
 
 /*******************************************************************************
-      Writes the processed SEVIRI data (and any ancilliary data) into an HDF5
-      file. All data is saved as floating point type, aside from "Time" (double)
-      Inputs:
-            driver:     The float array that will contain the data
-            preproc:     Main structure that will contain the SEVIRI data
-      Outputs:
-            integer:     Returns 0 if successful, otherwise -1
-
-*******************************************************************************/
+ *    Writes the processed SEVIRI data (and any ancilliary data) into an HDF5
+ *    file. All data is saved as floating point type, aside from "Time" (double)
+ *    Inputs:
+ *        driver:     The float array that will contain the data
+ *        preproc:    Main structure that will contain the SEVIRI data
+ *    Outputs:
+ *        integer:    Returns 0 if successful, otherwise -1
+ ******************************************************************************/
 int save_sev_hdf(struct driver_data driver,struct seviri_preproc_data preproc)
 {
 /*
