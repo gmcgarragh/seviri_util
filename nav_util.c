@@ -521,7 +521,7 @@ int su_vza_and_vaa(double lat, double lon, double height,
 
      *vza = acos(u[2] / sqrt(u[0]*u[0] + u[1]*u[1] + u[2]*u[2])) * R2D;
 
-     *vaa = atan2(u[1], u[0]) * R2D;
+     *vaa = atan2(u[1], -u[0]) * R2D;
      if (*vaa < 0.)
           *vaa += 360.;
 
