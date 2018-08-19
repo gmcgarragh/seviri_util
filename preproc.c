@@ -439,15 +439,6 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                  ((jtime_end2   - jtime_start2) / 2.);
 
      X = d->header.SatelliteStatus.OrbitPolynomial[i].X[0] +
-         d->header.SatelliteStatus.OrbitPolynomial[i].X[1] * t;
-
-     Y = d->header.SatelliteStatus.OrbitPolynomial[i].Y[0] +
-         d->header.SatelliteStatus.OrbitPolynomial[i].Y[1] * t;
-
-     Z = d->header.SatelliteStatus.OrbitPolynomial[i].Z[0] +
-         d->header.SatelliteStatus.OrbitPolynomial[i].Z[1] * t;
-/*
-     X = d->header.SatelliteStatus.OrbitPolynomial[i].X[0] +
          d->header.SatelliteStatus.OrbitPolynomial[i].X[1] * t -
          0.5* d->header.SatelliteStatus.OrbitPolynomial[i].X[0];
      Y = d->header.SatelliteStatus.OrbitPolynomial[i].Y[0] +
@@ -456,7 +447,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      Z = d->header.SatelliteStatus.OrbitPolynomial[i].Z[0] +
          d->header.SatelliteStatus.OrbitPolynomial[i].Z[1] * t -
          0.5* d->header.SatelliteStatus.OrbitPolynomial[i].Z[0];
-*/
+
 
      /*-------------------------------------------------------------------------
       * Compute latitude and longitude and solar and sensor zenith and azimuth
