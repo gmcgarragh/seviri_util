@@ -234,26 +234,23 @@ int parse_driver(char *fname,struct driver_data *driver)
      line[strlen(line)-1]='\0';
      driver->infdir = (char*) malloc(sizeof(char)*(strlen(line)+1));
      strcpy(driver->infdir,line);
-
-     /* Read the timeslot (HRIT only) */
-     if (getline(&line,&len,fp)==-1) {printf("Failure reading input timeslot line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
-     if (strlen(line)<12 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading input timeslot line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      if (driver->infrmt==SEVIRI_INFILE_HRIT) {
-          line[strlen(line)-1]='\0';
-          driver->timeslot = (char*) malloc(sizeof(char)*13);
-          strcpy(driver->timeslot,line);
-     }
+		 /* Read the timeslot (HRIT only) */
+		 if (getline(&line,&len,fp)==-1) {printf("Failure reading input timeslot line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+		 if (strlen(line)<12 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading input timeslot line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+		 line[strlen(line)-1]='\0';
+		 driver->timeslot = (char*) malloc(sizeof(char)*13);
+		 strcpy(driver->timeslot,line);
 
-     /* Read the satellite number (HRIT only) */
-     if (getline(&line,&len,fp)==-1) {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
-     if (strlen(line)<1 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
-     if (driver->infrmt==SEVIRI_INFILE_HRIT) {
-          line[strlen(line)-1]='\0';
-          if (atoi(line)==1) driver->satnum  = SAT_MSG1+1;
-          else if (atoi(line)==2) driver->satnum = SAT_MSG2+1;
-          else if (atoi(line)==3) driver->satnum = SAT_MSG3+1;
-          else if (atoi(line)==4) driver->satnum = SAT_MSG4+1;
-          else {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+		 /* Read the satellite number (HRIT only) */
+		 if (getline(&line,&len,fp)==-1) {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+		 if (strlen(line)<1 && driver->infrmt==SEVIRI_INFILE_HRIT) {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
+         line[strlen(line)-1]='\0';
+	     if (atoi(line)==1) driver->satnum  = SAT_MSG1+1;
+	     else if (atoi(line)==2) driver->satnum = SAT_MSG2+1;
+	     else if (atoi(line)==3) driver->satnum = SAT_MSG3+1;
+	     else if (atoi(line)==4) driver->satnum = SAT_MSG4+1;
+	     else {printf("Failure reading input satellite number line of driver file %s\n",fname);free(line);fclose(fp);E_L_R();}
      }
 
      /* Read the rss mode */

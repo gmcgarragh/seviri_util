@@ -27,7 +27,7 @@
 int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc, char satposstr[128])
 {
      if (seviri_read_and_preproc(driver.infdir,preproc, driver.sev_bands.nbands, driver.sev_bands.band_ids,
-     driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., driver.rss, driver.iodc, satposstr, 0))
+     driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., 0., driver.do_calib, satposstr, 0))
      {E_L_R();}
      return 0;
 }
