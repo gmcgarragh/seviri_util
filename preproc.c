@@ -438,15 +438,12 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      t = (jtime - (jtime_start2 + jtime_end2)   / 2.) /
                  ((jtime_end2   - jtime_start2) / 2.);
 
-     X = d->header.SatelliteStatus.OrbitPolynomial[i].X[0] +
-         d->header.SatelliteStatus.OrbitPolynomial[i].X[1] * t -
-         0.5* d->header.SatelliteStatus.OrbitPolynomial[i].X[0];
-     Y = d->header.SatelliteStatus.OrbitPolynomial[i].Y[0] +
-         d->header.SatelliteStatus.OrbitPolynomial[i].Y[1] * t -
-         0.5* d->header.SatelliteStatus.OrbitPolynomial[i].Y[0];
-     Z = d->header.SatelliteStatus.OrbitPolynomial[i].Z[0] +
-         d->header.SatelliteStatus.OrbitPolynomial[i].Z[1] * t -
-         0.5* d->header.SatelliteStatus.OrbitPolynomial[i].Z[0];
+     X = d->header.SatelliteStatus.OrbitPolynomial[i].X[0] * .5 +
+         d->header.SatelliteStatus.OrbitPolynomial[i].X[1] * t;
+     Y = d->header.SatelliteStatus.OrbitPolynomial[i].Y[0] * .5 +
+         d->header.SatelliteStatus.OrbitPolynomial[i].Y[1] * t;
+     Z = d->header.SatelliteStatus.OrbitPolynomial[i].Z[0] * .5 +
+         d->header.SatelliteStatus.OrbitPolynomial[i].Z[1] * t;
 
 
      /*-------------------------------------------------------------------------
@@ -465,16 +462,16 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                i_image = i * d->image.n_columns + j;
 
                su_line_column_to_lat_lon(ii + 1 + nav_off, d->image.i_column + j + 1,
-                                          &d2->lat[i_image], &d2->lon[i_image],
-                                          lon0, &nav_scaling_factors_vir);
+                                         &d2->lat[i_image], &d2->lon[i_image],
+                                         lon0, &nav_scaling_factors_vir);
 
                if (d2->lat[i_image] != FILL_VALUE_F &&
                    d2->lon[i_image] != FILL_VALUE_F) {
                     d2->time[i_image] = jtime2;
 
                     su_solar_params2(jtime2, d2->lat[i_image] * D2R,
-                                      d2->lon[i_image] * D2R, &mu0, &theta0,
-                                      &phi0, NULL);
+                                     d2->lon[i_image] * D2R, &mu0, &theta0,
+                                     &phi0, NULL);
                     d2->sza[i_image] = theta0 * R2D;
                     d2->saa[i_image] = phi0   * R2D;
 
@@ -483,7 +480,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                          d2->saa[i_image] = d2->saa[i_image] - 360.;
 
                     su_vza_and_vaa(d2->lat[i_image], d2->lon[i_image], 0.,
-                                    X, Y, Z, &d2->vza[i_image], &d2->vaa[i_image]);
+                                   X, Y, Z, &d2->vza[i_image], &d2->vaa[i_image]);
 
                     d2->vaa[i_image] = d2->vaa[i_image] + 180.;
                     if (d2->vaa[i_image] > 360.)
@@ -569,8 +566,9 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
 
                if (do_nasa) {
                     ldays    = get_time_since_launch(d);
-                    calivals = get_nasa_calib(d->trailer.ImageProductionStats.SatelliteID,
-                                              d->image.band_ids[i]-1, ldays);
+                    calivals = get_nasa_calib
+                                    (d->trailer.ImageProductionStats.SatelliteID,
+                                     d->image.band_ids[i]-1, ldays);
                }
 
                for (j = 0; j < d->image.n_lines; ++j) {
@@ -579,12 +577,11 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                          if (do_nasa)
                               d2->data[i][i_image] = (d->image.data_vir[i][i_image] -
                                                       calivals[1]) * calivals[0];
-                         else{
+                         else {
                               if (d->image.data_vir[i][i_image] != FILL_VALUE_US &&
-                                  d->image.data_vir[i][i_image] > 0) {
+                                  d->image.data_vir[i][i_image] > 0)
                                    d2->data[i][i_image] =
                                         d->image.data_vir[i][i_image] * slope + offset;
-                              }
                          }
                     }
                }
@@ -598,55 +595,60 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
       *
       * Ref: PDF_MSG_SEVIRI_RAD2REFL, Page 8
       *-----------------------------------------------------------------------*/
-
      a = sqrt(su_solar_distance_factor2(day_of_year));
 
      for (i = 0; i < d->image.n_bands; ++i) {
-        if (band_units[i] == SEVIRI_UNIT_REF || band_units[i] == SEVIRI_UNIT_BRF) {
-           do_nasa = 0;
-           get_cal_slope_and_offset(d, d->image.band_ids[i], do_gsics,&slope, &offset, &do_nasa);
+          if (band_units[i] == SEVIRI_UNIT_REF || band_units[i] == SEVIRI_UNIT_BRF) {
+               do_nasa = 0;
+               get_cal_slope_and_offset(d, d->image.band_ids[i], do_gsics,&slope,
+                                        &offset, &do_nasa);
 
-           b = a / band_solar_irradiance[i_sat][d->image.band_ids[i] - 1];
+               b = a / band_solar_irradiance[i_sat][d->image.band_ids[i] - 1];
 
-           if (do_nasa) {
-              ldays     =  get_time_since_launch(d);
-              calivals  =  get_nasa_calib(d->trailer.ImageProductionStats.SatelliteID,
-                                          d->image.band_ids[i]-1, ldays);
-           }
+               if (do_nasa) {
+                    ldays    = get_time_since_launch(d);
+                    calivals = get_nasa_calib
+                                    (d->trailer.ImageProductionStats.SatelliteID,
+                                     d->image.band_ids[i]-1, ldays);
+               }
 
-           for (j = 0; j < d->image.n_lines; ++j) {
-              for (k = 0; k < d->image.n_columns; ++k) {
-                 i_image = j * d->image.n_columns + k;
+               for (j = 0; j < d->image.n_lines; ++j) {
+                    for (k = 0; k < d->image.n_columns; ++k) {
+                         i_image = j * d->image.n_columns + k;
 
-                 if (do_nasa) {
-                    if (d->image.data_vir[i][i_image] <= calivals[1])d2->data[i][i_image] = 51;
-                    R = (d->image.data_vir[i][i_image] - calivals[1]) * calivals[0];
-                    d2->data[i][i_image] = (R * a) / calivals[2];
+                         if (do_nasa) {
+                              if (d->image.data_vir[i][i_image] <= calivals[1])
+                                   d2->data[i][i_image] = 51;
 
-                    if (band_units[i] == SEVIRI_UNIT_BRF)
-                       d2->data[i][i_image] /= cos(d2->sza[i_image] * D2R);
+                              R = (d->image.data_vir[i][i_image] - calivals[1]) *
+                                  calivals[0];
+                              d2->data[i][i_image] = (R * a) / calivals[2];
 
-                    if (d2->data[i][i_image]<-1.0) d2->data[i][i_image] = FILL_VALUE_F;
-                 }
-                 else
-                 {
-                    if (d->image.data_vir[i][i_image] != FILL_VALUE_US &&
-                    d->image.data_vir[i][i_image] > 0 &&
-                    d2->sza[i_image] >= 0. && d2->sza[i_image] < 90.)
-                    {
-                       R = d->image.data_vir[i][i_image] * slope + offset;
-                       d2->data[i][i_image] = b * R;
+                              if (band_units[i] == SEVIRI_UNIT_BRF)
+                                   d2->data[i][i_image] /= cos(d2->sza[i_image] * D2R);
 
-                       if (band_units[i] == SEVIRI_UNIT_BRF){
-                          d2->data[i][i_image] *= PI;
-                          d2->data[i][i_image] /= cos(d2->sza[i_image] * D2R);
-                       }
+                              if (d2->data[i][i_image] < -1.0)
+                                   d2->data[i][i_image] = FILL_VALUE_F;
+                         }
+                         else {
+                              if (d->image.data_vir[i][i_image] != FILL_VALUE_US &&
+                                  d->image.data_vir[i][i_image] > 0 &&
+                                    d2->sza[i_image] >= 0. && d2->sza[i_image] < 90.) {
+
+                                   R = d->image.data_vir[i][i_image] * slope + offset;
+                                   d2->data[i][i_image] = b * R;
+
+                                   if (band_units[i] == SEVIRI_UNIT_BRF) {
+                                        d2->data[i][i_image] *= PI /
+                                             cos(d2->sza[i_image] * D2R);
+                                   }
+                              }
+                         }
                     }
-                 }
-              }
-           }
-        }
+               }
+          }
      }
+
 
      /*-------------------------------------------------------------------------
       * Compute brightness temperature for the bands requested.
@@ -678,8 +680,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                              d->image.data_vir[i][i_image] > 0) {
                               L = d->image.data_vir[i][i_image] * slope + offset;
 
-                              d2->data[i][i_image] =
-                                   (c / log(1. + e / L) - b) / a;
+                              d2->data[i][i_image] = (c / log(1. + e / L) - b) / a;
                          }
                     }
                }
