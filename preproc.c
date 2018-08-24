@@ -64,7 +64,7 @@ static long get_time_since_launch(const struct seviri_data *d) {
  * This function generates an array of NASA calibration values for the VIS
  * channels based upon satellite ID, band and days since satellite launch.
  ******************************************************************************/
-static float *get_nasa_calib(short satnum, int band_id, long dayssince, float *retval) {
+static void get_nasa_calib(short satnum, int band_id, long dayssince, double *retval) {
 
      // Define arrays with g0, g1 and g2 values for each satellite
      // MSG-1 has two sets, one pre- and one post-IODC move.
@@ -174,8 +174,6 @@ static float *get_nasa_calib(short satnum, int band_id, long dayssince, float *r
           fprintf(stderr, "ERROR: Unrecognised satellite platform: %d\n", satnum);
           exit(-1);
      }
-
-     return retval;
 }
 
 
@@ -305,7 +303,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
 
      int   do_nasa = 0;
      long  ldays   = 0;
-     float calivals[3];
+     double calivals[3];
 
 
      if (rss)
