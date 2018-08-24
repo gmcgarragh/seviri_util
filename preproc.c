@@ -507,7 +507,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      // North polar radius from the L1.5 header
      // There is also a South polar radius in the header, unsure if these are
      // ever different.
-     i += sprintf(satposstr + i, "%010.2f", 
+     i += sprintf(satposstr + i, "%010.2f",
                   d->header.GeometricProcessing.NorthPolarRadius);
 
      for ( ; i < 127; ++i)
@@ -621,11 +621,10 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                                     d2->sza[i_image] >= 0. && d2->sza[i_image] < 90.) {
 
                                    R = d->image.data_vir[i][i_image] * slope + offset;
-                                   d2->data[i][i_image] = b * R;
+                                   d2->data[i][i_image] = PI * b * R;
 
                                    if (band_units[i] == SEVIRI_UNIT_BRF) {
-                                        d2->data[i][i_image] *= PI /
-                                             cos(d2->sza[i_image] * D2R);
+                                        d2->data[i][i_image] /= cos(d2->sza[i_image] * D2R);
                                    }
                               }
                          }
