@@ -136,40 +136,40 @@ static float *get_nasa_calib(short satnum, int band_id, long dayssince) {
      // MSG-2
      else if (satnum==2) {
           if (band_id == 1) retval[0] = gval_met9_a1[0] +
-		                        gval_met9_a1[1]*dayssince +
-		                        gval_met9_a1[2]*dayssince*dayssince;
+                                        gval_met9_a1[1]*dayssince +
+                                        gval_met9_a1[2]*dayssince*dayssince;
           if (band_id == 2) retval[0] = gval_met9_a2[0] +
-		                        gval_met9_a2[1]*dayssince +
-		                        gval_met9_a2[2]*dayssince*dayssince;
+                                        gval_met9_a2[1]*dayssince +
+                                        gval_met9_a2[2]*dayssince*dayssince;
           if (band_id == 3) retval[0] = gval_met9_a3[0] +
-		                        gval_met9_a3[1]*dayssince +
-		                        gval_met9_a3[2]*dayssince*dayssince;
-		retval[2] = solar_met9_a[band_id-1];
+                                        gval_met9_a3[1]*dayssince +
+                                        gval_met9_a3[2]*dayssince*dayssince;
+          retval[2] = solar_met9_a[band_id-1];
      }
      // MSG-3
      else if (satnum==3) {
           if (band_id == 1) retval[0] = gval_met10_a1[0] +
-		                        gval_met10_a1[1]*dayssince +
-		                        gval_met10_a1[2]*dayssince*dayssince;
+                                        gval_met10_a1[1]*dayssince +
+                                        gval_met10_a1[2]*dayssince*dayssince;
           if (band_id == 2) retval[0] = gval_met10_a2[0] +
-		                        gval_met10_a2[1]*dayssince +
-		                        gval_met10_a2[2]*dayssince*dayssince;
+                                        gval_met10_a2[1]*dayssince +
+                                        gval_met10_a2[2]*dayssince*dayssince;
           if (band_id == 3) retval[0] = gval_met10_a3[0] +
-		                        gval_met10_a3[1]*dayssince +
-		                        gval_met10_a3[2]*dayssince*dayssince;
-		retval[2] = solar_met10_a[band_id-1];
+                                        gval_met10_a3[1]*dayssince +
+                                        gval_met10_a3[2]*dayssince*dayssince;
+          retval[2] = solar_met10_a[band_id-1];
      }
      // MSG-4
      else if (satnum==4) {
           if (band_id == 1) retval[0] = gval_met11_a1[0] +
-		                        gval_met11_a1[1]*dayssince +
-		                        gval_met11_a1[2]*dayssince*dayssince;
+                                        gval_met11_a1[1]*dayssince +
+                                        gval_met11_a1[2]*dayssince*dayssince;
           if (band_id == 2) retval[0] = gval_met11_a2[0] +
-		                        gval_met11_a2[1]*dayssince +
-		                        gval_met11_a2[2]*dayssince*dayssince;
+                                        gval_met11_a2[1]*dayssince +
+                                        gval_met11_a2[2]*dayssince*dayssince;
           if (band_id == 3) retval[0] = gval_met11_a3[0] +
-		                        gval_met11_a3[1]*dayssince +
-		                        gval_met11_a3[2]*dayssince*dayssince;
+                                        gval_met11_a3[1]*dayssince +
+                                        gval_met11_a3[2]*dayssince*dayssince;
           retval[2] = solar_met11_a[band_id-1];
      }
      else {

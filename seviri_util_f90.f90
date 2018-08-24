@@ -171,7 +171,7 @@ module seviri_util
 
     interface
         integer(c_int) function seviri_read_and_preproc_hrit(filename, timeslot, &
-	    satnum, preproc, n_bands, band_ids, band_units, bounds, line0, line1, &
+            satnum, preproc, n_bands, band_ids, band_units, bounds, line0, line1, &
             column0, column1, lat0, lat1, lon0, lon1, rss, do_calib, satposstr, &
             do_not_alloc) bind(C, name = 'seviri_read_and_preproc_hrit')
 
