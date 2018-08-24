@@ -64,9 +64,7 @@ static long get_time_since_launch(const struct seviri_data *d) {
  * This function generates an array of NASA calibration values for the VIS
  * channels based upon satellite ID, band and days since satellite launch.
  ******************************************************************************/
-static float *get_nasa_calib(short satnum, int band_id, long dayssince) {
-
-     static float retval[3];
+static float *get_nasa_calib(short satnum, int band_id, long dayssince, float *retval) {
 
      // Define arrays with g0, g1 and g2 values for each satellite
      // MSG-1 has two sets, one pre- and one post-IODC move.
@@ -307,7 +305,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
 
      int   do_nasa = 0;
      long  ldays   = 0;
-     float *calivals;
+     float calivals[3];
 
 
      if (rss)
@@ -550,10 +548,9 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                                         &slope, &offset, &do_nasa);
 
                if (do_nasa) {
-                    ldays    = get_time_since_launch(d);
-                    calivals = get_nasa_calib
-                                    (d->trailer.ImageProductionStats.SatelliteID,
-                                     d->image.band_ids[i]-1, ldays);
+                    ldays = get_time_since_launch(d);
+                    get_nasa_calib(d->trailer.ImageProductionStats.SatelliteID,
+                                   d->image.band_ids[i]-1, ldays, calivals);
                }
 
                for (j = 0; j < d->image.n_lines; ++j) {
@@ -591,10 +588,9 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                b = a / band_solar_irradiance[i_sat][d->image.band_ids[i] - 1];
 
                if (do_nasa) {
-                    ldays    = get_time_since_launch(d);
-                    calivals = get_nasa_calib
-                                    (d->trailer.ImageProductionStats.SatelliteID,
-                                     d->image.band_ids[i]-1, ldays);
+                    ldays = get_time_since_launch(d);
+                    get_nasa_calib(d->trailer.ImageProductionStats.SatelliteID,
+                                   d->image.band_ids[i]-1, ldays, calivals);
                }
 
                for (j = 0; j < d->image.n_lines; ++j) {
