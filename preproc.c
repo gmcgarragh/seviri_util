@@ -309,9 +309,6 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      long  ldays   = 0;
      float *calivals;
 
-     float orbalt;
-     char tmpsatstr[12];
-
 
      if (rss)
           nav_off = 464 * 5;
@@ -495,39 +492,27 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
       *-----------------------------------------------------------------------*/
 
      // Satellite latitude, assumed to be 0.0N
-     sprintf(tmpsatstr,"%010.7f",0.0);
-     strncat(tmpsatstr,"\0",1);
-     strncpy(satposstr,tmpsatstr,11);
-     strncat(satposstr,",\0",2);
+     i  = sprintf(satposstr, "%010.7f,", 0.0);
 
      // Satellite longitude, taken from L1.5 header
-     sprintf(tmpsatstr,"%010.7f",lon0);
-     strncat(tmpsatstr,"\0",1);
-     strncat(satposstr,tmpsatstr,11);
-     strncat(satposstr,",\0",2);
+     i += sprintf(satposstr + i, "%010.7f,", lon0);
 
      // Satellite height, computed from orbit polynomial
-     orbalt = sqrt(X*X + Y*Y + Z*Z);
-     sprintf(tmpsatstr,"%010.2f",orbalt);
-     strncat(tmpsatstr,"\0",1);
-     strncat(satposstr,tmpsatstr,11);
-     strncat(satposstr,",\0",2);
+     i += sprintf(satposstr + i, "%010.2f,", sqrt(X*X + Y*Y + Z*Z));
 
      // Equatorial radius from the L1.5 header
-     sprintf(tmpsatstr,"%010.2f",d->header.GeometricProcessing.EquatorialRadius);
-     strncat(tmpsatstr,"\0",1);
-     strncat(satposstr,tmpsatstr,11);
-     strncat(satposstr,",\0",2);
+     i += sprintf(satposstr + i, "%010.2f,",
+                  d->header.GeometricProcessing.EquatorialRadius);
 
      // North polar radius from the L1.5 header
      // There is also a South polar radius in the header, unsure if these are
      // ever different.
-     sprintf(tmpsatstr,"%010.2f",d->header.GeometricProcessing.NorthPolarRadius);
-     strncat(tmpsatstr,"\0",1);
-     strncat(satposstr,tmpsatstr,11);
-     strncat(satposstr,"\0",1);
+     i += sprintf(satposstr + i, "%010.2f", 
+                  d->header.GeometricProcessing.NorthPolarRadius);
 
-     for (i=strlen(satposstr);i<127;i++)strncat(satposstr,"_\0",2);
+     for ( ; i < 127; ++i)
+          satposstr[i] = '_';
+     satposstr[i] = '\0';
 
 
      /*-------------------------------------------------------------------------
