@@ -113,6 +113,8 @@ static int read_hrit_prologue(const char *fname, struct seviri_data *d,
      if (seviri_15HEADER_ImageDescription_read     (fp, &d->header.ImageDescription,      aux)) {E_L_R();}
      /* Read the per-channel calibration data */
      if (seviri_15HEADER_RadiometricProcessing_read(fp, &d->header.RadiometricProcessing, aux)) {E_L_R();}
+     /* Read geometric processing data */
+     if (seviri_15HEADER_GeometricProcessing_read(fp, &d->header.GeometricProcessing, aux)) {E_L_R();}
 
      fclose(fp);
 
