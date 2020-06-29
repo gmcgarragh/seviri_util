@@ -18,7 +18,8 @@ extern "C" {
 
 
 int su_line_column_to_lat_lon(uint l, uint c, float *lat, float *lon,
-                               double lon0, const struct nav_scaling_factors *nav);
+                               double lon0, const struct nav_scaling_factors *nav,
+                               uchar earthmod);
 int su_lat_lon_to_line_column(float lat, float lon, uint *line, uint *column,
                                double lon0, const struct nav_scaling_factors *nav);
 void su_solar_params2(double jtime, double lat, double lon, double *mu0,

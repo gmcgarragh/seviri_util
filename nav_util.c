@@ -33,7 +33,7 @@
  * Ref: PDF_CGMS_LRIT_HRIT_2_6, Section 4.4
  ******************************************************************************/
 int su_line_column_to_lat_lon(uint line, uint column, float *lat, float *lon,
-          double lon0, const struct nav_scaling_factors *nav)
+          double lon0, const struct nav_scaling_factors *nav, uchar earthmod)
 {
      double x;
      double y;
@@ -52,8 +52,32 @@ int su_line_column_to_lat_lon(uint line, uint column, float *lat, float *lon,
      double s_n;
      double s_d;
 
+     const double offset = 1.5; // offset in km
+     const double a = 6378.1690; // equatorial radius
+     const double hgt = 42164.; // dist earth_centre <-> satellite
+     double alt, x_m, y_m; 
+
      x = (column - nav->COFF) / (pow(2, -16) * nav->CFAC);
      y = (line   - nav->LOFF) / (pow(2, -16) * nav->LFAC);
+
+     /* Correct 1.5 km N-W offset before 2017/12/06 by shifting the data 
+      * to the S-E by 1.5 km (see MSG Level 1.5 Image Data Format Description)
+      * earthmod == 1 -> georeferencing offset present
+      * earthmod == 2 -> corrected data
+     */
+
+     if ((int)earthmod == 1){
+          // altitude above ground = hgt - a
+          alt = hgt - a;
+
+          // Transform x and y from degrees to km and apply offset
+          x_m = (x * hgt) + offset;
+          y_m = (y * hgt) + offset;
+
+          // Re-transfrom from modified meters to degrees
+          x = x_m / hgt;
+          y = y_m / hgt;
+     }
 
      cos_x  = cos(x);
      sin_x  = sin(x);

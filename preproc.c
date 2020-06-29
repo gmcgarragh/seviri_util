@@ -283,6 +283,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      double Z;
 
      double lon0;
+     uchar earthmod;
 
      double mu0;
      double theta0;
@@ -444,7 +445,8 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
       * angles.
       *-----------------------------------------------------------------------*/
      lon0 = d->header.ImageDescription.LongitudeOfSSP;
-
+     earthmod = d->header.GeometricProcessing.TypeOfEarthModel;
+     
      for (i = 0; i < d->image.n_lines; ++i) {
           ii = d->image.i_line + i;
 
@@ -456,7 +458,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
 
                su_line_column_to_lat_lon(ii + 1 + nav_off, d->image.i_column + j + 1,
                                          &d2->lat[i_image], &d2->lon[i_image],
-                                         lon0, &nav_scaling_factors_vir);
+                                         lon0, &nav_scaling_factors_vir, earthmod);
 
                if (d2->lat[i_image] != FILL_VALUE_F &&
                    d2->lon[i_image] != FILL_VALUE_F) {
