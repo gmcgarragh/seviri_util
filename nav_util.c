@@ -2,6 +2,7 @@
  *
  *    Copyright (C) 2014-2018 Greg McGarragh <mcgarragh@atm.ox.ac.uk>
  *    Copyright (C) 2018 Simon Proud <simon.proud@physics.ox.ac.uk>
+ *    Copyright (C) 2020 Daniel Philipp <daniel.philipp@dwd.de>
  *
  *    This source code is licensed under the GNU General Public License (GPL),
  *    Version 3.  See the file COPYING for more details.
@@ -27,6 +28,8 @@
  * nav		: struct containing the navigation scaling factors defined in
  * nav		: Input struct containing the navigation scaling factors
  *                defined in the reference
+ * earthmod : TypeOfEarthModel parameter to decide whether georeferencing
+ *                offset correction is necessary
  *
  * returns	: Non-zero on error
  *
