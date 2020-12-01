@@ -543,9 +543,9 @@ int su_vza_and_vaa(double lat, double lon, double height,
      qv[1] = Y - y;
      qv[2] = Z - z;
 
-     u [0] = -sin_lat * cos_lon * qv[0] + -sin_lat * sin_lon * qv[1] + cos_lat * qv[2];
+     u [0] = sin_lat * cos_lon * qv[0] + sin_lat * sin_lon * qv[1] - cos_lat * qv[2];
      u [1] = -sin_lon *           qv[0] +  cos_lon           * qv[1];
-     u [2] =  cos_lat * cos_lon * qv[0] + -cos_lat * sin_lon * qv[1] + sin_lat * qv[2];
+     u [2] =  cos_lat * cos_lon * qv[0] + cos_lat * sin_lon * qv[1] + sin_lat * qv[2];
 
      *vza = acos(u[2] / sqrt(u[0]*u[0] + u[1]*u[1] + u[2]*u[2])) * R2D;
 

@@ -307,6 +307,11 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      long  ldays   = 0;
      double calivals[3];
 
+     int ORBITCOEF_SIZE = 8;
+     double dx=0, dy=0, dz=0;
+     double ddx=0, ddy=0, ddz=0;
+     double savex=0, savey=0, savez=0;
+     double t2;
 
      if (rss)
           nav_off = 464 * 5;
@@ -433,12 +438,30 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      t = (jtime - (jtime_start2 + jtime_end2)   / 2.) /
                  ((jtime_end2   - jtime_start2) / 2.);
 
-     X = d->header.SatelliteStatus.OrbitPolynomial[i].X[0] * .5 +
-         d->header.SatelliteStatus.OrbitPolynomial[i].X[1] * t;
-     Y = d->header.SatelliteStatus.OrbitPolynomial[i].Y[0] * .5 +
-         d->header.SatelliteStatus.OrbitPolynomial[i].Y[1] * t;
-     Z = d->header.SatelliteStatus.OrbitPolynomial[i].Z[0] * .5 +
-         d->header.SatelliteStatus.OrbitPolynomial[i].Z[1] * t;
+     t2 = 2 * t;
+
+     /* 
+      * Calculate Chebyshev polynomial up to 8th degree:
+      * EUMETSAT MSG Level 1.5 Image Data Format Desctiption
+      * [https://www-cdn.eumetsat.int/files/2020-05/pdf_ten_05105_msg_img_data.pdf]
+     */
+     for (k = ORBITCOEF_SIZE-1; k > 0; k--){
+          savex = dx;
+          savey = dy;
+          savez = dz;
+
+          dx = t2 * dx - ddx + d->header.SatelliteStatus.OrbitPolynomial[i].X[k];
+          dy = t2 * dx - ddy + d->header.SatelliteStatus.OrbitPolynomial[i].Y[k];
+          dz = t2 * dx - ddz + d->header.SatelliteStatus.OrbitPolynomial[i].Z[k];
+
+          ddx = savex;
+          ddy = savey;
+          ddz = savez;
+     }
+
+     X = t * dx - ddx + 0.5 * d->header.SatelliteStatus.OrbitPolynomial[i].X[0];
+     Y = t * dy - ddy + 0.5 * d->header.SatelliteStatus.OrbitPolynomial[i].Y[0];
+     Z = t * dz - ddz + 0.5 * d->header.SatelliteStatus.OrbitPolynomial[i].Z[0];
 
 
      /*-------------------------------------------------------------------------
