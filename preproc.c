@@ -209,11 +209,6 @@ static void get_cal_slope_and_offset(const struct seviri_data *d, int band_id,
                MPEFCalFeedback_data[band_id - 1].GSICSOffsetCount;
 
           if (gs < 0.0000001) {
-/*
-               fprintf(stderr,"WARNING: GSICS coefficients unavailable. "
-                              "Using IMPF calibration.\n");
-*/
-               *do_nasa = 1;
                *slope  = bc;
                *offset = ac;
           }
@@ -244,7 +239,7 @@ static void get_cal_slope_and_offset(const struct seviri_data *d, int band_id,
  ******************************************************************************/
 int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                    const enum seviri_units *band_units, int rss, int do_gsics,
-                   char satposstr[128], int do_not_alloc)
+                   int do_nasa, char satposstr[128], int do_not_alloc)
 {
      uint i;
      uint ii;
@@ -302,8 +297,6 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      double L;
 
      int nav_off = 0;
-
-     int   do_nasa = 0;
      long  ldays   = 0;
      double calivals[3];
 
@@ -566,8 +559,6 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
       *-----------------------------------------------------------------------*/
      for (i = 0; i < d->image.n_bands; ++i) {
           if (band_units[i] == SEVIRI_UNIT_RAD) {
-
-               do_nasa = 0;
                get_cal_slope_and_offset(d, d->image.band_ids[i], do_gsics,
                                         &slope, &offset, &do_nasa);
 
@@ -605,7 +596,6 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
 
      for (i = 0; i < d->image.n_bands; ++i) {
           if (band_units[i] == SEVIRI_UNIT_REF || band_units[i] == SEVIRI_UNIT_BRF) {
-               do_nasa = 0;
                get_cal_slope_and_offset(d, d->image.band_ids[i], do_gsics,&slope,
                                         &offset, &do_nasa);
 
@@ -661,8 +651,6 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
       *-----------------------------------------------------------------------*/
      for (i = 0; i < d->image.n_bands; ++i) {
           if (band_units[i] == SEVIRI_UNIT_BT) {
-
-               do_nasa = 0;
                get_cal_slope_and_offset(d, d->image.band_ids[i], do_gsics,
                                         &slope, &offset, &do_nasa);
 /*
@@ -730,7 +718,8 @@ int seviri_read_and_preproc_nat(const char *filename,
                                 enum seviri_bounds bounds,
                                 uint line0, uint line1, uint column0, uint column1,
                                 double lat0, double lat1, double lon0, double lon1,
-                                int do_gsics, char satposstr[128], int do_not_alloc)
+                                int do_gsics, int do_nasa, char satposstr[128],
+                                int do_not_alloc)
 {
      struct seviri_data seviri;
      int rss=0;
@@ -741,8 +730,8 @@ int seviri_read_and_preproc_nat(const char *filename,
           return -1;
      }
 
-     if (seviri_preproc(&seviri, preproc, band_units, rss, do_gsics, satposstr,
-                        do_not_alloc)) {
+     if (seviri_preproc(&seviri, preproc, band_units, rss, do_gsics, do_nasa, 
+                        satposstr, do_not_alloc)) {
           fprintf(stderr, "ERROR: seviri_preproc()\n");
           return -1;
      }
@@ -790,8 +779,8 @@ int seviri_read_and_preproc_hrit(const char *indir, const char *timeslot,
                                  enum seviri_bounds bounds,
                                  uint line0, uint line1, uint column0, uint column1,
                                  double lat0, double lat1, double lon0, double lon1,
-                                 int rss, int iodc, int do_gsics, char satposstr[128],
-                                 int do_not_alloc)
+                                 int rss, int iodc, int do_gsics, int do_nasa, 
+                                 char satposstr[128], int do_not_alloc)
 {
      int i, proc_hrv = 0;
 
@@ -804,8 +793,8 @@ int seviri_read_and_preproc_hrit(const char *indir, const char *timeslot,
           return -1;
      }
 
-     if (seviri_preproc(&seviri, preproc, band_units, rss, do_gsics, satposstr,
-                        do_not_alloc)) {
+     if (seviri_preproc(&seviri, preproc, band_units, rss, do_gsics, do_nasa,
+                        satposstr, do_not_alloc)) {
          fprintf(stderr, "ERROR: seviri_preproc()\n");
           return -1;
      }
@@ -858,7 +847,7 @@ int seviri_read_and_preproc(const char *filename,
                             enum seviri_bounds bounds,
                             uint line0, uint line1, uint column0, uint column1,
                             double lat0, double lat1, double lon0, double lon1,
-                            int do_gsics, char satposstr[128], int do_not_alloc)
+                            int do_gsics, int do_nasa, char satposstr[128], int do_not_alloc)
 {
      char *indir;
      int satnum;
@@ -869,7 +858,7 @@ int seviri_read_and_preproc(const char *filename,
      if (strstr(filename, ".nat") != NULL) {
           if (seviri_read_and_preproc_nat(filename, preproc, n_bands, band_ids,
                band_units, bounds, line0, line1, column0, column1, lat0, lat1,
-               lon0, lon1, do_gsics, satposstr, do_not_alloc)) {
+               lon0, lon1, do_gsics, do_nasa, satposstr, do_not_alloc)) {
                fprintf(stderr, "ERROR: seviri_read_and_preproc_nat()\n");
                return -1;
           }
@@ -883,8 +872,8 @@ int seviri_read_and_preproc(const char *filename,
 
           if (seviri_read_and_preproc_hrit(indir, timeslot, satnum, preproc,
                n_bands, band_ids, band_units, bounds, line0, line1, column0,
-               column1, lat0, lat1, lon0, lon1, rss, iodc, do_gsics, satposstr,
-               do_not_alloc)) {
+               column1, lat0, lat1, lon0, lon1, rss, iodc, do_gsics, do_nasa,
+               satposstr, do_not_alloc)) {
                fprintf(stderr, "ERROR: seviri_read_and_preproc_hrit()\n");
                return -1;
           }

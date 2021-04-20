@@ -27,7 +27,8 @@
 int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc, char satposstr[128])
 {
      if (seviri_read_and_preproc(driver.infdir,preproc, driver.sev_bands.nbands, driver.sev_bands.band_ids,
-     driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., 0., driver.do_calib, satposstr, 0))
+     driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., 0., driver.do_calib,
+     driver.do_nasa, satposstr, 0))
      {E_L_R();}
      return 0;
 }
@@ -44,7 +45,8 @@ int run_sev_native(struct driver_data driver,struct seviri_preproc_data *preproc
 int run_sev_hrit(struct driver_data driver,struct seviri_preproc_data *preproc, char satposstr[128])
 {
      if (seviri_read_and_preproc_hrit(driver.infdir,driver.timeslot,driver.satnum, preproc, driver.sev_bands.nbands, driver.sev_bands.band_ids,
-     driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., 0., driver.rss, driver.iodc, driver.do_calib, satposstr, 0))
+     driver.outtype, driver.bounds,driver.iline, driver.fline, driver.icol, driver.fcol,0., 0., 0., 0., driver.rss, driver.iodc, 
+     driver.do_calib, driver.do_nasa, satposstr, 0))
      {E_L_R();}
      return 0;
 }
@@ -108,7 +110,7 @@ int save_sev_tiff(struct driver_data driver,struct seviri_preproc_data preproc)
           for (j=0;j<nbands*preproc.n_columns;j=j+nbands) {
                band=0;
                col = (i*preproc.n_columns)+k;
-               for (band=0;band<preproc.n_bands;band++) oneline[j+band]=(float)preproc.data[band][col];
+/*               for (band=0;band<preproc.n_bands;band++) oneline[j+band]=(float)preproc.data[band][col];*/
                if(driver.ancsave[0]==1){oneline[j+band]=(float)preproc.time[col];band++;}
                if(driver.ancsave[1]==1){oneline[j+band]=(float)preproc.lat[col];band++;}
                if(driver.ancsave[2]==1){oneline[j+band]=(float)preproc.lon[col];band++;}

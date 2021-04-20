@@ -54,6 +54,7 @@ struct driver_data {
      int               ancsave[7];
      int               compression;
      int               do_calib;
+     int               do_nasa;
 };
 
 

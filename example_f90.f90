@@ -19,18 +19,18 @@ program example_f90
      ! brightness temperature.
      integer, parameter :: n_bands = 4
 
-     integer, parameter :: band_ids(n_bands) = (/1, 3, 7, 9/)
+     integer, parameter :: band_ids(n_bands) = (/1, 2,3,4/)
 
      integer, parameter :: band_units(n_bands) = (/SEVIRI_UNIT_BRF, &
                                                    SEVIRI_UNIT_BRF, &
-                                                   SEVIRI_UNIT_BT, &
-                                                   SEVIRI_UNIT_BT/)
+                                                   SEVIRI_UNIT_BRF, &
+                                                   SEVIRI_UNIT_BRF/)
 
      ! We want to read a sub-image defined by pixel coordinates.
-     integer, parameter :: line0   = 1899
-     integer, parameter :: line1   = 2199
-     integer, parameter :: column0 = 1700
-     integer, parameter :: column1 = 2299
+     integer, parameter :: line0   = 1
+     integer, parameter :: line1   = 3712
+     integer, parameter :: column0 = 1
+     integer, parameter :: column1 = 3712
 
      ! This struct will contain the image data and some metadata.
      type(seviri_preproc_t_f90) :: preproc
@@ -49,7 +49,7 @@ program example_f90
      if (seviri_read_and_preproc_f90(trim(filename), preproc, n_bands, band_ids, &
                             band_units, SEVIRI_BOUNDS_LINE_COLUMN, line0, line1, &
                             column0, column1, 0.d0, 0.d0, 0.d0, 0.d0, .false.,   &
-                            satposstr, .false.) .ne. 0) then
+                            .false., satposstr, .false.) .ne. 0) then
         print *, 'ERROR: seviri_read_and_preproc_f90()'
         stop -1
      end if

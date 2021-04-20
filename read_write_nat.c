@@ -280,7 +280,7 @@ static int seviri_image_read(FILE *fp, struct seviri_image_data *image,
                          dimens->n_columns_to_read_VIR / 4 * 5) E_L_R();
 
                i_image = ii * dimens->n_columns_requested_VIR + dimens->i_column_in_output_VIR;
-if (0) {
+if (1) {
                for (j = 0, jj = 0, jjj = 0; j < dimens->n_columns_to_read_VIR; ) {
                     for (k = 0; k < 4; ++k) {
                          if (j_offset + j >= i_column0 && j_offset + j <= i_column1) {
