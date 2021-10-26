@@ -38,6 +38,7 @@ struct seviri_preproc_data {
      float *vaa;		/* image of viewing azimuth angle  (degrees: 0.0 -- 360.0) */
      float **data;		/* array of pointers to images of length n_bands */
      float  *data2;		/* array of image data of length n_bands * n_lines * n_columns */
+     float *cal_slope;  /* array of pointers to cal_slopes of length n_bands */
 };
 
 

@@ -309,6 +309,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      if (rss)
           nav_off = 464 * 5;
 
+          d2->vaa   = malloc(length * sizeof(float));
 
      /*-------------------------------------------------------------------------
       * Find the index for our satellite to satellite dependent constants
@@ -374,6 +375,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
           d2->saa   = malloc(length * sizeof(float));
           d2->vza   = malloc(length * sizeof(float));
           d2->vaa   = malloc(length * sizeof(float));
+          d2->cal_slope   = malloc(d->image.n_bands * sizeof(float));
 
           d2->data2 = malloc(d->image.n_bands * length * sizeof(float *));
      }
@@ -561,6 +563,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
           if (band_units[i] == SEVIRI_UNIT_RAD) {
                get_cal_slope_and_offset(d, d->image.band_ids[i], do_gsics,
                                         &slope, &offset, &do_nasa);
+               d2->cal_slope[i] = slope;
 
                if (do_nasa) {
                     ldays = get_time_since_launch(d);
@@ -598,6 +601,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
           if (band_units[i] == SEVIRI_UNIT_REF || band_units[i] == SEVIRI_UNIT_BRF) {
                get_cal_slope_and_offset(d, d->image.band_ids[i], do_gsics,&slope,
                                         &offset, &do_nasa);
+               d2->cal_slope[i] = slope;
 
                b = a / band_solar_irradiance[i_sat][d->image.band_ids[i] - 1];
 
@@ -653,6 +657,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
           if (band_units[i] == SEVIRI_UNIT_BT) {
                get_cal_slope_and_offset(d, d->image.band_ids[i], do_gsics,
                                         &slope, &offset, &do_nasa);
+               d2->cal_slope[i] = FILL_VALUE_F;
 /*
                nu = 1.e4 / channel_center_wavelength[d->image.band_ids[i] - 1];
 */

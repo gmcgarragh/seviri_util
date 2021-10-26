@@ -59,6 +59,7 @@ module seviri_util
         type(c_ptr)    :: vaa
         type(c_ptr)    :: data
         type(c_ptr)    :: data2
+        type(c_ptr)    :: cal_slope
     end type seviri_preproc_t
 
     type :: seviri_preproc_t_f90
@@ -75,6 +76,7 @@ module seviri_util
         real(4), pointer :: vza(:, :)
         real(4), pointer :: vaa(:, :)
         real(4), pointer :: data(:, :, :)
+        real(4), pointer :: cal_slope(:)
 
         type(seviri_preproc_t) :: preproc
     end type seviri_preproc_t_f90
@@ -347,6 +349,7 @@ integer function seviri_read_and_preproc_nat_f90(filename, preproc_f90, n_bands,
     integer                :: do_nasa
     integer                :: do_not_alloc
     type(seviri_preproc_t) :: preproc
+    integer                :: shape0(1)
     integer                :: shape1(2)
     integer                :: shape2(3)
 
@@ -371,6 +374,7 @@ integer function seviri_read_and_preproc_nat_f90(filename, preproc_f90, n_bands,
         preproc%vza   = c_loc(preproc_f90%vza (1, 1))
         preproc%vaa   = c_loc(preproc_f90%vaa (1, 1))
         preproc%data2 = c_loc(preproc_f90%data(1, 1, 1))
+        preproc%cal_slope = c_loc(preproc_f90%cal_slope(1))
     end if
 
     status = seviri_read_and_preproc_nat(trim(filename)//C_NULL_CHAR, preproc, &
@@ -390,6 +394,7 @@ integer function seviri_read_and_preproc_nat_f90(filename, preproc_f90, n_bands,
     preproc_f90%n_columns  = preproc%n_columns
     preproc_f90%fill_value = preproc%fill_value
 
+    shape0 = [preproc%n_bands]
     shape1 = [preproc_f90%n_columns, preproc_f90%n_lines]
 
     if (.not. do_not_alloc_f90) then
@@ -400,6 +405,7 @@ integer function seviri_read_and_preproc_nat_f90(filename, preproc_f90, n_bands,
         call c_f_pointer(preproc%saa,   preproc_f90%saa,  shape1)
         call c_f_pointer(preproc%vza,   preproc_f90%vza,  shape1)
         call c_f_pointer(preproc%vaa,   preproc_f90%vaa,  shape1)
+        call c_f_pointer(preproc%cal_slope,   preproc_f90%cal_slope, shape0)
 
         shape2 = [preproc_f90%n_columns, preproc_f90%n_lines, n_bands]
 
@@ -440,6 +446,7 @@ integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
     integer                :: do_nasa
     integer                :: do_not_alloc
     type(seviri_preproc_t) :: preproc
+    integer                :: shape0(1)
     integer                :: shape1(2)
     integer                :: shape2(3)
 
@@ -468,6 +475,7 @@ integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
         preproc%vza   = c_loc(preproc_f90%vza (1, 1))
         preproc%vaa   = c_loc(preproc_f90%vaa (1, 1))
         preproc%data2 = c_loc(preproc_f90%data(1, 1, 1))
+        preproc%cal_slope = c_loc(preproc_f90%cal_slope(1))
     end if
 
     status = seviri_read_and_preproc_hrit(trim(filename)//C_NULL_CHAR, &
@@ -488,6 +496,7 @@ integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
     preproc_f90%n_columns  = preproc%n_columns
     preproc_f90%fill_value = preproc%fill_value
 
+    shape0 = [preproc%n_bands]
     shape1 = [preproc_f90%n_columns, preproc_f90%n_lines]
 
     if (.not. do_not_alloc_f90) then
@@ -498,6 +507,7 @@ integer function seviri_read_and_preproc_hrit_f90(filename, timeslot, satnum, &
         call c_f_pointer(preproc%saa,   preproc_f90%saa,  shape1)
         call c_f_pointer(preproc%vza,   preproc_f90%vza,  shape1)
         call c_f_pointer(preproc%vaa,   preproc_f90%vaa,  shape1)
+        call c_f_pointer(preproc%cal_slope,   preproc_f90%cal_slope,  shape0)
 
         shape2 = [preproc_f90%n_columns, preproc_f90%n_lines, n_bands]
 
@@ -533,6 +543,7 @@ integer function seviri_read_and_preproc_f90(filename, preproc_f90, n_bands, &
     integer                :: do_nasa
     integer                :: do_not_alloc
     type(seviri_preproc_t) :: preproc
+    integer                :: shape0(1)
     integer                :: shape1(2)
     integer                :: shape2(3)
 
@@ -557,6 +568,7 @@ integer function seviri_read_and_preproc_f90(filename, preproc_f90, n_bands, &
         preproc%vza   = c_loc(preproc_f90%vza (1, 1))
         preproc%vaa   = c_loc(preproc_f90%vaa (1, 1))
         preproc%data2 = c_loc(preproc_f90%data(1, 1, 1))
+        preproc%cal_slope   = c_loc(preproc_f90%cal_slope (1))
     end if
 
     status = seviri_read_and_preproc(trim(filename)//C_NULL_CHAR, preproc, &
@@ -576,6 +588,7 @@ integer function seviri_read_and_preproc_f90(filename, preproc_f90, n_bands, &
     preproc_f90%n_columns  = preproc%n_columns
     preproc_f90%fill_value = preproc%fill_value
 
+    shape0 = [preproc%n_bands]
     shape1 = [preproc_f90%n_columns, preproc_f90%n_lines]
 
     if (.not. do_not_alloc_f90) then
@@ -586,6 +599,8 @@ integer function seviri_read_and_preproc_f90(filename, preproc_f90, n_bands, &
         call c_f_pointer(preproc%saa,   preproc_f90%saa,  shape1)
         call c_f_pointer(preproc%vza,   preproc_f90%vza,  shape1)
         call c_f_pointer(preproc%vaa,   preproc_f90%vaa,  shape1)
+
+        call c_f_pointer(preproc%cal_slope,   preproc_f90%cal_slope,  shape0)
 
         shape2 = [preproc_f90%n_columns, preproc_f90%n_lines, n_bands]
 
