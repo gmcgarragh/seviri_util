@@ -309,8 +309,6 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
      if (rss)
           nav_off = 464 * 5;
 
-          d2->vaa   = malloc(length * sizeof(float));
-
      /*-------------------------------------------------------------------------
       * Find the index for our satellite to satellite dependent constants
       * defined in internal.c.
