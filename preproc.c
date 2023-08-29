@@ -593,7 +593,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
       *
       * Ref: PDF_MSG_SEVIRI_RAD2REFL, Page 8
       *-----------------------------------------------------------------------*/
-     a = sqrt(su_solar_distance_factor2(day_of_year));
+     a = pow(su_solar_distance_factor2(day_of_year), 2);
 
      for (i = 0; i < d->image.n_bands; ++i) {
           if (band_units[i] == SEVIRI_UNIT_REF || band_units[i] == SEVIRI_UNIT_BRF) {
