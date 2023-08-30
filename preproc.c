@@ -593,7 +593,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
       *
       * Ref: PDF_MSG_SEVIRI_RAD2REFL, Page 8
       *-----------------------------------------------------------------------*/
-     a = pow(su_solar_distance_factor2(day_of_year), 2);
+     a = su_solar_distance_factor2(day_of_year);
 
      for (i = 0; i < d->image.n_bands; ++i) {
           if (band_units[i] == SEVIRI_UNIT_REF || band_units[i] == SEVIRI_UNIT_BRF) {
@@ -601,7 +601,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
                                         &offset, &do_nasa);
                d2->cal_slope[i] = slope;
 
-               b = a / band_solar_irradiance[i_sat][d->image.band_ids[i] - 1];
+               b = 1. / (a * band_solar_irradiance[i_sat][d->image.band_ids[i] - 1]);
 
                if (do_nasa) {
                     ldays = get_time_since_launch(d);
@@ -619,7 +619,7 @@ int seviri_preproc(const struct seviri_data *d, struct seviri_preproc_data *d2,
 
                               R = (d->image.data_vir[i][i_image] - calivals[1]) *
                                   calivals[0];
-                              d2->data[i][i_image] = (R * a) / calivals[2];
+                              d2->data[i][i_image] = R / (calivals[2] * a);
 
                               if (band_units[i] == SEVIRI_UNIT_BRF)
                                    d2->data[i][i_image] /= cos(d2->sza[i_image] * D2R);
